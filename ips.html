@@ -1,0 +1,173 @@
+<head>
+
+<script src="https://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="https://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+
+
+<script src="https://code.highcharts.com/stock/highstock.js"></script>
+<script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/stock/modules/export-data.js"></script>
+</head>
+
+<div id="container0" style="height: 500px; min-width: 310px"></div><div id="pnl"></div>
+<script>
+let ips = []
+////console.log(ips)
+
+
+                    var options0 = {
+
+
+
+                        rangeSelector: {
+                            buttons: [{
+                                count: 1,
+                                type: 'minute',
+                                text: '1m'
+                            }, {
+                                count: 5,
+                                type: 'minute',
+                                text: '5m'
+                            }, {
+                                count: 10,
+                                type: 'minute',
+                                text: '10m'
+                            }, {
+                                count: 30,
+                                type: 'minute',
+                                text: '30m'
+                            }, {
+                                count: 1,
+                                type: 'hour',
+                                text: '1h'
+                            }, {
+                                type: 'all',
+                                text: 'All'
+                            }],
+                            inputEnabled: false,
+                            selected: 0
+                        },
+
+
+                        title: {
+                            text: '<%- name %>'
+                        },
+                        xAxis: [{
+                            min: 1553152242903,
+                            plotLines: [{}]
+                        }],
+
+
+                        yAxis: [{
+                            labels: {
+                                align: 'right',
+                                x: -3
+                            },
+                            title: {
+                                text: 'Price'
+                            },
+                            height: '60%',
+                            lineWidth: 2,
+                            resize: {
+                                enabled: true
+                            }
+                        }, {
+                            labels: {
+                                align: 'right',
+                                x: -3
+                            },
+                            title: {
+                                text: 'Volume'
+                            },
+                            top: '65%',
+                            height: '35%',
+                            offset: 0,
+                            lineWidth: 2
+                        }],
+
+                        tooltip: {
+                            split: true
+                        },
+                        series: [{
+                                name: 'pnl on one exchange http://prove.club',
+                                color: '#00FF00'
+                            }, {
+                                name: 'pnl on one exchange http://prove.club',
+                                color: '#0000FF'
+                            }, {
+                                name: 'pnl on one exchange http://prove.club',
+                                color: '#FF0000'
+                            },
+                            {
+                                name: 'pnl on one exchange http://prove.club',
+                                color: '#FF0000'
+                            }
+                        ]
+                    }
+var chart0 = Highcharts.stockChart('container0', options0);
+let data = []
+$.get("http://34.73.210.244:8083/?current_user_id=jare2228528365625318621dddfdfdaugacuacgcuacaccau", {}, function(data, status) {
+
+            ////console.log(data)
+            for (var i in data) {
+                for (var ip in data[i].ips) {
+                    if (data[i].user_id != 'test123' && data[i].user_id != null) {
+                        ips.push(data[i].ips[ip])
+                    }
+                }
+            }
+            let count = 0
+            for (var ip in ips) {
+                //chart = Highcharts.stockChart('container', options);
+                
+                dogetjson(ips, ip, 0)
+            }
+            
+                    
+})
+function dogetjson(ips, ip, count){
+  $.getJSON('http://' + ips[ip] + '/update?name=2', function(jsondata) {
+                    console.log(ips[ip])
+                    let diffs = [jsondata.usddiff2, jsondata.altdiff2, jsondata.btcdiff2]
+                    let lll = -99999
+                    for (var d in diffs) {
+                        if (diffs[d] && diffs[d] > lll && diffs[d] > -100) {
+                            lll = diffs[d]
+                            ////console.log('lll ' + lll)
+                        }
+                    }
+                    if (lll == -99999) {
+                        lll = 0;
+                    }
+                    let diffs2 = [jsondata.usddiff, jsondata.altdiff, jsondata.btcdiff]
+                    let lll2 = -99999
+
+                    for (var d in diffs2) {
+                        if (diffs2[d] > lll2  && diffs2[d] > -100) {
+                            lll2 = diffs2[d]
+                            console.log(lll2)
+                        }
+                    }
+                    if (lll2 == -99999) {
+                        lll2 = 0;
+                    }
+                    let date = new Date().getTime()
+                    if (data[count] == undefined){
+                      data[count] = []
+                    }
+                    data[count].push([date, lll2])
+                    ////console.log(data[count])
+                    ////console.log(count)
+                    chart0.series[count].setData(data[count]);
+                    count++
+                    if (count >= 4){
+                      count = 0;
+                    }
+                    ////console.log(ips[ip] + ' ' + lll + ' ' + lll2)
+                    
+                    setTimeout(function(){
+                      dogetjson(ips,ip,count)
+                    },5000)
+                })
+}
+</script>

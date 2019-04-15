@@ -1,0 +1,544 @@
+<head>
+    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <script>
+        (adsbygoogle = window.adsbygoogle || []).push({
+            google_ad_client: "ca-pub-8504034781433425",
+            enable_page_level_ads: true
+        });
+    </script>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-120452160-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'UA-120452160-1');
+    </script>
+</head>
+<script src="https://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="https://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+<!-- Resources -->
+<script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
+<script src="https://www.amcharts.com/lib/3/serial.js"></script>
+<script src="https://www.amcharts.com/lib/3/plugins/dataloader/dataloader.min.js"></script>
+<script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
+<link rel="stylesheet" href="https://www.amcharts.com/lib/3/plugins/export/export.css" type="text/css" media="all" />
+<script src="https://www.amcharts.com/lib/3/themes/light.js"></script>
+<style>
+    #chartdiv {
+        width: 100%;
+        height: 500px;
+    }
+</style>
+<!-- Chart code -->
+<script src="https://code.highcharts.com/stock/highstock.js"></script>
+<script src="https://code.highcharts.com/stock/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/stock/modules/export-data.js"></script>
+<div id="container0" style="height: 500px; min-width: 310px"></div>
+<div id="pnl"></div>
+<div id="profits"></div>
+<div id="msg"></div>
+The goal of this bot isn't to profit: it's to show off that there would be profits if we reduced the 0.1% trading fee to 0.02%. Imagine this chart as you're watching it without the steep climbs after some of the green (buying) lines: those drops are fees.
+Imagine it with bigger falls on some of the red (selling) lines: sales without fees.
+
+
+<a href="https://medium.com/@jarettrsdunn/binance-hitbtc-etc-market-maker-pitch-how-to-get-rich-online-2988c1d328ac">Read More Here.</a>
+<br>
+<br> # current orders:
+
+
+<div id='numOrders'></div> Buy orders:
+
+
+<div id='buyOrders'></div> Sell orders:
+
+
+<div id='sellOrders'></div>
+<br> # recent trades:
+
+
+<div id='numTrades'></div>
+<br>All balances:
+
+
+<div id="balances"></div>
+<br>Starttime:
+
+
+<div id='least'></div> and btcVol in recent memory:
+
+
+<div id='btcVol'></div>
+<br>Hours since starttime:
+
+
+<div id='hours'></div>
+<br>Est. daily vol:
+
+
+<div id="dailyvol"></div>
+<br>
+<br>Est. 1 BTC invested:
+
+
+<div id="1btc"></div>Est. 5 BTC invested:
+
+
+<div id="5btc"></div>Est. 10 BTC invested:
+
+
+<div id="10btc"></div>Est. 20 BTC invested:
+
+
+<div id="20btc"></div>
+<br>Minutely Sharpe vs. hold BTC:
+
+
+<div id="sharpe"></div>
+<br>
+<br>sharpe and green line on chart, along with total usd bnb btc are adjusted for 0.02% fees in recent memory.
+
+
+<br>
+<div id="container" style="height: 500px; min-width: 310px"></div>
+<div id="container3" style="height: 500px; min-width: 310px"></div>
+<div id="container2" style="height: 500px; min-width: 310px"></div>
+<!--
+<div id="chartdiv" style="height: 400px; min-width: 310px"></div>-->
+<script>
+    let trade = {}
+    var prices = [];
+    var rois = [];
+    var lasks = [];
+        console.log("ready!");
+        setInterval(function() {
+           doit();
+        }, 15000);
+        setTimeout(function() {
+           doit();
+        }, 6000);
+var prices = [];
+var rois = [];
+var lasks = [];
+let ips = []
+
+                    //chart0.series[4].setData(refdiff);
+                    var options = {
+
+
+
+                        rangeSelector: {
+                            buttons: [{
+                                count: 1,
+                                type: 'minute',
+                                text: '1m'
+                            }, {
+                                count: 5,
+                                type: 'minute',
+                                text: '5m'
+                            }, {
+                                count: 10,
+                                type: 'minute',
+                                text: '10m'
+                            }, {
+                                count: 30,
+                                type: 'minute',
+                                text: '30m'
+                            }, {
+                                count: 1,
+                                type: 'hour',
+                                text: '1h'
+                            }, {
+                                type: 'all',
+                                text: 'All'
+                            }],
+                            inputEnabled: false,
+                            selected: 0
+                        },
+
+
+                        title: {
+                            text: '<%- name %>'
+                        },
+                        xAxis: [{
+                            min: 1553152242903,
+                            plotLines: [{}]
+                        }],
+
+                        yAxis: [{
+                            labels: {
+                                align: 'right',
+                                x: -3
+                            },
+                            title: {
+                                text: 'Price'
+                            },
+                            height: '60%',
+                            lineWidth: 2,
+                            resize: {
+                                enabled: true
+                            }
+                        }, {
+                            labels: {
+                                align: 'right',
+                                x: -3
+                            },
+                            title: {
+                                text: 'Volume'
+                            },
+                            top: '65%',
+                            height: '35%',
+                            offset: 0,
+                            lineWidth: 2
+                        }],
+
+                        tooltip: {
+                            split: true
+                        },
+                        series: [{
+                            name: 'usd total',
+                            color: '#00FF00'
+                        }]
+                    }
+
+
+                    var options2 = {
+
+
+
+                        rangeSelector: {
+                            buttons: [{
+                                count: 1,
+                                type: 'minute',
+                                text: '1m'
+                            }, {
+                                count: 5,
+                                type: 'minute',
+                                text: '5m'
+                            }, {
+                                count: 10,
+                                type: 'minute',
+                                text: '10m'
+                            }, {
+                                count: 30,
+                                type: 'minute',
+                                text: '30m'
+                            }, {
+                                count: 1,
+                                type: 'hour',
+                                text: '1h'
+                            }, {
+                                type: 'all',
+                                text: 'All'
+                            }],
+                            inputEnabled: false,
+                            selected: 0
+                        },
+
+
+                        title: {
+                            text: '<%- name %>'
+                        },
+                        xAxis: [{
+                            min: 1553152242903,
+                            plotLines: [{}]
+                        }],
+
+
+                        yAxis: [{
+                            labels: {
+                                align: 'right',
+                                x: -3
+                            },
+                            title: {
+                                text: 'Price'
+                            },
+                            height: '60%',
+                            lineWidth: 2,
+                            resize: {
+                                enabled: true
+                            }
+                        }, {
+                            labels: {
+                                align: 'right',
+                                x: -3
+                            },
+                            title: {
+                                text: 'Volume'
+                            },
+                            top: '65%',
+                            height: '35%',
+                            offset: 0,
+                            lineWidth: 2
+                        }],
+
+                        tooltip: {
+                            split: true
+                        },
+                        series: [{
+                            name: 'btc total',
+                            color: '#00FF00'
+                        }]
+                    }
+
+
+
+                    var options0 = {
+
+
+
+                        rangeSelector: {
+                            buttons: [{
+                                count: 1,
+                                type: 'minute',
+                                text: '1m'
+                            }, {
+                                count: 5,
+                                type: 'minute',
+                                text: '5m'
+                            }, {
+                                count: 10,
+                                type: 'minute',
+                                text: '10m'
+                            }, {
+                                count: 30,
+                                type: 'minute',
+                                text: '30m'
+                            }, {
+                                count: 1,
+                                type: 'hour',
+                                text: '1h'
+                            }, {
+                                type: 'all',
+                                text: 'All'
+                            }],
+                            inputEnabled: false,
+                            selected: 0
+                        },
+
+
+                        title: {
+                            text: '<%- name %>'
+                        },
+                        xAxis: [{
+                            min: 1553152242903,
+                            plotLines: [{}]
+                        }],
+
+
+                        yAxis: [{
+                            labels: {
+                                align: 'right',
+                                x: -3
+                            },
+                            title: {
+                                text: 'Price'
+                            },
+                            height: '60%',
+                            lineWidth: 2,
+                            resize: {
+                                enabled: true
+                            }
+                        }, {
+                            labels: {
+                                align: 'right',
+                                x: -3
+                            },
+                            title: {
+                                text: 'Volume'
+                            },
+                            top: '65%',
+                            height: '35%',
+                            offset: 0,
+                            lineWidth: 2
+                        }],
+
+                        tooltip: {
+                            split: true
+                        },
+                        series: [{
+                                name: 'pnl on one exchange http://prove.club',
+                                color: '#00FF00'
+                            }, {
+                                name: 'pnl on one exchange http://prove.club',
+                                color: '#0000FF'
+                            }, {
+                                name: 'pnl on one exchange http://prove.club',
+                                color: '#FF0000'
+                            },
+                            {
+                                name: 'pnl on one exchange http://prove.club',
+                                color: '#FF0000'
+                            }
+                        ]
+                    }
+
+                    var options3 = {
+
+
+
+                        rangeSelector: {
+                            buttons: [{
+                                count: 1,
+                                type: 'minute',
+                                text: '1m'
+                            }, {
+                                count: 5,
+                                type: 'minute',
+                                text: '5m'
+                            }, {
+                                count: 10,
+                                type: 'minute',
+                                text: '10m'
+                            }, {
+                                count: 30,
+                                type: 'minute',
+                                text: '30m'
+                            }, {
+                                count: 1,
+                                type: 'hour',
+                                text: '1h'
+                            }, {
+                                type: 'all',
+                                text: 'All'
+                            }],
+                            inputEnabled: false,
+                            selected: 0
+                        },
+
+
+                        title: {
+                            text: '<%- name %>'
+                        },
+                        xAxis: [{
+                            min: 1553152242903,
+                            plotLines: [{}]
+                        }],
+
+
+                        yAxis: [{
+                            labels: {
+                                align: 'right',
+                                x: -3
+                            },
+                            title: {
+                                text: 'Price'
+                            },
+                            height: '60%',
+                            lineWidth: 2,
+                            resize: {
+                                enabled: true
+                            }
+                        }, {
+                            labels: {
+                                align: 'right',
+                                x: -3
+                            },
+                            title: {
+                                text: 'Volume'
+                            },
+                            top: '65%',
+                            height: '35%',
+                            offset: 0,
+                            lineWidth: 2
+                        }],
+
+                        tooltip: {
+                            split: true
+                        },
+                        series: [{
+                            name: 'alt total',
+                            color: '#00FF00'
+                        }]
+                    }
+
+                    console.log(prices);
+                    console.log(trade);
+
+                    var chart = Highcharts.stockChart('container', options);
+                    var chart0 = Highcharts.stockChart('container0', options0);
+                    var chart2 = Highcharts.stockChart('container2', options2);
+                    var chart3 = Highcharts.stockChart('container3', options3);
+                    setTimeout(function() {
+    ips = []
+    $.get("http://34.73.210.244:8083/?current_user_id=jare2228528365625318621dddfdfdaugacuacgcuacaccau", {}, function(data, status) {
+
+        console.log(data)
+        for (var i in data) {
+            for (var ip in data[i].ips) {
+                if (data[i].user_id != 'test123' && data[i].user_id != null) {
+                    ips.push(data[i].ips[ip])
+                }
+            }
+        }
+    console.log(ips)
+    })
+}, 1000);
+let l2l2 = []
+function doit() {
+    console.log(ips)
+        //chart = Highcharts.stockChart('container', options);
+        count = -1
+        setTimeout(function(){
+        gjson(count, ips)
+    }, (count + 2) * 500)
+}
+function gjson(count, ips){
+                    count++
+    $.getJSON('http://' + ips[count] + '/update?name=2', function(jsondata) {
+                    let diffs = [jsondata.usddiff2, jsondata.altdiff2, jsondata.btcdiff2]
+                    let lll = -99999
+                    for (var d in diffs) {
+                        if (diffs[d] && diffs[d] > lll && diffs[d] > -100) {
+                            lll = diffs[d]
+                            console.log('lll ' + lll)
+                        }
+                    }
+                    if (lll == -99999) {
+                        lll = 0;
+                    }
+                    let diffs2 = [jsondata.usddiff, jsondata.altdiff, jsondata.btcdiff]
+                    console.log(diffs2)
+                    let lll2 = -99999
+
+                    for (var d in diffs2) {
+                        if (diffs2[d] > lll2 && diffs2[d] && diffs2[d] > -100) {
+                            lll2 = diffs2[d]
+                            console.log('lll2: ' + lll2)
+                        }
+                    }
+                    if (lll2 == -99999) {
+                        lll2 == 0;
+                    }
+                    console.log('lll: ' + lll)
+                    if (l2l2[count] == undefined){
+                    l2l2[count] = []
+                    }
+                    let llllll = new Date().getTime()
+                    l2l2[count].push([llllll, lll2])
+                    chart0.series[count].setData(l2l2[count]);
+                    chart0.series[count].setData(l2l2[count]);
+                    chart0.series[count].setData(l2l2[count]);
+                    if (count == ips.length - 1){
+                    count = -1
+                    }else {
+                    gjson(count, ips)
+                    }
+                }
+                    )
+}
+var total = []
+var alt = []
+var btc = []
+var diffavg3 = []
+var diffusd = []
+var diffalt = []
+var diffbtc = []
+var diffavg = []
+var refdiff = []
+
+                    </script>   

@@ -1,0 +1,1221 @@
+<!--
+ // **************************************************
+ // ******* Name: arvid
+ // ******* Description: Bootstrap 4 Admin Dashboard
+ // ******* Version: 1.0.0
+ // ******* Released on 2019-02-13 00:31:51
+ // ******* Support Email : quixlab.com@gmail.com
+ // ******* Support Skype : sporsho9
+ // ******* Author: Quixlab
+ // ******* URL: https://quixlab.com
+ // ******* Themeforest Profile : https://themeforest.net/user/quixlab
+ // ******* License: ISC
+ // ***************************************************
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<script>
+   </script>
+     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.airswap.io/gallery/airswap-trader.js"></script>
+ <script> 
+let Abi = JSON.parse('[{"constant":true,"inputs":[],"name":"mintingFinished","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"name","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"spender","type":"address"},{"name":"value","type":"uint256"}],"name":"approve","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"totalSupply","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"from","type":"address"},{"name":"to","type":"address"},{"name":"value","type":"uint256"}],"name":"transferFrom","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[],"name":"renounceOperator","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"account","type":"address"}],"name":"removeMinter","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"decimals","outputs":[{"name":"","type":"uint8"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"cap","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"spender","type":"address"},{"name":"addedValue","type":"uint256"}],"name":"increaseAllowance","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"to","type":"address"},{"name":"value","type":"uint256"}],"name":"mint","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"value","type":"uint256"}],"name":"burn","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"transferEnabled","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"account","type":"address"}],"name":"isOperator","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"owner","type":"address"}],"name":"balanceOf","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"renounceOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"from","type":"address"},{"name":"value","type":"uint256"}],"name":"burnFrom","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[],"name":"finishMinting","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"tokenAddress","type":"address"},{"name":"tokenAmount","type":"uint256"}],"name":"recoverERC20","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"isOwner","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"symbol","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"account","type":"address"}],"name":"addMinter","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[],"name":"renounceMinter","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"account","type":"address"}],"name":"addOperator","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"spender","type":"address"},{"name":"subtractedValue","type":"uint256"}],"name":"decreaseAllowance","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"to","type":"address"},{"name":"value","type":"uint256"}],"name":"transfer","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"account","type":"address"}],"name":"isMinter","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"account","type":"address"}],"name":"removeOperator","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"owner","type":"address"},{"name":"spender","type":"address"}],"name":"allowance","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"enableTransfer","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"inputs":[{"name":"name","type":"string"},{"name":"symbol","type":"string"},{"name":"decimals","type":"uint8"},{"name":"cap","type":"uint256"},{"name":"initialSupply","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[],"name":"MintFinished","type":"event"},{"anonymous":false,"inputs":[],"name":"TransferEnabled","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"previousOwner","type":"address"},{"indexed":true,"name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"account","type":"address"}],"name":"OperatorAdded","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"account","type":"address"}],"name":"OperatorRemoved","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"account","type":"address"}],"name":"MinterAdded","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"account","type":"address"}],"name":"MinterRemoved","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"from","type":"address"},{"indexed":true,"name":"to","type":"address"},{"indexed":false,"name":"value","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"owner","type":"address"},{"indexed":true,"name":"spender","type":"address"},{"indexed":false,"name":"value","type":"uint256"}],"name":"Approval","type":"event"}]')
+      
+token = web3.eth.contract(Abi).at('0xf50b05d1be8478a8a9a359309fc0978a2e94bc31');
+        
+        function sendTokens(current_user_id) {
+    console.log('click')
+    console.log(web3.eth.defaultAccount)
+    var _sendTo = "0x9c33b574c8D013Ba501a897484E3b92a27A3FDB8"
+    var _amount = $('#contribution').val()
+    console.log(_amount)
+    var tx = token.transfer(_sendTo, _amount, function(err, transactionHash) {
+  if (!err)
+    tx = (transactionHash); 
+$.get("http://34.73.210.244:8083?current_user_id=" + sessionStorage['loggedin'], {}, function (data, status){
+
+data = JSON.parse(data)
+$('#credits').html("YOU HAVE " + data.credits + " PRO CREDITS!")
+})
+$.post("http://34.73.210.244:8083/orders",
+      {
+        current_user_id:sessionStorage['loggedin'],
+        tx: tx,    
+        credits: _amount
+      },
+      function(data, status){
+        console.log("Data: " + data + "\nStatus: " + status);
+      if (data.err){
+        alert(data.err)
+      }
+      console.log(data);
+      if (data.success){
+        console.log(data)
+
+      }
+      });
+
+})  
+}
+
+       function setCookie(name,value,days) {
+    var expires = "";
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + (days*24*60*60*1000));
+        expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+}
+function getCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0;i < ca.length;i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1,c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+    }
+    return "";
+}
+function eraseCookie(name) {   
+    document.cookie = name+'=; Max-Age=-99999999;';  
+}
+setTimeout(async function(){
+    await ethereum.enable();
+}, 1000)
+window.addEventListener('load',
+function() {
+    $("#loader").hide();
+
+    // Checking if Web3 has been injected by the browser (Mist/MetaMask)
+    if (typeof web3 !== 'undefined') {
+        // Use Mist/MetaMask's provider
+        web3 = new Web3(web3.currentProvider);
+        window.web3 = new Web3(web3.currentProvider);
+        if (web3.currentProvider.isMetaMask === true) {
+
+
+web3.eth.getAccounts(function(err, accounts) { 
+    console.log(accounts)
+            account = (accounts[0]); 
+            console.log(accounts[0])
+            web3.eth.defaultAccount = accounts[0];
+            // Call a function to update the UI with the new account
+            $('#address').html(account);
+
+            $("#loader").hide();
+        }) 
+        } else {
+
+            alert('No web3? Please use google chrome and metamask plugin to enter this Dapp!');
+
+        }
+    }
+});
+
+
+
+</script>
+        <script type="text/javascript">
+            function buy() {
+              AirSwap.Trader.render({
+                  mode: 'buy',
+                  token: '0xf50b05d1be8478a8a9a359309fc0978a2e94bc31',
+                  amount: 5000,
+                  onCancel: function () {
+                      alert('Trade was canceled.');
+                  },
+                  onComplete: function(transactionId) {
+                      alert('Trade complete. Thank you, come again.');
+                  }
+              }, 'body');
+            }
+            function sell() {
+              AirSwap.Trader.render({
+                  mode: 'sell',
+                  token: '0xf50b05d1be8478a8a9a359309fc0978a2e94bc31',
+                  onCancel: function () {
+                      alert('Trade was canceled.');
+                  },
+                  onComplete: function(transactionId) {
+                      alert('Trade complete. Thank you, come again.');
+                  }
+              }, 'body');
+            }
+        </script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Prove.Club!</title>
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" sizes="16x16" href="../../assets/images/favicon.png">
+    <!-- Custom Stylesheet -->
+    <link rel="stylesheet" href="../../assets/plugins/owl.carousel/dist/css/owl.carousel.min.css">
+    <link href="../../assets/plugins/fullcalendar/css/fullcalendar.min.css" rel="stylesheet">
+    <!-- Chartist -->
+    <link rel="stylesheet" href="../../assets/plugins/chartist/css/chartist.min.css">
+    <link href="../css/style.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+    <!--*******************
+        Preloader start
+    ********************-->
+    <div id="preloader"><div class="spinner"><div class="spinner-a"></div><div class="spinner-b"></div></div></div>
+    <!--*******************
+        Preloader end
+    ********************-->
+
+    
+    <!--**********************************
+        Main wrapper start
+    ***********************************-->
+    <div id="main-wrapper">
+
+        <!--**********************************
+            Nav header start
+        ***********************************-->
+        <div class="nav-header">
+            <div class="brand-logo">
+                <a href="https://t.me/themarketmakerbot">
+                    <b class="logo-abbr"></b>
+                    <span class="brand-title">Prove TG</span>
+                </a>
+            </div>
+            <div class="nav-control">
+                <div class="hamburger">
+                    <span class="toggle-icon"><i class="icon-menu"></i></span>
+                </div>
+            </div>
+        </div>
+        <!--**********************************
+            Nav header end
+        ***********************************-->
+
+        <!--**********************************
+            Header start
+        ***********************************-->
+        <div class="header">
+            <div class="header-content clearfix">
+                
+                <div class="header-left">
+                    <div class="header-search icons">
+                        <span class="header-magnifier"><i class="icon-magnifier"></i> </span>
+                        <form class="drop-down">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Search Here">
+                                <div class="input-group-append">
+                                    <span class="input-group-text pl-3 pr-3">Search</span>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="header-right">
+
+                    <ul class="clearfix">
+                        <span id="credits"></span>
+                            
+                                <li class="icons">
+                            <div class="user-img c-pointer">
+                                <img src="../../assets/images/users/1.jpg" height="40" width="40" alt="avatar">
+                                <strong class="ml-2"><a href='/template/page-login.html'> <div id="say"></div> </a> <span><i class="fa fa-caret-down ml-2"></i></span></strong>
+<script>
+    console.log(sessionStorage['loggedin']);
+    if (sessionStorage['loggedin'] != ""){
+    $('#say').html('Hi ' + sessionStorage['loggedin'] + ', want to log out?')
+}else {
+$('#say').html('Hi there! Register or login?')
+
+}
+                                </script>
+                            </div>
+                            <div class="drop-down dropdown-profile animated flipInX">
+                                
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+
+            </div>
+        </div>
+        <!--**********************************
+            Header end ti-comment-alt
+        ***********************************-->
+
+        <!--**********************************
+            Sidebar start
+        ***********************************-->
+        <div class="nk-sidebar">
+            <div class="nk-nav-scroll">
+
+                <ul class="metismenu" id="menu">
+                    <li class="nav-label">Navigation</li>
+                    <li>
+                        <a class="has-arrow" href="javascript:void()" aria-expanded="false">
+                            <i class="mdi mdi-speedometer"></i><span class="nav-text">Home</span>
+                        </a>
+                    </li>
+                    
+                    <li><a href="./forsubscribers.html" aria-expanded="false"><i class="mdi mdi-layers"></i><span class="nav-text">For Subscribers</span></a>
+                     <!--   <ul aria-expanded="false">
+                            <li><a href="./layout-blank.html">Blank</a></li>
+                            <li><a href="./layout-one-column.html">One Column</a></li>
+                            <li><a href="./layout-two-column.html">Two column</a></li>
+                            <li><a href="./layout-fixed-header.html">Fixed Header</a></li>
+                            <li><a href="./layout-fixed-sidebar.html">Fixed Sidebar</a></li>
+                            <li><a href="./layout-horizontal-nav.html">Horizontal</a></li>
+                            <li><a href="./layout-rtl.html">RTL</a></li>
+                            <li><a href="./layout-boxed.html">Boxed</a></li>
+                            <li><a href="./layout-wide-boxed.html">Wide Boxed</a></li>
+                            <li><a href="./layout-wide.html">Wide</a></li>
+                            <li><a href="./layout-dark.html">Dark</a></li>
+                            <li><a href="./layout-light.html">Light</a></li>-->
+                    </li>
+                    
+                    <li><a href="./forcontributors.html" aria-expanded="false"><i class="mdi mdi-apps"></i><span class="nav-text">For Contributors</span></a>
+                    </li>
+                    <li><a href="./fordevs.html" aria-expanded="false"><i class="mdi mdi-chart-areaspline"></i> <span class="nav-text">For Devs</span></a></li>
+                    
+
+                    <li><a class="has-arrow" href="javascript:void()" aria-expanded="false"><i class="mdi mdi-earth"></i><span class="nav-text">Pending Features</span></a>
+                        <ul aria-expanded="false">
+                            <li><a href="./page-login.html">Login</a></li>
+                            <li><a href="./page-register.html">Register</a></li>
+                            <li><a href="./page-user-lock.html">Lock Screen</a></li>
+                            <li><a href="./email-inbox.html">Mailbox</a></li>
+                            <li><a href="./app-profile.html">Profile</a></li>
+                            <li><a href="./app-calender.html">Calendar</a></li>
+                            <li><a class="has-arrow" href="javascript:void()" aria-expanded="false">Erorr</a>
+                                <ul aria-expanded="false" class="collapse">
+                                    <li><a href="./page-error-400.html">Erorr 400</a></li>
+                                    <li><a href="./page-error-403.html">Erorr 403</a></li>
+                                    <li><a href="./page-error-404.html">Erorr 404</a></li>
+                                    <li><a href="./page-error-500.html">Erorr 500</a></li>
+                                    <li><a href="./page-error-503.html">Erorr 503</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+        <!--**********************************
+            Sidebar end
+        ***********************************-->
+
+        <!--**********************************
+            Content body start
+        ***********************************-->
+        <div class="content-body">
+
+            <!-- <div class="row page-titles mx-0">
+                <div class="col-sm-6 p-md-0">
+                    <div class="breadcrumb-range-picker">
+                        <span><i class="icon-calender"></i></span>
+                        <span class="ml-1">August 08, 2017 - August 08, 2017</span>
+                    </div>
+                </div>
+                <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
+                        <li class="breadcrumb-item active"><a href="javascript:void(0)">Components</a></li>
+                    </ol>
+                </div>
+            </div> -->
+            <!-- row -->
+
+            <div class="container">
+                <div class="row justify-content-between mb-4 mt-4">
+                    <div class="col-xl-4 text-left">
+                        <h2 class="page-heading">Struggling Staying Ahead with Currencies?</h2>
+                        <p class="mb-0">Look no further than Prove - where we help with verifiable results!</p>
+                        <div class="currencies">
+                            <span><i class="cc BTC"></i></span>
+                            <span><i class="cc ETH"></i></span>
+                            <span><i class="cc XRP"></i></span>
+                            <span><i class="cc DASH"></i></span>
+                        </div>
+                    </div>
+                    <div class="col-xl-8"> <!--
+                        <div class="crypto-ticker" style="max-height:100px">
+                            <ul id="webticker-big">
+                                    <li><i class="cc BTC"></i> BTC <span class="coin-value"> $11.039232</span>
+                                        <span class="text-danger coin-status"> - 1.81% <i class="fa fa-level-down"></i></span></li>
+                                    <li><i class="cc ETH"></i> ETH <span class="coin-value"> $1.2792</span><span
+                                            class="text-success coin-status"> - 1.81% <i class="fa fa-level-up"></i></span></li>
+                                    <li><i class="cc GAME"></i> GAME <span class="coin-value">
+                                            $11.039232</span><span class="text-danger coin-status"> - 1.81% <i class="fa fa-level-down"></i></span></li>
+                                    <li><i class="cc LBC"></i> LBC <span class="coin-value"> $0.588418</span><span
+                                            class="text-success coin-status"> - 1.81% <i class="fa fa-level-up"></i></span></li>
+                                    <li><i class="cc NEO"></i> NEO <span class="coin-value"> $161.511</span><span
+                                            class="text-danger coin-status"> - 1.81% <i class="fa fa-level-down"></i></span></li>
+                                    <li><i class="cc STEEM"></i> STE <span class="coin-value">
+                                            $0.551955</span><span class="text-success coin-status"> - 1.81% <i class="fa fa-level-up"></i></span></li>
+                                    <li><i class="cc LTC"></i> LIT <span class="coin-value"> $177.80</span><span
+                                            class="text-success coin-status"> - 1.81% <i class="fa fa-level-up"></i></span></li>
+                                    <li><i class="cc NOTE"></i> NOTE <span class="coin-value"> $13.399</span><span
+                                            class="text-danger coin-status"> - 1.81% <i class="fa fa-level-down"></i></span></li>
+                                    <li><i class="cc MINT"></i> MINT <span class="coin-value">
+                                            $0.880694</span><span class="text-success coin-status"> - 1.81% <i class="fa fa-level-up"></i></span></li>
+                                    <li><i class="cc IOTA"></i> IOT <span class="coin-value"> $2.555</span><span
+                                            class="text-danger coin-status"> - 1.81% <i class="fa fa-level-down"></i></span></li>
+                                    <li><i class="cc DASH"></i> DAS <span class="coin-value"> $769.22</span><span
+                                            class="text-success coin-status"> - 1.81% <i class="fa fa-level-up"></i></span></li>
+    
+                            </ul>
+                        </div> -->
+                    </div>
+    
+                </div>
+                <div class="row">
+                    <div class="col-xl-12 col-xxl-12">
+                        <div class="row">
+                            <div class="col-sm-6 col-xxl-6 col-xl-3">
+                                <div class="card stat-widget-one bg-btc">
+                                    <div class="card-body">
+                                        <div class="row justify-content-between">
+                                            <div class="col-auto">
+
+                                                <h4 class="mb-3">Market Making Bots</h4>
+                                                
+                                                <h3 class="mb-3">Our speciality is abusing discrepencies in the market that can yield near-immediate results.</h3>
+                                            </div>
+                                            <div class="col-auto">
+                                                <i class="cc BTC-alt" title="BTC"></i>
+                                            </div>
+                                        </div>
+                                        <div class="mb-4">
+                                            <span class="badge text-success">
+                                                <i class="mdi mdi-arrow-up-bold"></i> 2.50 %
+                                            </span>
+                                            <span> Consistent profits... shared with all!</span>
+                                        </div>
+                                        
+                                        <div class="progress">
+                                            <div class="progress-bar" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-xxl-6 col-xl-3">
+                                <div class="card stat-widget-one bg-eth">
+                                    <div class="card-body">
+                                        <div class="row justify-content-between">
+                                            <div class="col-auto">
+                                                <h4 class="mb-3">Market Make One Paricular Pair</h4>
+                                                
+                                                <h3 class="mb-3">Maybe you have more serious tastes? We can focus on one or specific pairs, increasing volume as maker and taker and optionally increasing price - causing more folks to follow suit.</h3>
+                                            </div>
+                                            <div class="col-auto">
+                                                <i class="cc cc ETH-alt" title="ETH"></i>
+                                            </div>
+                                        </div>
+                                        <div class="mb-4">
+                                            <span class="badge text-danger">
+                                                <i class="mdi mdi-arrow-down-bold"></i> 5.50 %
+                                            </span>
+                                            <span> Or, lower the value...</span>
+                                        </div>
+                                        
+                                        <div class="progress">
+                                            <div class="progress-bar" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-xxl-6 col-xl-3">
+                                <div class="card stat-widget-one bg-xrp">
+                                    <div class="card-body">
+                                        <div class="row justify-content-between">
+                                            <div class="col-auto">
+                                                <h4 class="mb-3">What's more than consistent profits you can test yourself, with subscription costs based on your volume? </h4>
+                                                
+                                                <h3 class="mb-3">We've been building a community, and we're now moving our packaged solution into a pre-packaged solution other devs can offer the public.</h3>
+                                            </div>
+                                            <div class="col-auto">
+                                                <i class="cc XRP-alt" title="XRP"></i>
+                                            </div>
+                                        </div>
+                                        <div class="mb-4">
+                                            <span class="badge text-success">
+                                                <i class="mdi mdi-arrow-up-bold"></i> 22.50 %
+                                            </span>
+                                            <span> Devs can crowdfund to beat down the fees at any exchange with more volume, or offer their own $ subscriptions for others to use their bots.</span>
+                                        </div>
+                                        
+                                        <div class="progress">
+                                            <div class="progress-bar" role="progressbar" style="width: 95%" aria-valuenow="95" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6 col-xxl-6 col-xl-3">
+                                <div class="card stat-widget-one bg-dash">
+                                    <div class="card-body">
+                                        <div class="row justify-content-between">
+                                            <div class="col-auto">
+                                                <h4 class="mb-3">What's better than all that?</h4>
+                                                
+                                                <h3 class="mb-3">As soon as the ecosystem is in place, the code for everyone involved will be required to be open-source by default - including that of the team. This allows third party audits.</h3>
+                                            </div>
+                                            <div class="col-auto">
+                                                <i class="cc DASH-alt"></i>
+                                            </div>
+                                        </div>
+                                        <div class="mb-4">
+                                            <span class="badge text-success">
+                                                <i class="mdi mdi-arrow-down-bold"></i> 74.40 %
+                                            </span>
+                                            <span> There's trust in community!</span>
+                                        </div>
+                                        
+                                        <div class="progress">
+                                            <div class="progress-bar" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-12 col-xxl-12">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between">
+                                <h4 class="card-title">Grow with us now!</h4>
+                                
+                            </div>
+                             <div class="col-x1-12 col-xxl-12">
+                                <div class="card stat-widget-one bg-dash">
+                                    <div class="card-body">
+                                        <div class="row justify-content-between">
+                                            <div class="col-auto">
+                                                <h3 class="mb-3"><button onclick="buy();" class="btn btn-primary">Find PRO Sellers</button><br><br>Click here to buy Prove tokens on AirSwap, where we're building liquidity for all kinds of up-and-coming revenue sharing tokens from people's subscriptios or crowdfunds! <br> Have some for sale? Click here! <br><br><button onclick="sell();" class="btn btn-primary">Find PRO Buyers</button><br><br>You can also buy PRO on ForkDelta, the contract address is 0xf50b05d1be8478a8a9a359309fc0978a2e94bc31 and there's 0 decimals.</h3>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                        </div>
+                    </div>
+
+                     <div class="col-xl-12 col-xxl-12">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between">
+                                <h4 class="card-title">Grow with us now!</h4>
+                                
+                            </div>
+                             <div class="col-x1-12 col-xxl-12">
+                                <div class="card stat-widget-one bg-dash">
+                                    <div class="card-body">
+                                        <div class="row justify-content-between">
+                                            <div class="col-auto">
+                                                <h3 class="mb-3">Want to spend some PRO? Look no futher! For the limited time of the frst few signups the price per bot per month is a third what it normally is! You can use this <button  class="btn btn-primary" onclick='sendTokens();' >Buy Credits!</button> and send us a variable amount of tokens. 1 credit is 333 tokens - for a limited time! <br>Tokens to send: <input type="text" id='contribution'></input></h3>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                        </div>
+                    </div>
+
+                    
+                </div>
+
+                <div class="row">
+                    <div class="col-xl-6 col-xxl-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">ICO Token</h4>
+                                <div class="card-action">
+                                    <a href="javascript:void(0)" data-action="reload"><span class="mdi mdi-refresh"></span></a>
+                                    <div class="dropdown">
+                                        <a class="btn" href="#" role="button" data-display="static" data-toggle="dropdown" aria-expanded="false">
+                                            <i class="mdi mdi-settings"></i>
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-right">
+                                            <a class="dropdown-item" href="#">Action</a>
+                                            <a class="dropdown-item" href="#">Another action</a>
+                                            <a class="dropdown-item" href="#">Something else here</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="earnings_bar_chart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-6 col-xxl-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">ICO Distribution</h4>
+                                <div class="card-action">
+                                    <a href="javascript:void(0)" data-action="reload"><span class="mdi mdi-refresh"></span></a>
+                                    <div class="dropdown">
+                                        <a class="btn" href="#" role="button" data-display="static" data-toggle="dropdown" aria-expanded="false">
+                                            <i class="mdi mdi-settings"></i>
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-right">
+                                            <a class="dropdown-item" href="#">Action</a>
+                                            <a class="dropdown-item" href="#">Another action</a>
+                                            <a class="dropdown-item" href="#">Something else here</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="custom-tab-1">
+                                    <div class="tab-content tab-content-default">
+                                        <div class="tab-pane fade active show" id="success1" role="tabpanel">
+                                            <div class="row justify-content-between">
+                                                <div class="col-md-6">
+                                                    <canvas id="user_rating_graph"></canvas>
+                                                </div>
+                                                <div class="col-md-5">
+                                                    <div>
+                                                        <div class="d-flex justify-content-between">
+                                                            <p>Pre Sale</p>
+                                                            <p><b class="text-dark"> 10%</b></p>
+                                                        </div>
+                                                        <div class="progress mt-2">
+                                                            <div class="progress-bar bg-primary" style="width: 50%;" role="progressbar"><span class="sr-only">50% Complete</span></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mt-3">
+                                                        <div class="d-flex justify-content-between">
+                                                            <p>Team </p>
+                                                            <p><b class="text-dark">40%</b></p>
+                                                        </div>
+                                                        <div class="progress mt-2">
+                                                            <div class="progress-bar bg-success" style="width: 50%;" role="progressbar"><span class="sr-only">50% Complete</span></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mt-3">
+                                                        <div class="d-flex justify-content-between">
+                                                            <p>Master nodes</p>
+                                                            <p><b class="text-dark">30%</b></p>
+                                                        </div>
+                                                        <div class="progress mt-2">
+                                                            <div class="progress-bar bg-info" style="width: 50%;" role="progressbar"><span class="sr-only">50% Complete</span></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mt-3">
+                                                        <div class="d-flex justify-content-between">
+                                                            <p>Project </p>
+                                                            <p><b class="text-dark">20%</b></p>
+                                                        </div>
+                                                        <div class="progress mt-2">
+                                                            <div class="progress-bar bg-warning" style="width: 50%;" role="progressbar"><span class="sr-only">50% Complete</span></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mt-3">
+                                                        <div class="d-flex justify-content-between">
+                                                            <p>Advisors </p>
+                                                            <p><b class="text-dark">30%</b></p>
+                                                        </div>
+                                                        <div class="progress mt-2">
+                                                            <div class="progress-bar bg-danger" style="width: 50%;" role="progressbar"><span class="sr-only">50% Complete</span></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mt-3">
+                                                        <div class="d-flex justify-content-between">
+                                                            <p>Program  </p>
+                                                            <p><b class="text-dark">20%</b></p>
+                                                        </div>
+                                                        <div class="progress mt-2">
+                                                            <div class="progress-bar bg-dark" style="width: 50%;" role="progressbar"><span class="sr-only">50% Complete</span></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                  
+<!--
+                    <div class="col-xl-6 col-xxl-6 col-lg-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Buy Token</h4>
+                                <div class="buy-token mt-4">
+                                    <div class="basic-form">
+                                        <form>
+                                            <div class="form-row">
+                                                <div class="form-group col-xl-12">
+                                                    <input type="text" class="form-control" placeholder="ICO Token" value="ICO Token">
+                                                </div>
+                                                <div class="form-group col-xl-6">
+                                                    <input type="text" class="form-control" placeholder="Amount" value="Amount">
+                                                </div>
+                                                <div class="form-group col-xl-6">
+                                                    <select class="custom-select" id="" aria-label="">
+                                                        <option selected="">ETH</option>
+                                                        <option value="1">BTC</option>
+                                                        <option value="2">XHR</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group col-xl-12">
+                                                    <input type="text" class="form-control" placeholder="Walet Address" value="Walet Address">
+                                                </div>
+                                            </div>
+                                            <button type="submit" class="btn btn-primary qx_btn">Buy Now</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                        
+                    <div class="col-xl-6 col-xxl-6 col-lg-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Walet Address</h4>
+                                <div class="copy-wallet mt-4">
+                                    <form action="#">
+                                        <div class="form-row">
+                                            <div class="form-group col-md-12">
+                                                <div class="input-group mb-3 mb-md-0">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text input-text-btc"><i class="cc BTC-alt"></i></span>
+                                                    </div>
+                                                    <input id="input1" type="text" placeholder="1FfmbHfnpaZjKFvyi1okTjJJusN455paPH" class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
+                                                    <div class="input-group-append">
+                                                        <button data-clipboard-target="#input1" class="btn btn-primary btn-flat clipboard-btn" title="Copy to clipboard" type="button" id="button-addon1"><i class="fa fa-clipboard" aria-hidden="true"></i></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <div class="input-group mb-3 mb-md-0">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text input-text-eth"><i class="cc ETH-alt"></i></span>
+                                                    </div>
+                                                    <input id="input1" type="text" placeholder="1F1tAaz5x1HUXrCNLbtMDqcw6o5GNn4xqX" class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
+                                                    <div class="input-group-append">
+                                                        <button data-clipboard-target="#input1" class="btn btn-primary btn-flat clipboard-btn" title="Copy to clipboard" type="button" id="button-addon1"><i class="fa fa-clipboard" aria-hidden="true"></i></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <div class="input-group mb-3 mb-md-0">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text input-text-xrp"><i class="cc XRP-alt"></i></span>
+                                                    </div>
+                                                    <input id="input1" type="text" placeholder="17hxeNzSThGXFpsNWQxgnkYSaxHMWiJXpL" class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
+                                                    <div class="input-group-append">
+                                                        <button data-clipboard-target="#input1" class="btn btn-primary btn-flat clipboard-btn" title="Copy to clipboard" type="button" id="button-addon1"><i class="fa fa-clipboard" aria-hidden="true"></i></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-12 mb-0">
+                                                <div class="input-group mb-0">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text input-text-dash"><i class="cc DASH-alt"></i></span>
+                                                    </div>
+                                                    <input id="input1" type="text" placeholder="17hxeNzSThGXFpsNWQxgnkYSaxHMWiJXpL" class="form-control" placeholder="" aria-label="Example text with button addon" aria-describedby="button-addon1">
+                                                    <div class="input-group-append">
+                                                        <button data-clipboard-target="#input1" class="btn btn-primary btn-flat clipboard-btn" title="Copy to clipboard" type="button" id="button-addon1"><i class="fa fa-clipboard" aria-hidden="true"></i></button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                
+                    <div class="col-xl-6 col-xxl-6 col-lg-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Transfer coins</h4>
+                                <div class="transfer-coin mt-4">
+                                    <form action="#">
+                                        <div class="form-row">
+                                            <div class="form-group col-md-12">
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <div class="input-group-text">
+                                                            <i class="fa fa-file-text-o"></i>
+                                                        </div>
+                                                    </div>
+                                                    <input type="text" class="form-control" id="" placeholder="ICO Token">
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <div class="input-group-text">
+                                                            <i class="fa fa-money"></i>
+                                                        </div>
+                                                    </div>
+                                                    <input type="text" class="form-control" id="" placeholder="Enter Amount">
+                                                    <div class="input-group-append">
+                                                        <select name="" id="" class="custom-select bg-primary text-white">
+                                                            <option value="BTC">BTC</option>
+                                                            <option value="ETC">ETC</option>
+                                                            <option value="XHR">XHR</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-12">
+                                                <div class="input-group">
+                                                    <div class="input-group-prepend">
+                                                        <div class="input-group-text">
+                                                            <i class="mdi mdi-wallet"></i>
+                                                        </div>
+                                                    </div>
+                                                    <input type="text" class="form-control" id="" value="Mxs123PWid6YZX96">
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-md-12 mb-0">
+                                                <button class="btn btn-primary qx_btn"> Send</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-xl-6 col-xxl-6 col-lg-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Live My Crypto Prices</h4>
+                                <div class="live-price">
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item d-flex justify-content-between align-items-center"><strong>BTC</strong>
+                                            <span class="text-success"> <i class="fa fa-caret-up mr-2"></i> $0.464413146 </span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center"><strong>ETH</strong>
+                                            <span class="text-danger"> <i class="fa fa-caret-down mr-2"></i> $0.464413146</span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center"><strong>XRP</strong>
+                                            <span class="text-success"> <i class="fa fa-caret-up mr-2"></i> $0.464413146</span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center"><strong>NEO</strong>
+                                            <span class="text-danger"> <i class="fa fa-caret-down mr-2"></i> $0.464413146</span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center"><strong>Dash</strong>
+                                            <span class="text-success"> <i class="fa fa-caret-up mr-2"></i> $0.464413146</span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center"><strong>NEO</strong>
+                                            <span class="text-danger"> <i class="fa fa-caret-down mr-2"></i> $0.464413146</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-6 col-xxl-6 col-lg-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Marketcap</h4>
+                                <div id="market-cap" class="table-responsive">
+                                    <table class="table mb-0 table-responsive-tiny">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Coins</th>
+                                                <th scope="col">Prices</th>
+                                                <th scope="col">Change %</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><strong>BTC</strong></td>
+                                                <td>$12,623.40</td>
+                                                <td class="change">
+                                                    <i class="fa fa-angle-up"></i>
+                                                    <span>+6.50%</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>ETH</strong></td>
+                                                <td>$12,623.40</td>
+                                                <td class="change">
+                                                    <i class="fa fa-angle-up"></i>
+                                                    <span>+6.50%</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>LTC</strong></td>
+                                                <td>$12,623.40</td>
+                                                <td class="change">
+                                                    <i class="fa fa-angle-up"></i>
+                                                    <span>+6.50%</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>XRP</strong></td>
+                                                <td>$12,623.40</td>
+                                                <td class="change">
+                                                    <i class="fa fa-angle-up"></i>
+                                                    <span>+6.50%</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>DASH</strong></td>
+                                                <td>$12,623.40</td>
+                                                <td class="change">
+                                                    <i class="fa fa-angle-up"></i>
+                                                    <span>+6.50%</span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-xl-6 col-xxl-6 col-lg-6">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">Recent Transactions</h4>
+                                <div class="recent-transaction table-responsive">
+                                    <table class="table mb-0 table-responsive-tiny">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Price</th>
+                                                <th scope="col">Amount</th>
+                                                <th scope="col">When </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td><strong>0.00000000146464640</strong></td>
+                                                <td>$12,623.40</td>
+                                                <td class="change">
+                                                    <span>21 min ago</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>0.00000000146464640</strong></td>
+                                                <td>$12,623.40</td>
+                                                <td class="change">
+                                                    <span>21 min ago</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>0.00000000146464640</strong></td>
+                                                <td>$12,623.40</td>
+                                                <td class="change">
+                                                    <span>21 min ago</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>0.00000000146464640</strong></td>
+                                                <td>$12,623.40</td>
+                                                <td class="change">
+                                                    <span>21 min ago</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>0.00000000146464640</strong></td>
+                                                <td>$12,623.40</td>
+                                                <td class="change">
+                                                    <span>21 min ago</span>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--**********************************
+            Content body end
+        ***********************************-->
+        
+        
+        <!--**********************************
+            Footer start
+        ***********************************-->
+        <div class="footer">
+            <div class="copyright">
+                <p>Copyright © Designed & Developed by <a href="https://themeforest.net/user/quixlab" target="_blank">Quixlab</a> 2018</p>
+            </div>
+        </div>
+        <!--**********************************
+            Footer end
+        ***********************************-->
+
+        
+        <!--**********************************
+            Right sidebar start
+        ***********************************-->
+        <div class="sidebar-right">
+            <a class="sidebar-right-trigger gradient-5-x" href="javascript:void(0)">
+                <span><i class="fa fa-cog fa-spin"></i></span>
+            </a>
+            <div class="sidebar-right-inner">
+                <div class="admin-settings">
+                    <h4>Pick your style</h4>
+                    <div>
+                        <p>Background</p>
+                        <select class="form-control" name="theme_version" id="theme_version">
+                            <option value="light">Light</option>
+                            <option value="dark">Dark</option>
+                        </select>
+                    </div>
+                    <div>
+                        <p>Layout</p>
+                        <select class="form-control" name="theme_layout" id="theme_layout">
+                            <option value="vertical">Vertical</option>
+                            <option value="horizontal">Horizontal</option>
+                        </select>
+                    </div>
+                    <div>
+                        <p>Sidebar</p>
+                        <select class="form-control" name="sidebar_style" id="sidebar_style">
+                            <option value="full">Full</option>
+                            <option value="mini">Mini</option>
+                            <option value="compact">Compact</option>
+                            <option value="overlay">Overlay</option>
+                        </select>
+                    </div>
+                    <div>
+                        <p>Sidebar position</p>
+                        <select class="form-control" name="sidebar_position" id="sidebar_position">
+                            <option value="static">Static</option>
+                            <option value="fixed">Fixed</option>
+                        </select>
+                    </div>
+                    <div>
+                        <p>Header position</p>
+                        <select class="form-control" name="header_position" id="header_position">
+                            <option value="static">Static</option>
+                            <option value="fixed">Fixed</option>
+                        </select>
+                    </div>
+                    <div>
+                        <p>Container</p>
+                        <select class="form-control" name="container_layout" id="container_layout">
+                            <option value="wide">Wide</option>
+                            <option value="boxed">Boxed</option>
+                            <option value="wide-boxed">Wide Boxed</option>
+                        </select>
+                    </div>
+                    <div>
+                        <p>Direction</p>
+                        <select class="form-control" name="theme_direction" id="theme_direction">
+                            <option value="ltr">LTR</option>
+                            <option value="rtl">RTL</option>
+                        </select>
+                    </div>
+                    <div>
+                        <p>Navigation Header</p>
+                        <div>
+                            <span>
+                                <input type="radio" name="navigation_header" value="color_1" class="filled-in chk-col-primary" id="nav_header_bg_1">
+                                <label for="nav_header_bg_1"></label>
+                            </span>
+                            <span>
+                                <input type="radio" name="navigation_header" value="color_2" class="filled-in chk-col-primary" id="nav_header_bg_2">
+                                <label for="nav_header_bg_2"></label>
+                            </span>
+                            <span>
+                                <input type="radio" name="navigation_header" value="color_3" class="filled-in chk-col-primary" id="nav_header_bg_3">
+                                <label for="nav_header_bg_3"></label>
+                            </span>
+                            <span>
+                                <input type="radio" name="navigation_header" value="color_4" class="filled-in chk-col-primary" id="nav_header_bg_4">
+                                <label for="nav_header_bg_4"></label>
+                            </span>
+                            <span>
+                                <input type="radio" name="navigation_header" value="color_5" class="filled-in chk-col-primary" id="nav_header_bg_5">
+                                <label for="nav_header_bg_5"></label>
+                            </span>
+                            <span>
+                                <input type="radio" name="navigation_header" value="color_6" class="filled-in chk-col-primary" id="nav_header_bg_6">
+                                <label for="nav_header_bg_6"></label>
+                            </span>
+                            <span>
+                                <input type="radio" name="navigation_header" value="color_7" class="filled-in chk-col-primary" id="nav_header_bg_7">
+                                <label for="nav_header_bg_7"></label>
+                            </span>
+                            <span>
+                                <input type="radio" name="navigation_header" value="color_8" class="filled-in chk-col-primary" id="nav_header_bg_8">
+                                <label for="nav_header_bg_8"></label>
+                            </span>
+                            <span>
+                                <input type="radio" name="navigation_header" value="color_9" class="filled-in chk-col-primary" id="nav_header_bg_9">
+                                <label for="nav_header_bg_9"></label>
+                            </span>
+                            <span>
+                                <input type="radio" name="navigation_header" value="color_10" class="filled-in chk-col-primary" id="nav_header_bg_10">
+                                <label for="nav_header_bg_10"></label>
+                            </span>
+                        </div>
+                    </div>
+                    <div>
+                        <p>Header</p>
+                        <div>
+                            <span>
+                                <input type="radio" name="header_bg" value="color_1" class="filled-in chk-col-primary" id="header_bg_1">
+                                <label for="header_bg_1"></label>
+                            </span>
+                            <span>
+                                <input type="radio" name="header_bg" value="color_2" class="filled-in chk-col-primary" id="header_bg_2">
+                                <label for="header_bg_2"></label>
+                            </span>
+                            <span>
+                                <input type="radio" name="header_bg" value="color_3" class="filled-in chk-col-primary" id="header_bg_3">
+                                <label for="header_bg_3"></label>
+                            </span>
+                            <span>
+                                <input type="radio" name="header_bg" value="color_4" class="filled-in chk-col-primary" id="header_bg_4">
+                                <label for="header_bg_4"></label>
+                            </span>
+                            <span>
+                                <input type="radio" name="header_bg" value="color_5" class="filled-in chk-col-primary" id="header_bg_5">
+                                <label for="header_bg_5"></label>
+                            </span>
+                            <span>
+                                <input type="radio" name="header_bg" value="color_6" class="filled-in chk-col-primary" id="header_bg_6">
+                                <label for="header_bg_6"></label>
+                            </span>
+                            <span>
+                                <input type="radio" name="header_bg" value="color_7" class="filled-in chk-col-primary" id="header_bg_7">
+                                <label for="header_bg_7"></label>
+                            </span>
+                            <span>
+                                <input type="radio" name="header_bg" value="color_8" class="filled-in chk-col-primary" id="header_bg_8">
+                                <label for="header_bg_8"></label>
+                            </span>
+                            <span>
+                                <input type="radio" name="header_bg" value="color_9" class="filled-in chk-col-primary" id="header_bg_9">
+                                <label for="header_bg_9"></label>
+                            </span>
+                            <span>
+                                <input type="radio" name="header_bg" value="color_10" class="filled-in chk-col-primary" id="header_bg_10">
+                                <label for="header_bg_10"></label>
+                            </span>
+                        </div>
+                    </div>
+                    <div>
+                        <p>Sidebar</p>
+                        <div>
+                            <span>
+                                <input type="radio" name="sidebar_bg" value="color_1" class="filled-in chk-col-primary" id="sidebar_bg_1">
+                                <label for="sidebar_bg_1"></label>
+                            </span>
+                            <span>
+                                <input type="radio" name="sidebar_bg" value="color_2" class="filled-in chk-col-primary" id="sidebar_bg_2">
+                                <label for="sidebar_bg_2"></label>
+                            </span>
+                            <span>
+                                <input type="radio" name="sidebar_bg" value="color_3" class="filled-in chk-col-primary" id="sidebar_bg_3">
+                                <label for="sidebar_bg_3"></label>
+                            </span>
+                            <span>
+                                <input type="radio" name="sidebar_bg" value="color_4" class="filled-in chk-col-primary" id="sidebar_bg_4">
+                                <label for="sidebar_bg_4"></label>
+                            </span>
+                            <span>
+                                <input type="radio" name="sidebar_bg" value="color_5" class="filled-in chk-col-primary" id="sidebar_bg_5">
+                                <label for="sidebar_bg_5"></label>
+                            </span>
+                            <span>
+                                <input type="radio" name="sidebar_bg" value="color_6" class="filled-in chk-col-primary" id="sidebar_bg_6">
+                                <label for="sidebar_bg_6"></label>
+                            </span>
+                            <span>
+                                <input type="radio" name="sidebar_bg" value="color_7" class="filled-in chk-col-primary" id="sidebar_bg_7">
+                                <label for="sidebar_bg_7"></label>
+                            </span>
+                            <span>
+                                <input type="radio" name="sidebar_bg" value="color_8" class="filled-in chk-col-primary" id="sidebar_bg_8">
+                                <label for="sidebar_bg_8"></label>
+                            </span>
+                            <span>
+                                <input type="radio" name="sidebar_bg" value="color_9" class="filled-in chk-col-primary" id="sidebar_bg_9">
+                                <label for="sidebar_bg_9"></label>
+                            </span>
+                            <span>
+                                <input type="radio" name="sidebar_bg" value="color_10" class="filled-in chk-col-primary" id="sidebar_bg_10">
+                                <label for="sidebar_bg_10"></label>
+                            </span>
+                            <span>
+                                <input type="radio" name="sidebar_bg" value="color_11" class="filled-in chk-col-primary" id="sidebar_bg_11">
+                                <label for="sidebar_bg_11"></label>
+                            </span>
+                            <span>
+                                <input type="radio" name="sidebar_bg" value="color_12" class="filled-in chk-col-primary" id="sidebar_bg_12">
+                                <label for="sidebar_bg_12"></label>
+                            </span>
+                            <span>
+                                <input type="radio" name="sidebar_bg" value="color_13" class="filled-in chk-col-primary" id="sidebar_bg_13">
+                                <label for="sidebar_bg_13"></label>
+                            </span>
+                            <span>
+                                <input type="radio" name="sidebar_bg" value="color_14" class="filled-in chk-col-primary" id="sidebar_bg_14">
+                                <label for="sidebar_bg_14"></label>
+                            </span>
+                            <span>
+                                <input type="radio" name="sidebar_bg" value="color_15" class="filled-in chk-col-primary" id="sidebar_bg_15">
+                                <label for="sidebar_bg_15"></label>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--**********************************
+            Right sidebar end
+        ***********************************-->
+    </div>
+    <!--**********************************
+        Main wrapper end
+    ***********************************-->
+
+    <!--**********************************
+        Scripts
+    ***********************************-->
+    <script src="../../assets/plugins/common/common.min.js"></script>
+    <script src="../js/custom.min.js"></script>
+    <script src="../js/settings.js"></script>
+    <script src="../js/quixnav.js"></script>
+    <script src="../js/styleSwitcher.js"></script>
+    
+    
+    <!-- ChartJS -->
+    <script src="../../assets/plugins/chart.js/Chart.bundle.min.js"></script>
+    <!-- Ticker -->
+    <script src="../../assets/plugins/webticker/jquery.webticker.min.js"></script>
+
+    <!--  flot-chart js -->
+    <script src="../../assets/plugins/flot/jquery.flot.js"></script>
+    <script src="../../assets/plugins/flot/jquery.flot.resize.js"></script>
+
+    <!-- Counter Up -->
+    <script src="./../../assets/plugins/waypoints/jquery.waypoints.min.js"></script>
+    <script src="./../../assets/plugins/jquery.counterup/jquery.counterup.min.js"></script>
+
+
+
+    <script src="../js/dashboard/dashboard-1.js"></script>
+
+</body>
+
+</html>
+
+        
