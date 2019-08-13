@@ -3,7 +3,7 @@ module.exports = {
 };
 var RestClient = require("deribit-api").RestClient;
 
-var restClient = new RestClient("J1seZCRTZTnu", "QHH2P6LYQDWUBR7FBIOV3VXILUJ56C3H", "https://test.deribit.com");
+var restClient = new RestClient("9shdKeR2", "Ita-NCFcFCscZCLeac-wBcu4TBFI19suQxheGNTyA3w", "https://test.deribit.com");
 //import Deribit from 'deribit-ws-js'
 //let Deribit = require('deribit-ws-js').Deribit
 //const ws = new Deribit({key: "HwjG9hsiYvLb", secret: "MZ4XSMDKR4HPOLRUCZ7LVQ7VA6QXM6VY", testnet: true})

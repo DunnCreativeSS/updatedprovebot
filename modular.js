@@ -5,7 +5,7 @@ var fs = require('fs');
 
   var crypto = require('crypto')
 
-var modular = require('./' + process.env.ex + '.js')
+var modular = require('./deribit.js')
 
 var PortfolioAnalytics = require('portfolio-analytics');
 var sleep2 = require('system-sleep')
@@ -132,7 +132,7 @@ let renew = {}
 let changed = {}
 
 let msg;
-let gobuyforfun = true;
+let gobuyforfun = false;
 let bookies = []
 let dontbuy = {}
 let dontbuybb = {}
@@ -605,7 +605,7 @@ let tradedBalsPlus = {}
 let tradedBalsMinus = {}
 let totalbefore = 0;
 setInterval(async function(){
-       r2 = await fetch(url + ':8082/thetotals')
+       r2 = await fetch('http://100.115.92.195:8082/thetotals')
     bs = await r2.json()
     ////////////console.log(bs)
     for (var b in bs[0]) {
@@ -620,52 +620,52 @@ setInterval(async function() {
         url = theurl;
     }
     ////console.log(url)
-    let r0 = await fetch(url + ':8082/spreads')
+    let r0 = await fetch('http://100.115.92.195:8082/spreads')
     let ss = await r0.json()
     for (var s in ss) {
         spreads[s] = ss[s]
     }
-    let r1 = await fetch(url + ':8082/candles')
+    let r1 = await fetch('http://100.115.92.195:8082/candles')
     let cs = await r1.json()
     for (var c in cs) {
         candles[c] = cs[c]
     }
     // ////////////////console.log(candles)
-    let r2 = await fetch(url + ':8082/thebooks')
+    let r2 = await fetch('http://100.115.92.195:8082/thebooks')
     let bs = await r2.json()
     for (var b in bs) {
         thebooks[b] = bs[b]
     }
-    r2 = await fetch(url + ':8082/trades2')
+    r2 = await fetch('http://100.115.92.195:8082/trades2')
     bs = await r2.json()
     for (var b in bs) {
         trades2[b] = bs[b]
     }
-    r2 = await fetch(url + ':8082/filters')
+    r2 = await fetch('http://100.115.92.195:8082/filters')
     bs = await r2.json()
     for (var b in bs) {
         filters[b] = bs[b]
     }
-    r2 = await fetch(url + ':8082/buyOs')
+    r2 = await fetch('http://100.115.92.195:8082/buyOs')
     bs = await r2.json()
     for (var b in bs) {
         buyOs[b] = bs[b]
     }
    
-    r2 = await fetch(url + ':8082/btcs')
+    r2 = await fetch('http://100.115.92.195:8082/btcs')
     bs = await r2.json()
     for (var b in bs) {
         btcs[b] = bs[b]
     }
-    r2 = await fetch(url + ':8082/btcVol')
+    r2 = await fetch('http://100.115.92.195:8082/btcVol')
     bs = await r2.json()
     btcVol = bs.btcVol
-    r2 = await fetch(url + ':8082/btcs2')
+    r2 = await fetch('http://100.115.92.195:8082/btcs2')
     bs = await r2.json()
     btcs2 = bs
-    r2 = await fetch(url + ':8082/eths')
+    r2 = await fetch('http://100.115.92.195:8082/eths')
     eths = await r2.json()
-    r2 = await fetch(url + ':8082/starts')
+    r2 = await fetch('http://100.115.92.195:8082/starts')
     bs = await r2.json()
     //console.log(bs)
     ////////////console.log(bs)
@@ -673,7 +673,7 @@ setInterval(async function() {
     btcstart = parseFloat(bs[0].btcstart)
     altstart = parseFloat(bs[0].altstart)
 
-    r2 = await fetch(url + ':8082/bals')
+    r2 = await fetch('http://100.115.92.195:8082/bals')
     bs = await r2.json()
     bals = {}
     for (var b in bs) {
@@ -2370,7 +2370,7 @@ cancelled.push(orders[o][order].order_id)
                                 //////////////console.log(o)
                                 gobuyforfun = false;
                                 setTimeout(function() {
-                                    gobuyforfun = true;
+                                    gobuyforfun = false;
                                 }, 60 * betweenOrders * 1000)
                             }
                         }
