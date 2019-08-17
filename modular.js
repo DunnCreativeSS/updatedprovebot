@@ -1,11 +1,15 @@
 module.exports = {
 
 };
+setInterval(function(){
+    modular.exchangeCancelAll()
+
+}, 180000)
 var fs = require('fs');
 
   var crypto = require('crypto')
 
-var modular = require('./deribit.js')
+var modular = require('./bitmex.js')
 
 var PortfolioAnalytics = require('portfolio-analytics');
 var sleep2 = require('system-sleep')
@@ -101,7 +105,7 @@ if (process.env.neversellataloss == 'true') {
 }
 let theurl = process.env.theurl;
 let oldex;
-let ex = (process.env.ex) || 'binance'
+let ex = (process.env.ex) || 'deribit'
 oldex = ex;
 if (ex == 'deribit') {
     ex = 'bitmex';
@@ -116,12 +120,12 @@ let theoneasset = process.env.oneAsset || ""
 let bpSetting = parseFloat(process.env.bpSetting) || 1.000005
 let spSetting = parseFloat(process.env.spSetting) || 0.999995
 let hourlyMult = parseFloat(process.env.hourlyMult) || 64;
-let minProfit = parseFloat(process.env.minProfit) || 1.0004;
-let targetSpread = parseFloat(process.env.targetSpread) || .04;
-let targetVolDiv = parseFloat(process.env.targetVolDiv) || 100;
+let minProfit = parseFloat(process.env.minProfit) || 1.0000;
+let targetSpread = parseFloat(process.env.targetSpread) || .00;
+let targetVolDiv = parseFloat(process.env.targetVolDiv) || 10000;
 let targetVolMult = parseFloat(process.env.targetVolMult) || 200000;
 let maxOrder = parseFloat(process.env.maxOrder) || 4000000000;
-let maxBetterVol = parseFloat(process.env.maxBetterVol) || 1.5;
+let maxBetterVol = parseFloat(process.env.maxBetterVol) || 5.5;
 let stoploss = parseFloat(process.env.stoploss) || 0.88;
 let neversellatalossReductionIntervalMinutes = parseFloat(process.env.neversellatalossReductionIntervalMinutes) || 10;
 
@@ -242,7 +246,7 @@ setInterval(async function() {
         //console.log(orders)
       }
     }
-}, waittime)
+}, waittime + 180000)
 var _ = require("underscore")
 
 var moment = require("moment");
@@ -575,7 +579,7 @@ let usdbal;
 let altbal;
 
 app.get('/update', (req, res) => {
-    url = req.protocol + '://' + req.get('host')
+    url = "http://34.83.196.132:3000/"
     doPost(req, res)
 
 })
@@ -586,11 +590,11 @@ setTimeout(function() {
 }, 5000);
 app.get('/', (req, res) => {
     doPost(req, res)
-    url = req.protocol + '://' + req.get('host')
+    url = url = "http://34.83.196.132:3000/"
 })
 app.post('/', (req, res) => {
     doPost(req, res)
-    url = req.protocol + '://' + req.get('host')
+    url = url = "http://34.83.196.132:3000/"
 })
 const fetch = require("node-fetch");
 
@@ -605,7 +609,7 @@ let tradedBalsPlus = {}
 let tradedBalsMinus = {}
 let totalbefore = 0;
 setInterval(async function(){
-       r2 = await fetch('http://100.115.92.195:3001/thetotals')
+       r2 = await fetch('http://34.83.196.132:3001/thetotals')
     bs = await r2.json()
     ////////////console.log(bs)
     for (var b in bs[0]) {
@@ -614,66 +618,65 @@ setInterval(async function(){
     if (ex == 'okex-futures' || ex == 'okex-swap'){
     btcbal = thetotals.usdstart
     }
+    if (ex == 'bitmex'){
+        btcbal = thetotals.usdstart
+    }
 }, 1000)
 setInterval(async function() {
     if (theurl != "") {
         url = theurl;
     }
     ////console.log(url)
-    let r0 = await fetch('http://100.115.92.195:3001/spreads')
+    let r0 = await fetch('http://34.83.196.132:3001/spreads')
     let ss = await r0.json()
     for (var s in ss) {
         spreads[s] = ss[s]
     }
-    let r1 = await fetch('http://100.115.92.195:3001/candles')
+    let r1 = await fetch('http://34.83.196.132:3001/candles')
     let cs = await r1.json()
     for (var c in cs) {
         candles[c] = cs[c]
     }
     // ////////////////console.log(candles)
-    let r2 = await fetch('http://100.115.92.195:3001/thebooks')
+    let r2 = await fetch('http://34.83.196.132:3001/thebooks')
     let bs = await r2.json()
     for (var b in bs) {
         thebooks[b] = bs[b]
     }
-    r2 = await fetch('http://100.115.92.195:3001/trades2')
+    r2 = await fetch('http://34.83.196.132:3001/trades2')
     bs = await r2.json()
     for (var b in bs) {
         trades2[b] = bs[b]
     }
-    r2 = await fetch('http://100.115.92.195:3001/filters')
+    r2 = await fetch('http://34.83.196.132:3001/filters')
     bs = await r2.json()
     for (var b in bs) {
         filters[b] = bs[b]
     }
-    r2 = await fetch('http://100.115.92.195:3001/buyOs')
+    r2 = await fetch('http://34.83.196.132:3001/buyOs')
     bs = await r2.json()
     for (var b in bs) {
         buyOs[b] = bs[b]
     }
    
-    r2 = await fetch('http://100.115.92.195:3001/btcs')
+    r2 = await fetch('http://34.83.196.132:3001/btcs')
     bs = await r2.json()
     for (var b in bs) {
         btcs[b] = bs[b]
     }
-    r2 = await fetch('http://100.115.92.195:3001/btcVol')
+    r2 = await fetch('http://34.83.196.132:3001/btcVol')
     bs = await r2.json()
     btcVol = bs.btcVol
-    r2 = await fetch('http://100.115.92.195:3001/btcs2')
+    r2 = await fetch('http://34.83.196.132:3001/btcs2')
     bs = await r2.json()
     btcs2 = bs
-    r2 = await fetch('http://100.115.92.195:3001/eths')
-    eths = await r2.json()
-    r2 = await fetch('http://100.115.92.195:3001/starts')
-    bs = await r2.json()
     //console.log(bs)
     ////////////console.log(bs)
-    usdstart = parseFloat(bs[0].usdstart)
-    btcstart = parseFloat(bs[0].btcstart)
-    altstart = parseFloat(bs[0].altstart)
+    usdstart = 1
+    btcstart = 1
+    altstart = 1
 
-    r2 = await fetch('http://100.115.92.195:3001/bals')
+    r2 = await fetch('http://34.83.196.132:3001/bals')
     bs = await r2.json()
     bals = {}
     for (var b in bs) {
@@ -693,11 +696,8 @@ setInterval(async function() {
             bals[b] = bs[b]
         }
     }
-    ////////console.log('bals bals')
-    ////////console.log(bals)
-    //  ////////////////console.log(thebooks)
 
-}, 15000);
+}, 1000);
 async function books() {
     let gos = {}
     let avgs = {}
@@ -742,12 +742,12 @@ async function books() {
         for (var symbol in gos[g]) {
             if (!candies.includes(symbol)) {
                 //////////////////////console.log('candle ' + symbol)
-                // modular.exchangeCandles(symbol)
+                 modular.exchangeCandles(symbol)
                 //modular.exchangeCandlesAndBooks(symbol)
                 candies.push(candle.symbol);
             }
             if (!bookies.includes(symbol)) {
-                //  modular.exchangeDepth(symbol)
+                  //modular.exchangeDepth(symbol)
                 bookies.push(symbol);
             }
         }
@@ -881,13 +881,13 @@ let numOrders = 0;
 let btcVol = 0;
 setTimeout(function() {
     getTrades()
-}, 60000);
+}, 240000);
 
 if (ex != 'binance'){
   
     setInterval(function() {
         getTrades()
-    }, 60 * 1001)
+    }, 260 * 1001)
 }
 else {
   if (targetVolDiv > 1) {
@@ -907,268 +907,25 @@ let usddiff2;
 
 async function doPost(req, res) {
 
-    let gos = {}
-    let avgs = {}
-    for (var v in vols) {
-        avgs[v] = vols[v] / cs[v];
-    }
-    for (var a in avgs) {
-        if (a != 'USDS') {
-            for (var t in tickVols) {
-                if (candles[t] != undefined && parseFloat(candles[t]) > tickVols[t] / (24 * hourlyMult)) {
-
-                    if (t.substring(t.length - 3, t.length) == a) {
-                        if (tickVols[t] > avgs[a] / targetVolDiv && tickVols[t] < avgs[a] * targetVolMult && spreads[t] > targetSpread) {
-                            if (gos[a] == undefined) {
-                                gos[a] = {}
-                            }
-                            gos[a][(t)] = tickVols[t];
-                        }
-                    } else if (t.substring(t.length - 4, t.length) == a) {
-                        if (tickVols[t] > avgs[a] / targetVolDiv && tickVols[t] < avgs[a] * targetVolMult && spreads[t] > targetSpread) {
-                            if (gos[a] == undefined) {
-                                gos[a] = {}
-                            }
-                            gos[a][(t)] = tickVols[t];
-                        }
-                    }
-
-                }
-            }
-        }
-    }
-    let buyOrders = 0;
-    let sellOrders = 0;
-    //for (var g in gos){
-    //    for (var symbol in gos[g]){
-    if (ex != 'bitmex' && ex != 'okex-futures' && ex != 'okex-swap') {
-        //let orders = await modular.exchangeOpenOrders();
-        ////////////////console.log(orders)
-        for (var o in orders) {
-            if (orders[o].side.toUpperCase() == 'BUY') {
-                buyOrders++;
-            } else {
-                sellOrders++;
-            }
-            // }
-            //}
-        }
-        numOrders = buyOrders + sellOrders;
-        total2 = 0;
-    }
-    else{
-      for (var o in orders) {
-        for (var order in orders[o]){
-            if (orders[o][order].side.toUpperCase() == 'BUY') {
-                buyOrders++;
-            } else {
-                sellOrders++;
-            }
-            // }
-            //}
-        }
-      }
-        numOrders = buyOrders + sellOrders;
-        total2 = 0;
-    }
-    //let bals = balscombined
-    total2 = 0;
-    alttotal = 0;
-    btctotal = 0;
-
-    for (var bal in bals) {
-        // //////////////////////////console.log(parseFloat(bals[bal]))
-        if (bals[bal] > 0.00001) {
-            //////////////console.log(bal)
-            //////////////console.log(bals[bal])
-            if (bal.startsWith('USD' && btcs['BTC'] != undefined)) {
-                total2 += parseFloat(bals[bal]) / btcs['BTC']
-            } else if (bal == 'TUSD' && btcs['BTC'] != undefined) {
-                total2 += parseFloat(bals[bal]) / btcs['BTC']
-            } else if (bal == 'BTC') {
-
-                total2 += parseFloat(bals[bal])
-            } else if (bal == 'ETH' && btcs2[bal] != undefined) {
-                total2 += parseFloat(bals[bal]) * parseFloat(btcs2[bal])
-
-            } else if (btcs2[bal] != undefined) {
-                total2 += parseFloat(bals[bal]) * parseFloat(btcs2[bal])
-            } else if (btcs2[bal] == undefined && eths[bal] != undefined) {
-                total2 += parseFloat(bals[bal]) * parseFloat(eths[bal]) * parseFloat(btcs['ETH'])
-            }
-            //////////////console.log(total2)
-        }
-
-
-    }
-
-    if (true) {
-      ////////////console.log('thetotals')
-    ////////////console.log(thetotals)
-      
        
-      total2=thetotals.btcstart
+      total2=btcstart
       ////console.log(total2)
         ////console.log('total2: ' + total2)
         ////console.log('btcstart: ' + btcstart)
-        let refdiff = 100 * ((1 - (btcs['BTC'] / btcref)));
-        
-            usddiff = 100 * ((1 - (btcstart / (total2))));
-        
-        ////////////console.log('btcstart: ' + btcstart)
-        ////////////////console.log(btcs['BTC'])
-      
+
             btctotal = (((total2 * btcs['BTC'])));
 
         
         ////////////console.log('btctotal: ' + btctotal)
-        if (ex == 'kucoin' || ex == 'okex'){
-      ////////////console.log('modular alt is ' + modular.alt)
-          ////////////console.log('modular alt: ' + btcs2[modular.alt])
-          ////////////console.log('total2: ' + total2)
-        alttotal = (((btctotal / btcs2[modular.alt])));
-        }
-        else {
-        alttotal = (((total2 / btcs[modular.alt])));
-
-        }
+        
         ////////////console.log('altotal: ' + alttotal)
         let btcdiff
-             btcdiff = 100 * ((1 - (usdstart / (btctotal))));
+             btcdiff = 100 * ((1 - (btcstart / (bals['BTC']))));
 
-
-        let altdiff = 100 * ((1 - (altstart / alttotal)));
-        rdiff = refdiff;
-        let adiff = [usddiff, btcdiff, altdiff]
-        let lll = -9999999999999999999999999999
-        for (var a in adiff) {
-            if (adiff[a] > lll) {
-                lll = adiff[a]
-            }
-        }
-        retdiff = lll;
-        totalbefore = total2;
-        /*
-        for (var t in feesusd){
-
-            bals[t.substring(0, t.length-3)] += feesusd[t]
-        }
-        for (var t in feesbtc){
-
-            bals[t.substring(0, t.length-3)] += feesbtc[t]
-        }
-        for (var t in feeseth){
-
-            bals[t.substring(0, t.length-3)] += feeseth[t]
-        }*/
-        let total22 = 0;
-        let alttotal2 = 0;
-        let btctotal2 = 0;
-        ////////////////////////////console.log(bals)
-        for (var bal in bals) {
-            // //////////////////////////console.log(parseFloat(bals[bal]))
-            if (bals[bal] > 0.00001) {
-                if (bal.startsWith('USD' && btcs['BTC'] != undefined)) {
-                    total22 += parseFloat(bals[bal]) / btcs['BTC']
-                } else if (bal == 'TUSD' && btcs['BTC'] != undefined) {
-                    total22 += parseFloat(bals[bal]) / btcs['BTC']
-                } else if (bal == 'BTC') {
-
-                    total22 += parseFloat(bals[bal])
-                } else if (bal == 'ETH' && btcs2[bal] != undefined) {
-
-                    total22 += parseFloat(bals[bal]) * parseFloat(btcs2[bal])
-
-                } else if (btcs2[bal] != undefined) {
-                    total22 += parseFloat(bals[bal]) * parseFloat(btcs2[bal])
-                } else if (btcs2[bal] == undefined && eths[bal] != undefined) {
-                    total22 += parseFloat(bals[bal]) * parseFloat(eths[bal]) * parseFloat(btcs['ETH'])
-                }
-            }
-
-        }
-       
-      
-    
-      total22=thetotals.btcstart
-      
-//        total22 = thetotals.btcstart
-      ////console.log(total22)
-        //console.log('total22: ' + total22)
-        //console.log('btcstart: ' +btcstart)
-
-        let refdiff2 = 100 * ((1 - (btcs['BTC'] / btcref)));
-        total22 = total22 + (btcVol * 0.0008)
-
-            usddiff2 = 100 * ((1 - (btcstart / (total22))));
-        
-
-    //console.log('btcdiff2: ' + usddiff2)
-    //console.log('btcdiff: ' + usddiff)
-
-        btctotal2 = (((total2 * btcs['BTC'])));
-
-    if (ex == 'kucoin' || ex == 'okex'){
-    alttotal2 = (((btctotal2 / btcs2[modular.alt])));
-      
-    }
-    else {
-    alttotal2 = (((total22 / btcs[modular.alt])));
-      
-    }
-    let btcdiff2
-   
-
-        btcdiff2 = 100 * ((1 - (usdstart / (btctotal2))));
-
-    
-    let altdiff2 = 100 * ((1 - (altstart / alttotal2)));
-    let rdiff2 = refdiff2;
-    let adiff2 = [usddiff2, btcdiff2, altdiff2]
-    let lll2 = -9999999999999999999999999999
-    for (var a in adiff2) {
-        if (adiff2[a] > lll2) {
-            lll2 = adiff2[a]
-        }
-    }
-    rdiff = refdiff;
-    retdiff = lll2;
-
-    if (req.query.name && usddiff > -50) {
+    if (req.query.name) {
         res.json({
-            ex: oldex,
-            usddiff: btcdiff,
-            btcdiff: usddiff,
-            altdiff: altdiff,
+            btcdiff: btcdiff,
             total: btctotal,
-            btc: total2,
-            alt: alttotal,
-            usddiff2: btcdiff2,
-            btcdiff2: usddiff2,
-            altdiff2: altdiff2,
-            total22: btctotal2,
-            btc: total2,
-            alt: alttotal,
-            btc2: total22,
-            alt2: alttotal2,
-            trades2: trades2,
-            trades: trades2.length,
-            orders: numOrders,
-            buyOrders: buyOrders,
-            sellOrders: sellOrders,
-            balances: bals3,
-            balances2: bals4,
-            bids: avgBids,
-            stops: stopp,
-            buyOs: buyOs,
-            divisor: divisor,
-            btcVol: btcVol,
-            least: starttime2,
-            refdiff: refdiff,
-            refdiff2: refdiff2,
-            sharpe: sharpe,
-            msg: msg,
-            url: process.env.url || "techvoices.club"
         });
 
     } else if (req.query.name) {
@@ -1183,8 +940,7 @@ async function doPost(req, res) {
             url: process.env.url || "techvoices.club"
         })
     }
-}
-total2 = 0;
+    total2 = 0;
 }
 
 let url;
@@ -1369,20 +1125,20 @@ async function doit() {
     try {
         for (var t in tickVols) {
             if (!bookies.includes(t)) {
-                //  modular.exchangeDepth(t)
+                  ////modular.exchangeDepth(t)
                 bookies.push(t);
             }
             if (!candies.includes(t)) {
                 candies.push(t);
-                //////////////////////console.log('candle ' + t)
+                console.log('candle ' + t)
                 if (ex == 'liquid') {
-                    modular.exchangeCandlesAndBooks(tickVols)
+                    //modular.exchangeCandlesAndBooks(tickVols)
                 } else if (ex != 'okex') {
                     if (!t.startsWith('.')) {
-                        modular.exchangeCandlesAndBooks(t)
+                        //modular.exchangeCandlesAndBooks(t)
                     }
                 }
-                //  modular.exchangeCandles(t)
+                  //modular.exchangeCandles(t)
             }
         }
         //bals = balscombined
@@ -1507,7 +1263,7 @@ async function doit() {
                             candies.push(symbol);
                             if (ex == 'liquid' || ex == 'okex' || ex == 'kucoin') {} else {
                                 if (!t.startsWith('.')) {
-                                    modular.exchangeCandlesAndBooks(symbol)
+                                    //modular.exchangeCandlesAndBooks(symbol)
                                 }
                             }
                         }
@@ -1588,7 +1344,7 @@ async function doit() {
                         if (lala == 0) {
                             //////////////////////////////console.log(precisions[symbol]);
                             //////////////////////////////console.log(filters[symbol])
-                            //////////////////////////////console.log((bals[symbol.substring(symbol.length - 3, symbol.length)] / (hb * bpSetting)).toFixed(filters[symbol].stepSize - 1));
+                            //////////////////////////////console.log((bals[symbol.substring(symbol.length - 3, symbol.length)] / (hb * bpSetting)));
                             bp = (hb * bpSetting)
                             bp = bp.toFixed(filters[symbol].tickSize - 1)
                             sp = (la * spSetting)
@@ -1633,6 +1389,8 @@ async function doit() {
                                     if (!trading.includes(symbol)) {
                                         trading.push(symbol)
                                     }
+                                    sellQty = sellQty * bids[symbol]['default']
+
                                     ////////////////////////////console.log('\sellQty: ' + sellQty)
                                     modular.exchangeOrder(symbol, 'SELL', sellQty, 0, 'MARKET')
 
@@ -1761,18 +1519,29 @@ async function doit() {
                                 if ((dontsellrsi[symbol] == false || dontsellrsi[symbol] == undefined)) {
                                     ////////////////////////////console.log(precisions[symbol]);
                                     ////////////////////////////console.log(filters[symbol])
-                                    ////////////////////////////console.log((bals[symbol.substring(symbol.length - 3, symbol.length)] / (hb * bpSetting)).toFixed(filters[symbol].stepSize - 1));
+                                    ////////////////////////////console.log((bals[symbol.substring(symbol.length - 3, symbol.length)] / (hb * bpSetting)));
                                     bp = (hb * bpSetting)
                                     bp = bp.toFixed(filters[symbol].tickSize - 1)
                                     sp = (la * spSetting)
                                     sp = sp.toFixed(filters[symbol].tickSize - 1)
-                                    buyQty = ((bals[symbol.substring(symbol.length - 3, symbol.length)] / (hb * bpSetting) / Object.keys(gos[g]).length).toFixed(filters[symbol].stepSize - 1));
+
+                                    if (ex == 'bitmex'){
+                                        buyQty = (25* (bals['BTC'] / (hb * bpSetting) / Object.keys(gos[g]).length));
+
+                                    }
+                                    else {
+                                    buyQty = ((bals[symbol.substring(symbol.length - 3, symbol.length)] / (hb * bpSetting) / Object.keys(gos[g]).length));
+                                    }
                                     let dontgo = false;
                                     let sellQty;
-                                    if (ex == 'bitmex'|| ex == "okex-futures" || ex == "okex-swap" ) {
-                                      //console.log('btcbal ' + (bals[symbol.substring(0, 3).toLowerCase()] * 0.05 * 0.05))
-                                      //console.log('btcssymbol ' +  btcs[symbol.substring(0, 3)])
-                                        sellQty = parseFloat((bals[symbol.substring(0, 3).toLowerCase()] * 0.02)).toFixed(filters[symbol].stepSize - 1)
+                                    if (ex == 'bitmex'){
+                                        sellQty = parseFloat((bals['BTC'] * hb * 25 * 0.09))
+                                    }
+                                    if (ex == "okex-futures" || ex == "okex-swap" ) {
+                                      console.log('btcbal ' + (bals[symbol.substring(0, 3)] * hb * 0.05 * 0.05))
+                                      console.log('btcssymbol ' +  btcs[symbol.substring(0, 3)])
+                                        sellQty = parseFloat((bals[symbol.substring(0, 3)] * hb * 0.09))
+                                        console.log('sellqty0: ' + sellQty)
                                     } else {
                                       ////console.log(asset)
                                       ////console.log('balasset ' + parseFloat(bals[asset]))
@@ -1792,7 +1561,6 @@ async function doit() {
                                     }
                                     }
                                     ////////console.log(('sellqty1: ' + symbol + ': ' + sellQty))
-                                    
                                     console.log('sellqty3: ' + symbol + ': ' + sellQty)
                                     //////////////////////////console.log(sellQty)
                                     //////////////////////////console.log(filters[symbol].minNotional)
@@ -1829,22 +1597,19 @@ async function doit() {
                                     }
                                     if (ex == 'bitmex'|| ex == "okex-futures" || ex == "okex-swap" ) {
                                         ////////////////console.log('orders')
-                                        //let orders = await modular.exchangeOpenOrders(symbol);
+                                        let orders = await modular.exchangeOpenOrders(symbol);
                                         for (var o in orders) {
-                                          for (var order in orders[o]){
                                             ////////////////console.log(orders[o].side.toUpperCase())
                                             ////////////////console.log(orders[o].symbol)
 
-                                            if (orders[o][order].symbol.substring(0,3) == symbol.substring(0,3)) {
                                                 
-                                         if (!cancelled.includes(orders[o][order].order_id)){
+                                         if (!cancelled.includes(orders[o].order_id)){
                                                 console.log('cancel')
-cancelled.push(orders[o][order].order_id)
-                                                modular.exchangeCancelOrder(orders[o][order])
+cancelled.push(orders[o].order_id)
+                                                modular.exchangeCancelOrder(orders[o])
                                             }
                                                 ////////////////console.log('cancel')
 }
-                                            }
                                         }
 
                                         dontbuy[symbol] = false
@@ -1861,6 +1626,8 @@ cancelled.push(orders[o][order].order_id)
                                             if (dontgo == false) {
                                                 //////////////console.log(dontgo)
                                                 //////////////console.log(1)
+                                                sellQty = sellQty * bids[symbol]['default']
+
                                                 modular.exchangeOrder(symbol, 'SELL', sellQty, sp, 'LIMIT')
                                             }
 
@@ -1896,6 +1663,8 @@ cancelled.push(orders[o][order].order_id)
                                                 if (dontgo == false) {
                                                     //////////////console.log(dontgo)
                                                     //////////////console.log(2)
+                                                    sellQty = sellQty * bids[symbol]['default']
+
                                                     modular.exchangeOrder(symbol, 'SELL', sellQty, sp, 'LIMIT')
                                                 }
 
@@ -1937,7 +1706,9 @@ cancelled.push(orders[o][order].order_id)
                                             if (dontgo == false) {
 
                                                 //////////////console.log(dontgo)
-                                                //////////////console.log(3)
+                                                //////////////console.log(3)                                    sellQty = sellQty * bids[symbol]['default']
+                                                sellQty = sellQty * bids[symbol]['default']
+
                                                 modular.exchangeOrder(symbol, 'SELL', sellQty, sp, 'LIMIT')
                                             }
 
@@ -1961,7 +1732,7 @@ cancelled.push(orders[o][order].order_id)
                                         //////////////////console.log(buyOs[symbol])
                                     }
                                 }
-                            }
+                           
                         }
 
                         /*
@@ -1994,7 +1765,7 @@ cancelled.push(orders[o][order].order_id)
                     }
                     if (!bookies.includes(symbol)) {
                         bookies.push(symbol);
-                        //  modular.exchangeDepth(symbol)
+                          //modular.exchangeDepth(symbol)
 
                     }
 
@@ -2103,7 +1874,7 @@ cancelled.push(orders[o][order].order_id)
                                     if ((dontsellrsi[symbol] == false || dontsellrsi[symbol] == undefined)) {
                                         ////////////////////////////console.log(precisions[symbol]);
                                         ////////////////////////////console.log(filters[symbol])
-                                        ////////////////////////////console.log((bals[symbol.substring(symbol.length - 3, symbol.length)] / (hb * bpSetting)).toFixed(filters[symbol].stepSize - 1));
+                                        ////////////////////////////console.log((bals[symbol.substring(symbol.length - 3, symbol.length)] / (hb * bpSetting)));
                                         bp = (hb * bpSetting)
                                         bp = bp.toFixed(filters[symbol].tickSize - 1)
                                         sp = (la * spSetting)
@@ -2194,6 +1965,8 @@ cancelled.push(orders[o][order].order_id)
 
                                                         //////////////console.log(dontgo)
                                                         //////////////console.log(5)
+                                                        sellQty = sellQty * bids[symbol]['default']
+
                                                         modular.exchangeOrder(symbol, 'SELL', sellQty, sp, 'LIMIT')
                                                     }
 
@@ -2232,6 +2005,8 @@ cancelled.push(orders[o][order].order_id)
 
                                                     //////////////console.log(dontgo)
                                                     //////////////console.log(6)
+                                                    sellQty = sellQty * bids[symbol]['default']
+
                                                     modular.exchangeOrder(symbol, 'SELL', sellQty, sp, 'LIMIT')
                                                 }
 
@@ -2376,11 +2151,11 @@ cancelled.push(orders[o][order].order_id)
                         }
                         //let orders;
                        console.log('1: ' + symbol + ' la: ' + la + ' hb: ' + hb)
-                        //////////////////////////console.log(aorders[symbol])
+                        //////////////////////////d.log(aorders[symbol])
                         if (ex == 'bitmex' || ex == "okex-futures" || ex == "okex-swap" || hb == 0 || (renew[symbol] == undefined || (renew[symbol] == true || (symbol != 'BNBUSDS' && (orders.length == 0) || ((hblesss[symbol] != hbless || lalesss[symbol] != laless) || ((las[symbol] != la && hbs[symbol] != hb) && (aorders[symbol] != la && borders[symbol] != hb))))))) {
 
                           console.log('2 ' + buyQtys[symbol] + ' ; ' + bsover);
-                            if (thebooks[symbol] == undefined || hb == 0 || (renew[symbol] == undefined || renew[symbol] == true) || (buyQtys[symbol] * maxBetterVol < bsover || orders.length == 0 || buyQtys[symbol] == undefined || isNaN(bsover))) {
+                            if (thebooks[symbol] == undefined || hb == 0 || (renew[symbol] == undefined || renew[symbol] == true) || (buyQtys[symbol] * maxBetterVol < bsover || buyQtys[symbol] == undefined || isNaN(bsover))) {
                                 if (hb == 0) {
                                     hb = bids[symbol]['default']
                                     la = asks[symbol]['default']
@@ -2408,7 +2183,7 @@ cancelled.push(orders[o][order].order_id)
                                 if (timeoutbuy || targetVolDiv < 1) {
                                     ////////////////////////////console.log(precisions[symbol]);
                                     ////////////////////////////console.log(filters[symbol])
-                                    ////////////////////////////console.log((bals[symbol.substring(symbol.length - 3, symbol.length)] / (hb * bpSetting) / Object.keys(gos[g]).length).toFixed(filters[symbol].stepSize - 1));
+                                    ////////////////////////////console.log((bals[symbol.substring(symbol.length - 3, symbol.length)] / (hb * bpSetting) / Object.keys(gos[g]).length));
                                     if (hb == 0) {
                                         ////////////console.log('hb 0')
                                         hb = bids[symbol]['default']
@@ -2425,7 +2200,7 @@ cancelled.push(orders[o][order].order_id)
                                     stop = stop.toFixed(filters[symbol].tickSize - 1)
                                     sp = (la * spSetting)
                                     sp = sp.toFixed(filters[symbol].tickSize - 1)
-                                    //buyQty = ((bals[symbol.substring(symbol.length - 3, symbol.length)] / (hb * bpSetting) / Object.keys(gos[g]).length).toFixed(filters[symbol].stepSize - 1));
+                                    //buyQty = ((bals[symbol.substring(symbol.length - 3, symbol.length)] / (hb * bpSetting) / Object.keys(gos[g]).length));
                                     //testing
                                     if (ex == 'okex-futures' || ex == 'okex-swap'){
                                       for (var o in orders) {
@@ -2445,7 +2220,7 @@ cancelled.push(orders[o][order].order_id)
                                     }
                                     }
                                     else {
-                                    for (var o in orders) {
+                                    /* for (var o in orders) {
                                       //console.log(orders[o])
                                         if (orders[o].side.toUpperCase() == 'BUY' && orders[o].symbol == symbol) {
                                             //console.log(orders[o])
@@ -2454,19 +2229,22 @@ cancelled.push(orders[o][order].order_id)
                                             ////////////////console.log('cancel')
 
                                         }
-                                    }
-                                    }
+                                    }*/
+                                    } 
                                     let bb;
                                     if (symbol.substring(symbol.length - 3, symbol.length).startsWith('USD') && symbol.substring(symbol.length - 3, symbol.length).length > 3) {
                                         bb = bals[(symbol.substring(symbol.length - 4, symbol.length))];
                                     } else {
                                         bb = bals[(symbol.substring(symbol.length - 3, symbol.length))]
                                     }
-                                    if (ex == 'bitmex'|| ex == "okex-futures" || ex == "okex-swap" ) {
+                                    if (ex == "okex-futures" || ex == "okex-swap" ) {
                                         ////////////////console.log('bitmex btcbal ' + btcbal + ' ' + (hb * bpSetting) + ' ' + filters[symbol].stepSize)
                                         //buyQty = (((btcbal * 0.05) / (hb * bpSetting) / 2.5).toFixed(filters[symbol].stepSize));
-                                        buyQty = parseFloat((bals[symbol.substring(0, 3).toLowerCase()] * 0.1)).toFixed(filters[symbol].stepSize - 1)
-                                    } else {
+                                        buyQty = parseFloat((bals[symbol.substring(0, 3)] * hb * 0.09))
+                                    } else if(ex == 'bitmex'){
+                                        buyQty = parseFloat((bals['BTC'] * hb * 0.09 * 25))
+
+                                    } else{
                                         ////console.log(symbol.substring(symbol.length - 3, symbol.length))
                                         //console.log('0 ' + bb)
                                         //console.log('1 ' + bals[symbol.substring(symbol.length - 3, symbol.length)])
@@ -2475,7 +2253,7 @@ cancelled.push(orders[o][order].order_id)
                                         //console.log('4 ' + Object.keys(gos[g]).length)
                                         //console.log('5 ' + filters[symbol].stepSize)
                                      
-                                      buyQty = (bb * 0.99 / (hb * bpSetting) / (Object.keys(gos[g]).length + 3)).toFixed(filters[symbol].stepSize - 1)
+                                      buyQty = (bb * 0.99 / (hb * bpSetting) / (Object.keys(gos[g]).length + 3))
 
                                     }
                                     if (buyQty > 0.0000001){
@@ -2488,7 +2266,7 @@ cancelled.push(orders[o][order].order_id)
                                     if (buyQty > 0.0000001){
                                     console.log('buyqty2: ' + buyQty)
                                     }
-                                    buyQty = buyQty.toFixed(filters[symbol].stepSize - 1)
+                                    buyQty = buyQty
                                     if (buyQty > 0.0000001){
                                     console.log('buyqty3: ' + buyQty)
                                     }
@@ -2504,11 +2282,11 @@ cancelled.push(orders[o][order].order_id)
                                     /*
                                     if (filters[symbol].minQty * hb * bpSetting < filters[symbol].minNotional){
                                     if ((buyQty * hb * bpSetting) < filters[symbol].minNotional) {
-                                    buyQty =  (filters[symbol].minQty / filters[symbol].minNotional).toFixed(filters[symbol].stepSize - 1)  //((hb * 1.1) / filters[symbol].minNotional).toFixed(filters[symbol].stepSize - 1)
+                                    buyQty =  (filters[symbol].minQty / filters[symbol].minNotional)  //((hb * 1.1) / filters[symbol].minNotional)
                                     //////////////////////console.log('1 minnotional')
                                     }
                                      if (buyQty < filters[symbol].minQty) {
-                                    buyQty = (filters[symbol].minQty / filters[symbol].minNotional).toFixed(filters[symbol].stepSize - 1)
+                                    buyQty = (filters[symbol].minQty / filters[symbol].minNotional)
                                     //////////////////////console.log('1 minqty')
                                     }
 
@@ -2516,10 +2294,10 @@ cancelled.push(orders[o][order].order_id)
                                     else {
                                     if (buyQty < filters[symbol].minQty) {
                                     //////////////////////console.log('2 minqty')
-                                    buyQty = (filters[symbol].minQty / filters[symbol].minNotional).toFixed(filters[symbol].stepSize - 1)//(filters[symbol].minQty * 1.05).toFixed(filters[symbol].stepSize - 1)
+                                    buyQty = (filters[symbol].minQty / filters[symbol].minNotional)//(filters[symbol].minQty * 1.05)
                                     }if ((buyQty * hb * bpSetting) < filters[symbol].minNotional) {
                                     //////////////////////console.log('2 buyqty')
-                                    buyQty =  (filters[symbol].minQty / filters[symbol].minNotional).toFixed(filters[symbol].stepSize - 1)//((hb * 1.1) / filters[symbol].minNotional).toFixed(filters[symbol].stepSize - 1)
+                                    buyQty =  (filters[symbol].minQty / filters[symbol].minNotional)//((hb * 1.1) / filters[symbol].minNotional)
                                     }
 
                                     }*/
@@ -2579,22 +2357,18 @@ cancelled.push(orders[o][order].order_id)
                                         if (ex == 'bitmex' || ex == "okex-futures" || ex == "okex-swap" ) {
                                             //let orders = await modular.exchangeOpenOrders();
                                             for (var o in orders) {
-                                            for (var order in orders[o]){
     //                                          console.log(orders[o][order])
                                             ////////////////console.log(orders[o].side.toUpperCase())
                                             ////////////////console.log(orders[o].symbol)
 
-                                            if (orders[o][order].symbol.substring(0,3) == symbol.substring(0,3)) {
                                                 
-                                                  if (!cancelled.includes(orders[o][order].order_id)){
+                                                  if (!cancelled.includes(orders[o].order_id)){
                                                 console.log('cancel')
-cancelled.push(orders[o][order].order_id)
-                                                modular.exchangeCancelOrder(orders[o][order])
+cancelled.push(orders[o].order_id)
+                                                modular.exchangeCancelOrder(orders[o])
                                             }
                                                 ////////////////console.log('cancel')
 }
-                                            }
-                                            }
                                         } else {
                                             // //let orders = await modular.exchangeOpenOrders(symbol);
                                             for (var o in orders) {
@@ -2615,10 +2389,13 @@ cancelled.push(orders[o][order].order_id)
                                                 aorders[symbol] = la;
                                                 selling[symbol] = true;
                                                 borders[symbol] = hb;
+
+                                                buyQty = buyQty * bids[symbol]['default']
                                                 ////////////////////////console.log
                                                 //////////////////////console.log
                                                 ////////////////console.log(bp)
                                                 ////////////////console.log('8')
+
                                                 modular.exchangeOrder(symbol, 'BUY', buyQty, bp, 'LIMIT')
 
                                                 ////////////////////console.log(o.orderId)
@@ -2652,14 +2429,14 @@ cancelled.push(orders[o][order].order_id)
         ////////////console.log(update * 1 + ' intervals')
         setTimeout(function() {
             doit();
-        }, doitmult * 15000)
+        }, doitmult * 5000)
         count++;
 
     } catch (err) {
           //////console.log(err)
         setTimeout(function() {
             doit();
-        }, doitmult * 15000)
+        }, doitmult * 5000)
         ////////////console.log(err);
     }
 }

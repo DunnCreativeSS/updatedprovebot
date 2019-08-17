@@ -3,7 +3,7 @@ module.exports = {
 };
 var RestClient = require("deribit-api").RestClient;
 
-var restClient = new RestClient("9shdKeR2", "Ita-NCFcFCscZCLeac-wBcu4TBFI19suQxheGNTyA3w", "https://test.deribit.com");
+var restClient = new RestClient("IYl70lOm", "VBkPeKEO29XPTOSssskcttmtpYRKj2ILbLihWSKpREA", "https://test.deribit.com");
 //import Deribit from 'deribit-ws-js'
 //let Deribit = require('deribit-ws-js').Deribit
 //const ws = new Deribit({key: "HwjG9hsiYvLb", secret: "MZ4XSMDKR4HPOLRUCZ7LVQ7VA6QXM6VY", testnet: true})
@@ -48,11 +48,11 @@ ws.on('open', function open() {
     console.log('Request object', obj);
 setInterval(function(){
     ws.send(JSON.stringify(obj));
-}, 30000);
+}, 60000);
 });
 let modular = require('./modular.js')
 var ccxt = require("ccxt");
-let deribit  = new ccxt.deribit ({ 'enableRateLimit': true, apiKey: "J1seZCRTZTnu", secret: "QHH2P6LYQDWUBR7FBIOV3VXILUJ56C3H" })
+let deribit  = new ccxt.deribit ({ 'enableRateLimit': true, apiKey: "IYl70lOm", secret:  "VBkPeKEO29XPTOSssskcttmtpYRKj2ILbLihWSKpREA" })
 deribit.urls['api'] = deribit.urls['test'];
 //var RestClient = require("deribit-api").RestClient;
 
@@ -203,7 +203,7 @@ app.get('/candles', (req, res) => {
 app.get('/thebooks', (req, res) => {
     res.json(thebooks)
 });
-app.listen(process.env.binPORT || 300182, function() {});
+app.listen(process.env.binPORT || 3001, function() {});
 
 let candies = []
 
@@ -213,7 +213,9 @@ let spreads = {}
 
 
 
-
+module.exports.exchangeCancelAll = async function exchangeCancelAll(){
+    restClient.cancelall('all')
+}
 module.exports.exchangeOpenOrders = async function exchangeOpenOrders(symbol){
 if (symbol == undefined){
 symbol ='BTC-27SEP19'
@@ -290,6 +292,9 @@ thebooks[t] = {asks: ob.asks, bids: ob.bids}
 module.exports.alt = "ETH";
 setInterval(async function(){
   let balances = await deribit.fetchBalance();
+  console.log(balances)
+  thetotals = {'usdstart': balances.BTC.free}
+console.log(thetotals)
   bals = {}
     let coins = ['ETH', 'BTC']
   for (var b in coins){
@@ -303,9 +308,16 @@ setInterval(async function(){
     }
   }
   }, 30000);
+
+let thetotals;
+
+app.get('/thetotals', (req, res) => {
+    res.json(thetotals)
+});
 module.exports.exchangeUpdateBalances = async function exchangeUpdateBalances(){
   setInterval(async function(){
   let balances = await deribit.fetchBalance();
+  thetotals = {'usdstart': balances.BTC.free}
   bals = {}
     let coins = ['ETH', 'BTC']
   for (var b in coins){
@@ -328,6 +340,7 @@ let btcVol = 0;
 //}, 5000);
 module.exports.exchangeDoTrades = async function exchangeDoTrades(symbol){
  restClient.positions(function(trades){//deribit.private_get_position({'symbol':symbol})
+ if (trades!= undefined){
 trades = trades.result
 //console.log(trades);
 
@@ -433,6 +446,7 @@ trades2.push({
                    
                 }
             }
+        }
 })
 }
 let actualstarttime = new Date().getTime()
@@ -471,14 +485,14 @@ return  await   deribit.createMarketBuyOrder(symbol, -qty);
     console.log(qty)
     console.log(price)
 setTimeout(async function(){
-    let o = await  restClient.sell(symbol, Math.floor(qty), price);
+    let o = await  restClient.sell(symbol, Math.floor(qty), price, true);
     console.log(o)
     return(o)
 }, Math.random() * 10 * 1000)
   }
   else if (side.toLowerCase()=='buy'){
 setTimeout(async function(){
-    return await restClient.buy(symbol, Math.floor(qty), price);
+    return await restClient.buy(symbol, Math.floor(qty), price, true);
 }, Math.random() * 10 * 1000);
   }
   }

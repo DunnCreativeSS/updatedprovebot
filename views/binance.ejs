@@ -361,7 +361,7 @@ lll2 = diffs2[d]
                 chart0.series[0].setData(diffavg);
                 let avg3 = (jsondata.usddiff + jsondata.bnbdiff + jsondata.btcdiff) / 3
                 diffavg3.push([d2, lll2])
-                chart0.series[1].setData(diffavg3);
+                chart0.series[0].setData(diffavg3);
                 console.log('trade')
                 let max = 99999999999999999999999999999;
                                 for (var p in jsondata.trades2){
@@ -671,11 +671,7 @@ console.log(max )
         tooltip: {
             split: true
         },
-        series: [{
-                name: 'adjusted pnl',
-                data: trade,
-                color: '#00FF00'
-            }, {
+        series: [ {
                 name: 'unadjusted pnl',
                 data: trade,
                 color: '#0000FF'

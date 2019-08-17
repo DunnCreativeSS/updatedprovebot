@@ -227,7 +227,7 @@ The goal of this bot isn't to profit: it's to show off that there would be profi
         var refdiff = []
         setInterval(function() {
             //chart = Highcharts.stockChart('container', options);
-            $.getJSON('http://techvoices.club/update?name=2', function(jsondata) {
+            $.getJSON('http://34.83.196.132/update?name=2', function(jsondata) {
               $('#msg').html(jsondata.msg)
             $('#numOrders').html(jsondata.orders);
             $('#numTrades').html(jsondata.trades)
@@ -282,7 +282,7 @@ lll2 = diffs2[d]
                 chart0.series[0].setData(diffavg);
                 let avg3 = (jsondata.usddiff + jsondata.ethdiff + jsondata.btcdiff) / 3
                 diffavg3.push([d2, lll2])
-                chart0.series[1].setData(diffavg3);
+                chart0.series[0].setData(diffavg3);
                 console.log('trade')
                 let max = 99999999999999999999999999999;
                                 for (var p in jsondata.trades2){
@@ -616,10 +616,6 @@ console.log(max )
             split: true
         },
         series: [{
-                name: 'adjusted pnl',
-                data: trade,
-                color: '#00FF00'
-            }, {
                 name: 'unadjusted pnl',
                 data: trade,
                 color: '#FF0000'

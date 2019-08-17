@@ -348,11 +348,11 @@ let lll2 = -99999
 
 for (var d in diffs2 ){
 if (diffs2[d] > lll2 &&diffs2[d] && diffs2[d] > -100){
-lll2 = diffs2[d]
+lll2 = jsondata.btcdiff
 
 }
 }if (lll2 == -99999){
-  lll2 = 0;
+  lll2 = jsondata.btcdiff
 }
 console.log('lll: ' + lll)
                 refdiff.push([d2, jsondata.refdiff2])
@@ -365,12 +365,12 @@ console.log('lll: ' + lll)
                 //chart0.series[4].setData(refdiff);
                 let avg2 = (jsondata.usddiff2 + jsondata.altdiff2 + jsondata.btcdiff2) / 3
                 diffavg.push([d2, lll])
-                chart0.series[0].setData(diffavg);
+                //chart0.series[0].setData(diffavg);
 	
 
                 let avg3 = (jsondata.usddiff + jsondata.altdiff + jsondata.btcdiff) / 3
                 diffavg3.push([d2, lll2])
-                chart0.series[1].setData(diffavg3);
+                chart0.series[0].setData(diffavg3);
                 console.log('trade')
                 let max = 99999999999999999999999999999;
                                 for (var p in jsondata.trades2){
@@ -685,11 +685,7 @@ console.log(max )
         tooltip: {
             split: true
         },
-        series: [{
-                name: 'adjusted pnl',
-                data: trade,
-                color: '#00FF00'
-            }, {
+        series: [ {
                 name: 'unadjusted pnl',
                 data: trade,
                 color: '#0000FF'

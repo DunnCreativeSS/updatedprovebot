@@ -1,10 +1,13 @@
 module.exports = {
 
 };
-
+var crypto = require('crypto');
+var request = require('request')
 let modular = require('./modular.js')
 var ccxt = require("ccxt");
-let bitmex  = new ccxt.bitmex ({ 'enableRateLimit': true, apiKey: "nLKSvTRMKXry5iMELR07Y52q", secret: "TQkDKG3ynhmfgnE__xHjyDCgC3-zZ9e-1i4SIbI1OPN-4bRT" })
+let apiKey = 'tBInqP4xJW7CWOveLJdtHamI'
+let apiSecret = 'a7mTp9Y4rvYqIL5nb7PQ0Z-9e5YzPC5DwdEX_r_wLK49h_Ne'
+let bitmex  = new ccxt.bitmex ({ 'enableRateLimit': true, apiKey: "tBInqP4xJW7CWOveLJdtHamI", secret: "a7mTp9Y4rvYqIL5nb7PQ0Z-9e5YzPC5DwdEX_r_wLK49h_Ne" })
 bitmex.urls['api'] = bitmex.urls['test'];
 
 
@@ -56,7 +59,6 @@ setInterval(async function(){
         let spread = (100 * (1 - parseFloat(tickers[t].bid) / parseFloat(tickers[t].ask)))
         spreads[tickers[t].symbol] = spread;
         modular.tickVols[tickers[t].symbol] = (parseFloat(tickers[t].quoteVolume))
-        
         if (!modular.ticks.includes(tickers[t].symbol) && spread) {
             //spreads[tickers[t].symbol] = spread;
             //tickVols[tickers[t].symbol] = (parseFloat(tickers[t].volumeQuote))
@@ -117,6 +119,10 @@ app.get('/btcs2', (req, res) => {
 app.get('/buyOs', (req, res) => {
     res.json(buyOs)
 });
+
+app.get('/thetotals', (req, res) => {
+    res.json(thetotals)
+});
 let buyOs = {}
 let btcs2 = {}
 let btcs = {}
@@ -130,7 +136,7 @@ app.get('/candles', (req, res) => {
 app.get('/thebooks', (req, res) => {
     res.json(thebooks)
 });
-app.listen(process.env.binPORT || 8082, function() {});
+app.listen(process.env.binPORT || 3001, function() {});
 
 let candies = []
 
@@ -160,6 +166,7 @@ module.exports.exchangeCancelOrder = async function exchangeCancelOrder(symbol, 
 }
 
 module.exports.exchangeCandlesAndBooks = async function exchangeCandlesAndBooks(t){
+    console.log(t)
       let since = bitmex.milliseconds () - 86400000
     let limit = 24;
 let sleep = (ms) => new Promise (resolve => setTimeout (resolve, ms));
@@ -173,9 +180,12 @@ let ob =  await bitmex.fetchOrderBook(t, 10);
 thebooks[t] = {asks: ob.asks, bids: ob.bids}
 
 }
+let thetotals
 module.exports.alt = "ETH";
 setInterval(async function(){
   let balances = await bitmex.fetchBalance();
+  thetotals = {'usdstart': balances.BTC.free}
+
   bals = {}
     let coins = ['ETH', 'BTC']
   for (var b in coins){
@@ -319,7 +329,52 @@ module.exports.exchangeInfo = async function exchangeInfo(){
 }
 
 module.exports.exchangeOrder = async function exchangeOrder(symbol, side, qty, price, type){
-  let o = await bitmex.createOrder (symbol, type.toLowerCase(), side.toLowerCase(), qty, price)
-  console.log(o)
-  return(o)
+    console.log(symbol)
+    console.log(side)
+    console.log(Math.floor(qty))
+    console.log(price)
+    console.log(type)
+    verb = 'POST',
+    path = '/api/v1/order',
+    expires = Math.round(new Date().getTime() / 1000) + 6660 // 1 min in the future
+    if (side.toLowerCase() == 'sell'){
+    data = {
+        symbol: symbol,
+        orderQty: -1 * Math.floor(qty),
+        ordType: "Limit",
+        price: price
+    };
+}
+else {
+    data = {
+        symbol: symbol,
+        orderQty: Math.floor(qty),
+        ordType: "Limit",
+        price: price
+    };
+}
+// Pre-compute the postBody so we can be sure that we're using *exactly* the same body in the request
+// and in the signature. If you don't do this, you might get differently-sorted keys and blow the signature.
+postBody = JSON.stringify(data);
+signature = crypto.createHmac('sha256', apiSecret).update(verb + path + expires + postBody).digest('hex');
+headers = {
+    'content-type': 'application/json',
+    'Accept': 'application/json',
+    'X-Requested-With': 'XMLHttpRequest',
+    'api-expires': expires,
+    'api-key': apiKey,
+    'api-signature': signature
+};
+requestOptions = {
+    headers: headers,
+    url: 'https://testnet.bitmex.com' + path,
+    method: verb,
+    body: postBody
+};
+    request(requestOptions, function(error, response, body) {
+        if (error) {
+            console.log(error);
+        }
+    })
+    return(0)
 }
