@@ -6,7 +6,7 @@ var asks = {}
 var avgBids = {}
 var crypto = require('crypto');
 var request = require('request')
-let modular = require('./modular.js')
+let modular = require('./simulation.js')
 var ccxt = require("ccxt");
 let apiKey = 'tBInqP4xJW7CWOveLJdtHamI'
 let apiSecret = 'a7mTp9Y4rvYqIL5nb7PQ0Z-9e5YzPC5DwdEX_r_wLK49h_Ne'
@@ -157,7 +157,7 @@ app.get('/tickVols', (req, res) => {
     res.json(tickVols)
 });
 
-app.listen(process.env.binPORT || 3001, function() {});
+app.listen(process.env.binPORT || 3003, function() {});
 
 let candies = []
 
