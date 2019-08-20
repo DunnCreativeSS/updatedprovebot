@@ -1,6 +1,9 @@
 module.exports = {
 
-};
+};var tickVols = {}
+var bids = {}
+var asks = {}
+var avgBids = {}
 var crypto = require('crypto');
 var request = require('request')
 let modular = require('./modular.js')
@@ -17,6 +20,8 @@ setInterval(async function(){
     if (modular.asks[tickers[t].symbol] == undefined) {
             modular.asks[tickers[t].symbol] = {}
             modular.bids[tickers[t].symbol] = {}
+            asks[tickers[t].symbol] = {}
+            bids[tickers[t].symbol] = {}
         }
         let pair;
         if (tickers[t].symbol.substring(tickers[t].symbol.length - 4, tickers[t].symbol.length).startsWith('USD')) {
@@ -30,6 +35,8 @@ setInterval(async function(){
         }
         modular.asks[tickers[t].symbol]['default'] = tickers[t].ask
         modular.bids[tickers[t].symbol]['default'] = tickers[t].bid
+        asks[tickers[t].symbol]['default'] = tickers[t].ask
+        bids[tickers[t].symbol]['default'] = tickers[t].bid
         
         if (tickers[t].symbol == 'ETH/USD') {
             btcs['ETH'] = tickers[t].bid;
@@ -59,6 +66,7 @@ setInterval(async function(){
         let spread = (100 * (1 - parseFloat(tickers[t].bid) / parseFloat(tickers[t].ask)))
         spreads[tickers[t].symbol] = spread;
         modular.tickVols[tickers[t].symbol] = (parseFloat(tickers[t].quoteVolume))
+        tickVols[tickers[t].symbol] = (parseFloat(tickers[t].quoteVolume))
         if (!modular.ticks.includes(tickers[t].symbol) && spread) {
             //spreads[tickers[t].symbol] = spread;
             //tickVols[tickers[t].symbol] = (parseFloat(tickers[t].volumeQuote))
@@ -136,6 +144,19 @@ app.get('/candles', (req, res) => {
 app.get('/thebooks', (req, res) => {
     res.json(thebooks)
 });
+app.get('/avgBids', (req, res) => {
+    res.json(avgBids)
+});
+app.get('/asks', (req, res) => {
+    res.json(asks)
+});
+app.get('/bids', (req, res) => {
+    res.json(bids)
+});
+app.get('/tickVols', (req, res) => {
+    res.json(tickVols)
+});
+
 app.listen(process.env.binPORT || 3001, function() {});
 
 let candies = []
@@ -272,6 +293,7 @@ console.log(trades[t])
                                     });
                                 } else {
                                     modular.avgBids[symbol] = parseFloat(bp);
+                                    avgBids[symbol] = parseFloat(bp);
                                     buyOs[symbol].push({
                                         price: parseFloat(trades[t].price) * (minProfit),
                                         qty: parseFloat(trades[t].qty)
@@ -285,6 +307,7 @@ console.log(trades[t])
                                     })
                                 } else {
                                     modular.avgBids[symbol] = parseFloat(bp);
+                                    avgBids[symbol] = parseFloat(bp);
                                     buyOs[symbol].push({
                                         price: parseFloat(trades[t].price) * (minProfit),
                                         qty: parseFloat(trades[t].qty)

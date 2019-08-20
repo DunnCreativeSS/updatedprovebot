@@ -1,6 +1,9 @@
 module.exports = {
 
 };
+var simBal = 0.1;
+var simOrders = {}
+var simPoses = {}
 setInterval(function() {
     //  modular.exchangeCancelAll()
 
@@ -210,7 +213,7 @@ setInterval(async function() {
     if (ex == 'bitmex' || ex == 'okex-futures' || ex == 'okex-swap') {
         ////////////console.log(trading)
         for (var sym in trading) {
-            os[sym] = await modular.exchangeOpenOrders(trading[sym])
+            //os[sym] = await modular.exchangeOpenOrders(trading[sym])
         }
         let o = []
         for (var x in os) {
@@ -241,7 +244,7 @@ setInterval(async function() {
                 orders = body
             })
         } else {
-            orders = await modular.exchangeOpenOrders()
+            //orders = await modular.exchangeOpenOrders()
             //console.log(orders)
         }
     }
@@ -364,12 +367,12 @@ setInterval(async function() {
                                 //////////////////////console.log(symbol + ' dontbuyrsi ' + theRsi)
                                 dontbuyrsi[symbol] = true;
                                 ////let orders = await modular.exchangeOpenOrders();
-
+                                simOrders = {}
                                 for (var o in orders) {
                                     if (orders[o].side.toUpperCase() == 'BUY' && orders[o].symbol == symbol) {
                                         //////////////////////////console.log(orders[o])
                                         //////////////////////////console.log('cancel')
-                                        modular.exchangeCancelOrder(orders[o])
+                                        //modular.exchangeCancelOrder(orders[o])
                                         ////////////////console.log('cancel')
 
 
@@ -381,13 +384,13 @@ setInterval(async function() {
                             if (theRsi < 30 && dorsistopsell) { //don't sell
                                 //////////////////////console.log(symbol + ' dontsellrsi ' + theRsi)
                                 dontsellrsi[symbol] = true
-                                //let orders = await modular.exchangeOpenOrders();
-
+                                //let orde  rs = await modular.exchangeOpenOrders();
+                                simOrders = {}
                                 for (var o in orders) {
                                     if (orders[o].side.toUpperCase() == 'SELL' && orders[o].symbol == symbol) {
                                         //////////////////////////console.log(orders[o])
                                         //////////////////////////console.log('cancel')
-                                        modular.exchangeCancelOrder(orders[o])
+                                        //modular.exchangeCancelOrder(orders[o])
                                         ////////////////console.log('cancel')
 
                                     }
@@ -406,12 +409,12 @@ setInterval(async function() {
                     if (asks[symbol]['default'] > bb) {
                         //////////////////////console.log('gogobb false ' + bb)
                         //let orders = await modular.exchangeOpenOrders();
-
+                        simOrders = {}
                         for (var o in orders) {
                             if (orders[o].side.toUpperCase() == 'BUY' && orders[o].symbol == symbol) {
                                 //////////////////////////console.log(orders[o])
                                 //////////////////////////console.log('cancel')
-                                modular.exchangeCancelOrder(orders[o])
+                                //modular.exchangeCancelOrder(orders[o])
                                 ////////////////console.log('cancel')
 
                             }
@@ -607,78 +610,152 @@ let tradeids = []
 let tradedBalsPlus = {}
 let tradedBalsMinus = {}
 let totalbefore = 0;
-setInterval(async function() {
-    r2 = await fetch('http://35.212.143.81:3001/thetotals')
-    bs = await r2.json()
-    ////////////console.log(bs)
-    for (var b in bs[0]) {
-        thetotals[b] = bs[0][b]
+var fs = require('fs');
+
+function readLines(input, func) {
+  var remaining = '';
+
+  input.on('data', function(data) {
+    remaining += data;
+    var index = remaining.indexOf('\n');
+    var last  = 0;
+    while (index > -1) {
+      var line = remaining.substring(last, index);
+      last = index + 1;
+      func(line);
+      index = remaining.indexOf('\n', last);
     }
-    if (ex == 'okex-futures' || ex == 'okex-swap') {
-        btcbal = thetotals.usdstart
+
+    remaining = remaining.substring(last);
+  });
+
+  input.on('end', function() {
+    if (remaining.length > 0) {
+      func(remaining);
     }
-    if (ex == 'bitmex') {
-        btcbal = thetotals.usdstart
-    }
-}, 1000)
-setInterval(async function() {
-    if (theurl != "") {
-        url = theurl;
-    }
-    let rrr = await fetch('http://35.212.143.81:3001/tickVols')
-    tickVols = await rrr.json()
+  });
+}
+
+var old;
+var doitcount = 0;
+function func(data) {
+    let rrr = data[1]
+    tickVols = JSON.parse(rrr.replace(/'/g, '"'))
     ////console.log(url)
-    let r0 = await fetch('http://35.212.143.81:3001/spreads')
-    let ss = await r0.json()
+    let r0 = data[2]
+    let ss = JSON.parse(r0.replace(/'/g, '"'))
     for (var s in ss) {
         spreads[s] = ss[s]
     }
-    let r1 = await fetch('http://35.212.143.81:3001/candles')
-    let cs = await r1.json()
-    for (var c in cs) {
-        candles[c] = cs[c]
-    }
+
     // ////////////////console.log(candles)
-    let r2 = await fetch('http://35.212.143.81:3001/thebooks')
-    let bs = await r2.json()
+    let r2 = data[3]
+    let bs = JSON.parse(r2.replace(/'/g, '"'))
     for (var b in bs) {
         thebooks[b] = bs[b]
     }
-    r2 = await fetch('http://35.212.143.81:3001/trades2')
-    bs = await r2.json()
+    r2 = data[4]
+    bs = JSON.parse(r2.replace(/'/g, '"'))
     for (var b in bs) {
         trades2[b] = bs[b]
     }
-    r2 = await fetch('http://35.212.143.81:3001/filters')
-    bs = await r2.json()
+    r2 = data[5]
+    bs = JSON.parse(r2.replace(/'/g, '"'))
     for (var b in bs) {
         filters[b] = bs[b]
     }
-    r2 = await fetch('http://35.212.143.81:3001/buyOs')
-    bs = await r2.json()
+    r2 = data[6]
+    bs = JSON.parse(r2.replace(/'/g, '"'))
     for (var b in bs) {
         buyOs[b] = bs[b]
     }
 
-    r2 = await fetch('http://35.212.143.81:3001/btcs')
-    bs = await r2.json()
+    r2 = data[7]
+    bs = JSON.parse(r2.replace(/'/g, '"'))
     for (var b in bs) {
         btcs[b] = bs[b]
     }
-    r2 = await fetch('http://35.212.143.81:3001/btcVol')
-    bs = await r2.json()
+    r2 = data[8]
+    bs = JSON.parse(r2.replace(/'/g, '"'))
     btcVol = bs.btcVol
-    r2 = await fetch('http://35.212.143.81:3001/btcs2')
-    bs = await r2.json()
+    r2 = data[9]
+    bs = JSON.parse(r2.replace(/'/g, '"'))
     btcs2 = bs
     //console.log(bs)
     ////////////console.log(bs)
-    usdstart = 1
-    btcstart = 0.01
-    altstart = 1
 
-    r2 = await fetch('http://35.212.143.81:3001/bals')
-    bs = await r2.json()
+    avgBids = JSON.parse(r2.replace(/'/g, '"'))
+    r2 = data[12]
+    bids = JSON.parse(r2.replace(/'/g, '"'))
+    r2 = data[13]
+    asks = JSON.parse(r2.replace(/'/g, '"'))
+    for (var a in asks){
+        for (var b in simPoses){
+            if (a == b){
+                for (var c in simPoses[b]){
+                if (simPoses[b][c]['qty'] < 0){
+                        simBal = simBal + simPoses[b][c]['qty'] * 25 * (asks[a] / simPoses[b][c]['price'])
+                    
+                } if (simPoses[b][c]['qty'] > 0){
+                        simBal = simBal + simPoses[b][c]['qty'] * 25 * (simPoses[b][c]['price'] / asks[a])
+                   
+                }
+            }
+            }
+        }
+    }
+    for (var b in asks){
+
+        for (var a in simOrders){
+            if (a == b){
+            for (var side in simOrders[a]){
+                if (side == 'BUY'){
+                if (simOrders[a][side]['price'] < asks[b]){
+                    if (a.includes('USD')){
+                        simBal = simBal + (simOrders[a][side]['qty'] * 25 * simOrders[a][side]['price']) * 0.000250
+                    }
+                    else{
+                        simBal = simBal + (simOrders[a][side]['qty'] * 25 * simOrders[a][side]['price']) * 0.0005
+                
+                    }
+                    if (simPoses[a] == undefined){
+                        simPoses[a] = []
+                    }
+                    var theQty = simOrders[a][side]['qty'] 
+                    simPoses[a].push({'price': simOrders[a][side]['price'], 'qty': theQty})
+                    simOrders[a] = {}
+                }
+            }        
+        }
+        }
+    }
+    for (var b in bids){
+
+        for (var a in simOrders){
+            if (a == b){
+            for (var side in simOrders[a]){
+                if (side == 'SELL'){
+                if (simOrders[a][side]['price'] > bids[b]){
+                    if (a.includes('USD')){
+                        simBal = simBal + (simOrders[a][side]['qty'] * 25 * simOrders[a][side]['price']) * 0.000250
+                    }
+                    else{
+                        simBal = simBal + (simOrders[a][side]['qty'] * 25 * simOrders[a][side]['price']) * 0.0005
+                
+                    }
+                    if (simPoses[a] == undefined){
+                        simPoses[a] = []
+                    }
+                    var theQty = simOrders[a][side]['qty'] 
+                    simPoses[a].push({'price': simOrders[a][side]['price'], 'qty': theQty})
+                    simOrders[a] = {}
+                }
+            }        
+        }
+        }
+    }
+    r2 = data[10]
+    bs = JSON.parse(r2.replace(/'/g, '"'))
     bals = {}
     for (var b in bs) {
         if (bs[b] != 0) {
@@ -696,6 +773,25 @@ setInterval(async function() {
             }
             bals[b] = bs[b]
         }
+    }
+doitcount++
+if (doitcount == 60){
+    doitcount = 0;
+    doit()
+}
+head
+}
+
+var input = fs.createReadStream('../csv.csv');
+readLines(input, func);
+
+
+setInterval(async function() {
+
+}, 1000)
+setInterval(async function() {
+    if (theurl != "") {
+        url = theurl;
     }
 
 }, 1000);
@@ -743,7 +839,7 @@ async function books() {
         for (var symbol in gos[g]) {
             if (!candies.includes(symbol)) {
                 //////////////////////console.log('candle ' + symbol)
-                modular.exchangeCandles(symbol)
+                //modular.exchangeCandles(symbol)
                 //modular.exchangeCandlesAndBooks(symbol)
                 candies.push(candle.symbol);
             }
@@ -763,15 +859,15 @@ let ts = {}
 function gocount2(symbol, thegocount) {
     setTimeout(function() {
 
-        modular.exchangeDoTrades(symbol)
+       // modular.exchangeDoTrades(symbol)
     }, Math.random() * 100 * thegocount)
 }
 let buyOsChange = {}
-modular.exchangeDoTrades('ETH/BTC')
+//modular.exchangeDoTrades('ETH/BTC')
 async function getTrades() {
     let gos = {}
     if (ex == 'bitmex') {
-        modular.exchangeDoTrades('btc');
+       // modular.exchangeDoTrades('btc');
     }
     let avgs = {}
     tradedBalsPlus = {}
@@ -967,7 +1063,7 @@ async function doBal() {
         bals4 = {}
         balscombined = {}
         rego = false;
-        modular.exchangeUpdateBalances();
+       // modular.exchangeUpdateBalances();
         ////////////////////////console.log('etheth');
         ////////////////////////console.log(balscombined['ETH'])
     }
@@ -992,13 +1088,13 @@ setTimeout(function() {
 }, 60000);
 async function cancelAll() {
     //let orders = await modular.exchangeOpenOrders();
-
+    simOrders = {}
     for (var o in orders) {
 
         ////////////////console.log(orders[o])
         ////////////////console.log('cancel')
 
-        modular.exchangeCancelOrder(orders[o])
+       // modular.exchangeCancelOrder(orders[o])
     }
     bookies = []
     candies = []
@@ -1110,7 +1206,7 @@ function checkDs() {
     let diff = d - update;
     ////////////console.log(diff)
     if (diff > 1000 * 60 * 1) {
-        doit()
+       // doit()
     }
 
     setTimeout(function() {
@@ -1132,11 +1228,11 @@ async function doit() {
             if (!candies.includes(t)) {
                 candies.push(t);
                 if (ex == 'liquid') {
-                    modular.exchangeCandlesAndBooks(tickVols)
+                    //modular.exchangeCandlesAndBooks(tickVols)
                 } else if (ex != 'okex') {
                     if (t.indexOf('.') == -1) {
                         console.log('candle ' + t)
-                        modular.exchangeCandlesAndBooks(t)
+                        //modular.exchangeCandlesAndBooks(t)
                     }
                 }
                 // modular.exchangeCandles(t)
@@ -1277,7 +1373,7 @@ async function doit() {
         ////////////console.log('gogs length ' + gogs.length)
         if ((ex == 'liquid' || ex == 'okex' || ex == 'kucoin') && gogs.length > 0) {
             ////////////console.log(gogs)
-            modular.doob(gogs, 0)
+            //modular.doob(gogs, 0)
         }
         for (var symbol in stopp) {
             if (true) {
@@ -1370,12 +1466,13 @@ async function doit() {
 
                             if (sp < stopp[symbol]) {
                                 //let orders = await modular.exchangeOpenOrders();
-
+                                simOrders = {}    
                                 for (var o in orders) {
                                     if (orders[o].side.toUpperCase() == 'SELL' && orders[o].symbol == symbol) {
                                         //////////////////////////console.log(orders[o])
                                         //////////////////////////console.log('cancel')
-                                        modular.exchangeCancelOrder(orders[o])
+                                        simOrders = {}
+                                        //modular.exchangeCancelOrder(orders[o])
                                         ////////////////console.log('cancel')
 
                                     }
@@ -1390,9 +1487,12 @@ async function doit() {
                                         trading.push(symbol)
                                     }
                                     //sellQty = sellQty * bids[symbol]['default']
-
+                                    if (simOrders[symbol] == undefined){
+                                        simOrders[symbol] = {}
+                                    }
+                                    simOrders[symbol]['SELL'] = { 'qty':sellQty, 'price':0, 'type':'MARKET'}
                                     ////////////////////////////console.log('\sellQty: ' + sellQty)
-                                    modular.exchangeOrder(symbol, 'SELL', sellQty, 0, 'MARKET')
+                                    //modular.exchangeOrder(symbol, 'SELL', sellQty, 0, 'MARKET')
 
 
                                     ////////////////////console.log(o.orderId)
@@ -1605,7 +1705,8 @@ async function doit() {
                                     }
                                     if (ex == 'bitmex' || ex == "okex-futures" || ex == "okex-swap") {
                                         ////////////////console.log('orders')
-                                        let orders = await modular.exchangeOpenOrders(symbol);
+                                        simOrders = {}
+                                        //let orders = await modular.exchangeOpenOrders(symbol);
                                         for (var o in orders) {
                                             ////////////////console.log(orders[o].side.toUpperCase())
                                             ////////////////console.log(orders[o].symbol)
@@ -1614,7 +1715,7 @@ async function doit() {
                                             if (!cancelled.includes(orders[o].order_id)) {
                                                 console.log('cancel')
                                                 cancelled.push(orders[o].order_id)
-                                                modular.exchangeCancelOrder(orders[o])
+                                                //modular.exchangeCancelOrder(orders[o])
                                             }
                                             ////////////////console.log('cancel')
                                         }
@@ -1635,8 +1736,12 @@ async function doit() {
                                             //////////////console.log(dontgo)
                                             //////////////console.log(1)
                                             //sellQty = sellQty * bids[symbol]['default']
+                                            if (simOrders[symbol] == undefined){
+                                                simOrders[symbol] = {}
+                                            }
+                                            simOrders[symbol]['SELL'] = { 'qty':sellQty, 'price':sp, 'type':'LIMIT'}
 
-                                            modular.exchangeOrder(symbol, 'SELL', sellQty, sp, 'LIMIT')
+                                         //   modular.exchangeOrder(symbol, 'SELL', sellQty, sp, 'LIMIT')
                                         }
 
 
@@ -1647,12 +1752,12 @@ async function doit() {
                                     if ((sellQty > 0.0000000001) && dontgo == false && (neversellataloss == true && (buyOs[symbol][buyOs[symbol].length - 1].price == 0) || (sp > buyOs[symbol][buyOs[symbol].length - 1].price))) {
                                         console.log('sellqty: ' + sellQty + ': ' + symbol);
                                         //let orders = await modular.exchangeOpenOrders();
-
+                                        simOrders = {}
                                         for (var o in orders) {
                                             if (orders[o].side.toUpperCase() == 'SELL' && orders[o].symbol == symbol) {
                                                 //////////////////////////console.log(orders[o])
                                                 //////////////////////////console.log('cancel')
-                                                modular.exchangeCancelOrder(orders[o])
+                                                //modular.exchangeCancelOrder(orders[o])
                                                 ////////////////console.log('cancel')
 
                                             }
@@ -1672,8 +1777,12 @@ async function doit() {
                                                 //////////////console.log(dontgo)
                                                 //////////////console.log(2)
                                                 //sellQty = sellQty * bids[symbol]['default']
+                                                if (simOrders[symbol] == undefined){
+                                                    simOrders[symbol] = {}
+                                                }
+                                                simOrders[symbol]['SELL'] =  { 'qty':sellQty, 'price':sp, 'type':'LIMIT'}
 
-                                                modular.exchangeOrder(symbol, 'SELL', sellQty, sp, 'LIMIT')
+                                                //modular.exchangeOrder(symbol, 'SELL', sellQty, sp, 'LIMIT')
                                             }
 
                                             ////////////////////console.log(o.orderId)
@@ -1689,12 +1798,12 @@ async function doit() {
                                     }
                                 } else if ((sellQty > 0.0000000001) && dontgo == false) {
                                     //let orders = await modular.exchangeOpenOrders();
-
+                                    simOrders = {}
                                     for (var o in orders) {
                                         if (orders[o].side.toUpperCase() == 'SELL' && orders[o].symbol == symbol) {
                                             //////////////////////////console.log(orders[o])
                                             //////////////////////////console.log('cancel')
-                                            modular.exchangeCancelOrder(orders[o])
+                                            //modular.exchangeCancelOrder(orders[o])
                                             ////////////////console.log('cancel')
 
                                         }
@@ -1716,8 +1825,11 @@ async function doit() {
                                             //////////////console.log(dontgo)
                                             //////////////console.log(3)                                    //sellQty = sellQty * bids[symbol]['default']
                                             //sellQty = sellQty * bids[symbol]['default']
-
-                                            modular.exchangeOrder(symbol, 'SELL', sellQty, sp, 'LIMIT')
+                                            if (simOrders[symbol] == undefined){
+                                                simOrders[symbol] = {}
+                                            }
+                                            simOrders[symbol]['SELL'] =  { 'qty':sellQty, 'price':sp, 'type':'LIMIT'}
+                                            //modular.exchangeOrder(symbol, 'SELL', sellQty, sp, 'LIMIT')
                                         }
 
                                         ////////////////////console.log(o.orderId)
@@ -1948,12 +2060,12 @@ async function doit() {
                                             console.log('sellqty33: ' + sellQty + ': ' + symbol);
                                             if ((sellQty > 0.00000000000000001) && dontgo == false && (neversellataloss == true && (buyOs[symbol][buyOs[symbol].length - 1].price == 0 || sp > buyOs[symbol][buyOs[symbol].length - 1].price || buyOs[symbol] == undefined))) {
                                                 //let orders = await modular.exchangeOpenOrders();
-
+                                                simOrders = {}
                                                 for (var o in orders) {
                                                     if (orders[o].side.toUpperCase() == 'SELL' && orders[o].symbol == symbol) {
                                                         //////////////////////////console.log(orders[o])
                                                         //////////////////////////console.log('cancel')
-                                                        modular.exchangeCancelOrder(orders[o])
+                                                        //modular.exchangeCancelOrder(orders[o])
                                                         ////////////////console.log('cancel')
 
                                                     }
@@ -1973,8 +2085,11 @@ async function doit() {
                                                         //////////////console.log(dontgo)
                                                         //////////////console.log(5)
                                                         //sellQty = sellQty * bids[symbol]['default']
-
-                                                        modular.exchangeOrder(symbol, 'SELL', sellQty, sp, 'LIMIT')
+                                                        if (simOrders[symbol] == undefined){
+                                                            simOrders[symbol] = {}
+                                                        }
+                                                        simOrders[symbol]['SELL'] = { 'qty':sellQty, 'price':sp, 'type':'LIMIT'}
+                                                      //.  modular.exchangeOrder(symbol, 'SELL', sellQty, sp, 'LIMIT')
                                                     }
 
                                                     ////////////////////console.log(o.orderId)
@@ -1987,13 +2102,14 @@ async function doit() {
                                                 }
                                             }
                                         } else if ((sellQty > 0.00000000000000001) && dontgo == false) {
+                                            simOrders = {}    
                                             //let orders = await modular.exchangeOpenOrders();
                                             ////////////////console.log('go go')
                                             for (var o in orders) {
                                                 if (orders[o].side.toUpperCase() == 'SELL' && orders[o].symbol == symbol) {
                                                     //////////////////////////console.log(orders[o])
                                                     //////////////////////////console.log('cancel')
-                                                    modular.exchangeCancelOrder(orders[o])
+                                                    //modular.exchangeCancelOrder(orders[o])
                                                     ////////////////console.log('cancel')
 
                                                 }
@@ -2013,8 +2129,11 @@ async function doit() {
                                                     //////////////console.log(dontgo)
                                                     //////////////console.log(6)
                                                     //sellQty = sellQty * bids[symbol]['default']
-
-                                                    modular.exchangeOrder(symbol, 'SELL', sellQty, sp, 'LIMIT')
+                                                    if (simOrders[symbol] == undefined){
+                                                        simOrders[symbol] = {}
+                                                    }
+                                                    simOrders[symbol]['SELL'] =  { 'qty':sellQty, 'price':sp, 'type':'LIMIT'}
+                                                   // modular.exchangeOrder(symbol, 'SELL', sellQty, sp, 'LIMIT')
                                                 }
 
                                                 ////////////////////console.log(o.orderId)
@@ -2148,7 +2267,7 @@ async function doit() {
                                 }
                                 //////////////console.log('tobuy: ' + tobuy)
                                 //////////////console.log('at price: ' + toprice)
-                                let o = await modular.exchangeOrder(theoneasset + theonebase, 'BUY', tobuy, toprice, 'LIMIT')
+                              //  let o = await modular.exchangeOrder(theoneasset + theonebase, 'BUY', tobuy, toprice, 'LIMIT')
                                 //////////////console.log(o)
                                 gobuyforfun = false;
                                 setTimeout(function() {
@@ -2210,6 +2329,7 @@ async function doit() {
                                     //buyQty = ((bals[symbol.substring(symbol.length - 3, symbol.length)] / (hb * bpSetting) / Object.keys(gos[g]).length));
                                     //testing
                                     if (ex == 'okex-futures' || ex == 'okex-swap') {
+                                        simOrders = {}
                                         for (var o in orders) {
                                             for (var order in orders[o]) {
                                                 //console.log(orders[o])
@@ -2219,7 +2339,7 @@ async function doit() {
                                                     if (!cancelled.includes(orders[o][order].order_id)) {
                                                         console.log('cancel')
                                                         cancelled.push(orders[o][order].order_id)
-                                                        modular.exchangeCancelOrder(orders[o][order])
+                                                        //exchangeCancelOrder(orders[o][order])
                                                     }
                                                     ////////////////console.log('cancel')
 
@@ -2366,6 +2486,7 @@ async function doit() {
                                             trading.push(symbol)
                                         }
                                         stopp[symbol] = stop;
+                                        simOrders = {}
                                         if (ex == 'bitmex' || ex == "okex-futures" || ex == "okex-swap") {
                                             //let orders = await modular.exchangeOpenOrders();
                                             for (var o in orders) {
@@ -2377,16 +2498,17 @@ async function doit() {
                                                 if (!cancelled.includes(orders[o].order_id)) {
                                                     console.log('cancel')
                                                     cancelled.push(orders[o].order_id)
-                                                    modular.exchangeCancelOrder(orders[o])
+                                                   // modular.exchangeCancelOrder(orders[o])
                                                 }
                                                 ////////////////console.log('cancel')
                                             }
                                         } else {
+                                            simOrders = {}
                                             // //let orders = await modular.exchangeOpenOrders(symbol);
                                             for (var o in orders) {
                                                 if (orders[o].side.toUpperCase() == 'BUY' && orders[o].symbol == symbol) {
                                                     //////console.log('cancel')
-                                                    modular.exchangeCancelOrder(orders[o])
+                                                    //modular.exchangeCancelOrder(orders[o])
 
 
                                                 }
@@ -2407,9 +2529,13 @@ async function doit() {
                                                 //////////////////////console.log
                                                 ////////////////console.log(bp)
                                                 ////////////////console.log('8')
-
-                                                modular.exchangeOrder(symbol, 'BUY', buyQty, bp, 'LIMIT')
-                                                modular.exchangeOrder(symbol, 'SELL', buyQty, sp, 'LIMIT')
+                                                if (simOrders[symbol] == undefined){
+                                                    simOrders[symbol] = {}
+                                                }
+                                                simOrders[symbol]['BUY'] =  { 'qty':buyQty, 'price':bp, 'type':'LIMIT'}
+                                                simOrders[symbol]['SELL'] =  { 'qty':sellQty, 'price':sp, 'type':'LIMIT'}
+                                               // modular.exchangeOrder(symbol, 'BUY', buyQty, bp, 'LIMIT')
+                                                ///modular.exchangeOrder(symbol, 'SELL', buyQty, sp, 'LIMIT')
                                                 ////////////////////console.log(o.orderId)
                                                 //orderIds.push(o.orderId)
                                             }
@@ -2439,16 +2565,11 @@ async function doit() {
         }
 
         ////////////console.log(update * 1 + ' intervals')
-        setTimeout(function() {
-            doit();
-        }, doitmult * 60000)
+        
         count++;
 
     } catch (err) {
         //////console.log(err)
-        setTimeout(function() {
-            doit();
-        }, doitmult * 60000)
         ////////////console.log(err);
     }
 }
@@ -2496,7 +2617,6 @@ let thebooks = {}
 module.exports.renew = renew
 module.exports.divisor = divisor
 module.exports.minProfit = minProfit
-module.exports.avgBids = avgBids
 module.exports.buyOs = buyOs
 module.exports.dontgo2 = dontgo2
 module.exports.tradeids = tradeids
@@ -2507,12 +2627,9 @@ module.exports.app = app
 module.exports.candies = candies
 module.exports.precisions = precisions
 module.exports.filters = filters
-module.exports.asks = asks
-module.exports.bids = bids
 module.exports.pairs = pairs
 module.exports.btcs = btcs
 module.exports.btcs2 = btcs2
-module.exports.tickVols = tickVols
 module.exports.bases = bases
 module.exports.ticks = ticks
 module.exports.vols = vols
