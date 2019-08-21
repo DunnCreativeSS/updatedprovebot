@@ -1,49 +1,59 @@
 module.exports = {
 
 };var tickVols = {}
+const BitMEXClient = require('bitmex-realtime-api');
+// See 'options' reference below
+const client = new BitMEXClient({testnet: true});
+
 var bids = {}
 var asks = {}
 var avgBids = {}
 var crypto = require('crypto');
 var request = require('request')
-let modular = require('./simulation.js')
+let modular = require('./modular.js')
 var ccxt = require("ccxt");
-let apiKey = 'tBInqP4xJW7CWOveLJdtHamI'
-let apiSecret = 'a7mTp9Y4rvYqIL5nb7PQ0Z-9e5YzPC5DwdEX_r_wLK49h_Ne'
-let bitmex  = new ccxt.bitmex ({ 'enableRateLimit': true, apiKey: "tBInqP4xJW7CWOveLJdtHamI", secret: "a7mTp9Y4rvYqIL5nb7PQ0Z-9e5YzPC5DwdEX_r_wLK49h_Ne" })
+let apiKey = 'AAb8HWz-y3z8pMw8U-r5PL73'
+let apiSecret = 'CgQ1m3g4coPcmtqIBuCxcbRMMoK9R_f_NQQ-_Pl8Rh2-ZmmL'
+let bitmex  = new ccxt.bitmex ({ 'enableRateLimit': true, apiKey: "AAb8HWz-y3z8pMw8U-r5PL73", secret: "CgQ1m3g4coPcmtqIBuCxcbRMMoK9R_f_NQQ-_Pl8Rh2-ZmmL" })
 bitmex.urls['api'] = bitmex.urls['test'];
 
 
-setInterval(async function(){
+setTimeout(async function(){
   let tickers = await bitmex.fetchTickers()
   for (var t in tickers) {
-    if (modular.asks[tickers[t].symbol] == undefined) {
-            modular.asks[tickers[t].symbol] = {}
-            modular.bids[tickers[t].symbol] = {}
-            asks[tickers[t].symbol] = {}
-            bids[tickers[t].symbol] = {}
+      if (tickers[t].symbol.includes('U19') && !tickers[t].symbol.includes('XBT')){
+        client.addStream(tickers[t].symbol, 'instrument', function (data, symbol, tableName) {
+            if (!data.length) return;
+            const quote = data[data.length - 1];  // the last data element is the newest quote
+            // Do something with the quote (.bidPrice, .bidSize, .askPrice, .askSize)
+        //console.log(quote)
+          
+    if (modular.asks[symbol] == undefined) {
+            modular.asks[symbol] = {}
+            modular.bids[symbol] = {}
+            asks[symbol] = {}
+            bids[symbol] = {}
         }
         let pair;
-        if (tickers[t].symbol.substring(tickers[t].symbol.length - 4, tickers[t].symbol.length).startsWith('USD')) {
-            pair = tickers[t].symbol.substring(0, tickers[t].symbol.length - 4) + '/' + tickers[t].symbol.substring(tickers[t].symbol.length - 4, tickers[t].symbol.length);
+        if (symbol.substring(symbol.length - 4, symbol.length).startsWith('USD')) {
+            pair = symbol.substring(0, symbol.length - 4) + '/' + symbol.substring(symbol.length - 4, symbol.length);
         } else {
-            pair = tickers[t].symbol.substring(0, tickers[t].symbol.length - 3) + '/' + tickers[t].symbol.substring(tickers[t].symbol.length - 3, tickers[t].symbol.length);
+            pair = symbol.substring(0, symbol.length - 3) + '/' + symbol.substring(symbol.length - 3, symbol.length);
 
         }
         if (!modular.pairs.includes(pair)) {
             modular.pairs.push(pair);
         }
-        modular.asks[tickers[t].symbol]['default'] = tickers[t].ask
-        modular.bids[tickers[t].symbol]['default'] = tickers[t].bid
-        asks[tickers[t].symbol]['default'] = tickers[t].ask
-        bids[tickers[t].symbol]['default'] = tickers[t].bid
+        modular.asks[symbol]['default'] = quote.askPrice
+        modular.bids[symbol]['default'] = quote.bidPrice
+        asks[symbol]['default'] = quote.askPrice
+        bids[symbol]['default'] = quote.bidPrice
         
-        if (tickers[t].symbol == 'ETH/USD') {
-            btcs['ETH'] = tickers[t].bid;
-        } else if (tickers[t].symbol == 'BNBBTC') {
-            btcs['BNB'] = tickers[t].bid;
+        if (symbol == 'ETH/USD') {
+            btcs['ETH'] = quote.bidPrice;
+        } else if (symbol == 'BNBBTC') {
+            btcs['BNB'] = quote.bidPrice;
         }
-        let symbol = tickers[t].symbol;
         let asset;
         if (symbol.substring(symbol.length - 3, symbol.length) == 'BTC') {
 
@@ -51,57 +61,58 @@ setInterval(async function(){
 
 
             if (asset != 'ETH' && asset != 'BTC' && asset != 'USD' && asset != 'BNB') {
-                btcs[asset] = parseFloat(tickers[t].bid)
+                btcs[asset] = parseFloat(quote.bidPrice)
             }
 
         }
 
-        if (tickers[t].symbol == 'BTC/USD') {
+        if (symbol == 'BTC/USD') {
 
             for (b in btcs) {
                 btcs2[b] = btcs[b]
             }
-            btcs['BTC'] = parseFloat(tickers[t].bid);
+            btcs['BTC'] = parseFloat(quote.bidPrice);
         }
-        let spread = (100 * (1 - parseFloat(tickers[t].bid) / parseFloat(tickers[t].ask)))
-        spreads[tickers[t].symbol] = spread;
-        modular.tickVols[tickers[t].symbol] = (parseFloat(tickers[t].quoteVolume))
-        tickVols[tickers[t].symbol] = (parseFloat(tickers[t].quoteVolume))
-        if (!modular.ticks.includes(tickers[t].symbol) && spread) {
-            //spreads[tickers[t].symbol] = spread;
-            //tickVols[tickers[t].symbol] = (parseFloat(tickers[t].volumeQuote))
-            if (tickers[t].symbol.substring(tickers[t].symbol.length - 4, tickers[t].symbol.length).includes('USD')) {
-                if (!modular.bases.includes(tickers[t].symbol.substring(tickers[t].symbol.length - 4, tickers[t].symbol.length))) {
-                    modular.bases.push(tickers[t].symbol.substring(tickers[t].symbol.length - 4, tickers[t].symbol.length))
+        let spread = (100 * (1 - parseFloat(quote.bidPrice) / parseFloat(quote.askPrice)))
+        spreads[symbol] = spread;
+        modular.tickVols[symbol] = (parseFloat(quote.volume24h))
+        tickVols[symbol] = (parseFloat(quote.volume24h))
+        if (!modular.ticks.includes(symbol) && spread) {
+            //spreads[symbol] = spread;
+            //tickVols[symbol] = (parseFloat(quote.volumeQuote))
+            if (symbol.substring(symbol.length - 4, symbol.length).includes('USD')) {
+                if (!modular.bases.includes(symbol.substring(symbol.length - 4, symbol.length))) {
+                    modular.bases.push(symbol.substring(symbol.length - 4, symbol.length))
                 }
             } else {
-                if (!modular.bases.includes(tickers[t].symbol.substring(tickers[t].symbol.length - 3, tickers[t].symbol.length))) {
-                    modular.bases.push(tickers[t].symbol.substring(tickers[t].symbol.length - 3, tickers[t].symbol.length))
+                if (!modular.bases.includes(symbol.substring(symbol.length - 3, symbol.length))) {
+                    modular.bases.push(symbol.substring(symbol.length - 3, symbol.length))
                 }
             }
-            modular.ticks.push(tickers[t].symbol)
+            modular.ticks.push(symbol)
             for (var t in tickers) {
                 for (b in modular.bases) {
                     if (modular.vols[modular.bases[b]] == undefined) {
                         modular.vols[modular.bases[b]] = 0;
                         modular.cs[modular.bases[b]] = 0;
                     }
-                    if (tickers[t].symbol.substring(tickers[t].symbol.length - 4, tickers[t].symbol.length) == modular.bases[b]) {
-                        modular.vols[modular.bases[b]] += (parseFloat(tickers[t].quoteVolume));
+                    if (symbol.substring(symbol.length - 4, symbol.length) == modular.bases[b]) {
+                        modular.vols[modular.bases[b]] += (parseFloat(quote.volume24h));
                         modular.cs[modular.bases[b]]++;
-                    } else if (tickers[t].symbol.substring(tickers[t].symbol.length - 3, tickers[t].symbol.length) == modular.bases[b]) {
-                        modular.vols[modular.bases[b]] += (parseFloat(tickers[t].quoteVolume));
+                    } else if (symbol.substring(symbol.length - 3, symbol.length) == modular.bases[b]) {
+                        modular.vols[modular.bases[b]] += (parseFloat(quote.volume24h));
                         modular.cs[modular.bases[b]]++;
                     }
                 }
 
             }
 
-        }
+        }  });
+    }
     }
         
     
-}, 5000)
+}, 1000)
 let thebooks = {}
 let candles = {}
 const express = require('express');
@@ -157,7 +168,7 @@ app.get('/tickVols', (req, res) => {
     res.json(tickVols)
 });
 
-app.listen(process.env.binPORT || 3003, function() {});
+app.listen(process.env.binPORT || 3001, function() {});
 
 let candies = []
 

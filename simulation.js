@@ -1,7 +1,7 @@
 module.exports = {
 
 };
-var simBal = 0.1;
+var simBal = 0.2677;
 var simOrders = {}
 var simPoses = {}
 setInterval(function() {
@@ -120,8 +120,8 @@ let targetBid = parseFloat(process.env.targetBid)
 let percentToBuy = parseFloat(process.env.percentToBuy)
 let theonebase = process.env.oneBase || ""
 let theoneasset = process.env.oneAsset || ""
-let bpSetting = parseFloat(process.env.bpSetting) || 1.000005
-let spSetting = parseFloat(process.env.spSetting) || 0.999995
+let bpSetting = parseFloat(process.env.bpSetting) || 1
+let spSetting = parseFloat(process.env.spSetting) || 1
 let hourlyMult = parseFloat(process.env.hourlyMult) || 64;
 let minProfit = parseFloat(process.env.minProfit) || 1.0000;
 let targetSpread = parseFloat(process.env.targetSpread) || .00;
@@ -166,11 +166,11 @@ let orders;
 
 function trim(number, precision) {
     base = 10;
-    //////////////console.log('number: ' + number)
-    //////////////console.log('prec: ' + precision)
+    ////////////////////console.log('number: ' + number)
+    ////////////////////console.log('prec: ' + precision)
     number = Math.floor(number * Math.pow(base, precision)) / Math.pow(base, precision);
 
-    //////////////console.log(number)
+    ////////////////////console.log(number)
     return (number)
 }
 
@@ -211,7 +211,7 @@ if (ex == 'bitmex') {
 setInterval(async function() {
     let os = []
     if (ex == 'bitmex' || ex == 'okex-futures' || ex == 'okex-swap') {
-        //////////////////console.log(trading)
+        ////////////////////////console.log(trading)
         for (var sym in trading) {
             //os[sym] = await modular.exchangeOpenOrders(trading[sym])
         }
@@ -222,13 +222,13 @@ setInterval(async function() {
             }
         }
         orders = o
-        // ////////////////console.log(orders)
+        // //////////////////////console.log(orders)
     } else {
         if (ex == 'darb') {
             let ts = new Date().getTime()
             let text = "timestamp=" + ts.toString()
             hash = crypto.createHmac('sha256', process.env.binApiSecret || "fMgIClpANlFKvfmESQgMbND9BZR6fUWLpDd2yTCMERgA7TOZt5vVR8eci6iNaFjQ").update(text).digest('hex')
-            ////////console.log(hash)
+            //////////////console.log(hash)
             var options = {
                 method: 'GET',
                 url: 'https://api.darbfinance.com/api/v1/openOrders?timestamp=' + ts.toString() + '&signature=' + hash,
@@ -237,15 +237,15 @@ setInterval(async function() {
                     "Content-Type": "application/json"
                 }
             };
-            //////////console.log(options)
+            ////////////////console.log(options)
             request(options, function(error, response, body) {
-                ////////console.log(error)
+                //////////////console.log(error)
                 body = JSON.parse(body)
                 orders = body
             })
         } else {
             //orders = await modular.exchangeOpenOrders()
-            ////////console.log(orders)
+            //////////////console.log(orders)
         }
     }
 }, waittime + 180000)
@@ -359,21 +359,21 @@ setInterval(async function() {
                     rsis[symbol][bbc[symbol]] = rsi(rsiHistory[symbol][bbc[symbol]], 14)
 
                     if (rsis[symbol][bbc[symbol]][rsis[symbol][bbc[symbol]].length - 1] != undefined) {
-                        ////////////////////////////console.log(rsis[symbol][bbc[symbol]][rsis[symbol][bbc[symbol]].length-1]);
+                        //////////////////////////////////console.log(rsis[symbol][bbc[symbol]][rsis[symbol][bbc[symbol]].length-1]);
                         var theRsi = rsis[symbol][bbc[symbol]][rsis[symbol][bbc[symbol]].length - 1].rsi
-                        ////////////////////////////console.log(symbol + ': theRsi: ' + theRsi)
+                        //////////////////////////////////console.log(symbol + ': theRsi: ' + theRsi)
                         if (dorsi && theRsi != -1) {
                             if (theRsi > 70) { //don't buy
-                                ////////////////////////////console.log(symbol + ' dontbuyrsi ' + theRsi)
+                                //////////////////////////////////console.log(symbol + ' dontbuyrsi ' + theRsi)
                                 dontbuyrsi[symbol] = true;
                                 ////let orders = await modular.exchangeOpenOrders();
                                 //simOrders = {}
                                 for (var o in orders) {
                                     if (orders[o].side.toUpperCase() == 'BUY' && orders[o].symbol == symbol) {
-                                        ////////////////////////////////console.log(orders[o])
-                                        ////////////////////////////////console.log('cancel')
+                                        //////////////////////////////////////console.log(orders[o])
+                                        //////////////////////////////////////console.log('cancel')
                                         //modular.exchangeCancelOrder(orders[o])
-                                        //////////////////////console.log('cancel')
+                                        ////////////////////////////console.log('cancel')
 
 
                                     }
@@ -382,16 +382,16 @@ setInterval(async function() {
                                 dontbuyrsi[symbol] = false
                             }
                             if (theRsi < 30 && dorsistopsell) { //don't sell
-                                ////////////////////////////console.log(symbol + ' dontsellrsi ' + theRsi)
+                                //////////////////////////////////console.log(symbol + ' dontsellrsi ' + theRsi)
                                 dontsellrsi[symbol] = true
                                 //let orde  rs = await modular.exchangeOpenOrders();
                                 //simOrders = {}
                                 for (var o in orders) {
                                     if (orders[o].side.toUpperCase() == 'SELL' && orders[o].symbol == symbol) {
-                                        ////////////////////////////////console.log(orders[o])
-                                        ////////////////////////////////console.log('cancel')
+                                        //////////////////////////////////////console.log(orders[o])
+                                        //////////////////////////////////////console.log('cancel')
                                         //modular.exchangeCancelOrder(orders[o])
-                                        //////////////////////console.log('cancel')
+                                        ////////////////////////////console.log('cancel')
 
                                     }
                                 }
@@ -403,19 +403,19 @@ setInterval(async function() {
                 }
                 var bb = bands[symbol][bbc[symbol]][bands[symbol][bbc[symbol]].length - 1].ub
                 if (true) {
-                    // ////////////////////////////console.log('onn of the 10 6-secondly bollinger band ub is ' + bb)
+                    // //////////////////////////////////console.log('onn of the 10 6-secondly bollinger band ub is ' + bb)
                 }
                 if (dobollingerbands) {
                     if (asks[symbol]['default'] > bb) {
-                        ////////////////////////////console.log('gogobb false ' + bb)
+                        //////////////////////////////////console.log('gogobb false ' + bb)
                         //let orders = await modular.exchangeOpenOrders();
                         //simOrders = {}
                         for (var o in orders) {
                             if (orders[o].side.toUpperCase() == 'BUY' && orders[o].symbol == symbol) {
-                                ////////////////////////////////console.log(orders[o])
-                                ////////////////////////////////console.log('cancel')
+                                //////////////////////////////////////console.log(orders[o])
+                                //////////////////////////////////////console.log('cancel')
                                 //modular.exchangeCancelOrder(orders[o])
-                                //////////////////////console.log('cancel')
+                                ////////////////////////////console.log('cancel')
 
                             }
                         }
@@ -432,7 +432,7 @@ setInterval(async function() {
 
             }
         } catch (err) {
-            //////////////////console.log(err)
+            ////////////////////////console.log(err)
         }
 
     }
@@ -462,7 +462,7 @@ let least = 99999999999999999999999999999999;
 app.set('view engine', 'ejs');
 var MongoClient = require('mongodb').MongoClient;
 let gocount = 0;
-app.listen(process.env.binPORT1 || 3008, function() {});
+app.listen(process.env.binPORT1 || 3015, function() {});
 
 var sortBy = (function() {
     var toString = Object.prototype.toString,
@@ -550,7 +550,7 @@ async function doSharpe() {
         rdiffs.shift();
         retdiffs.shift();
     }
-    ////////////////////////////////console.log(rdiff)
+    //////////////////////////////////////console.log(rdiff)
     // Build the equity curves corresponding to the returns
     returnPortfolio = new Array(retdiffs.length + 1);
     benchmark = new Array(rdiffs.length + 1);
@@ -565,7 +565,7 @@ async function doSharpe() {
         zeroRisk[i + 1] = zeroRisk[i];
     }
     sharpe = PortfolioAnalytics.sharpeRatio(returnPortfolio, benchmark)
-    ////////////////////////////////console.log('sharpe: ' + sharpe)
+    //////////////////////////////////////console.log('sharpe: ' + sharpe)
 }
 setTimeout(function() {
     doSharpe();
@@ -641,19 +641,19 @@ var doitcount = 0;
 
 function func(data) {
     data = data.split('","')
-    //////console.log(data)
+    ////////////console.log(data)
     let rrr = data[1]
-    ////////console.log(rrr)
+    //////////////console.log(rrr)
     try{
     tickVols = JSON.parse(rrr.replace(/'/g, '"'))
-    //////////console.log(url)
+    ////////////////console.log(url)
     let r0 = data[2]
     let ss = JSON.parse(r0.replace(/'/g, '"'))
     for (var s in ss) {
         spreads[s] = ss[s]
     }
 
-    // //////////////////////console.log(candles)
+    // ////////////////////////////console.log(candles)
     let r2 = data[3]
     let bs = JSON.parse(r2.replace(/'/g, '"'))
     for (var b in bs) {
@@ -686,8 +686,8 @@ function func(data) {
     r2 = data[9]
     bs = JSON.parse(r2.replace(/'/g, '"'))
     btcs2 = bs
-    ////////console.log(bs)
-    //////////////////console.log(bs)
+    //////////////console.log(bs)
+    ////////////////////////console.log(bs)
 
     avgBids = JSON.parse(r2.replace(/'/g, '"'))
     r2 = data[12]
@@ -716,115 +716,126 @@ function func(data) {
                     bals[b] = bs[b]
                 }
             }
+            bals['BTC'] = simBal
+            ////console.log(bals)
             doitcount++
             checkStuff()
             if (doitcount == 60) {
+               // //console.log(simOrders)
                 doitcount = 0;
-////console.log(simOrders)
-    console.log(simBal)
+   console.log(simBal)
+    //////////console.log(simOrders)
+    //////console.log(simOrders)
     simorders = {}
                 doit()
             }
         }catch (err){
-////console.log(err)
+//////////console.log(err)
         }
         }
 function checkStuff(){
+    console.log(simPoses)
+    var post = 0
+
+    for (var b in simPoses) {
+
+        for (var c in simPoses[b]) {
+            if (parseFloat(simPoses[b]['qty']) < 0){
+                post = post - parseFloat(simPoses[b]['qty']) 
+            }else {
+                post = post + parseFloat(simPoses[b]['qty']) 
+            }
+        }
+    }
+    ////console.log(simPoses)
+    var price = 1
+    //console.log(simOrders)
     for (var a in asks) {
         for (var b in simPoses) {
             if (a == b) {
-                for (var c in simPoses[b]) {
-                    if (simPoses[b][c]['qty'] < 0) {
-                        if (parseFloat(simPoses[b][c]['qty']) * 25 * (parseFloat(asks[a]) / parseFloat(simPoses[b][c]['price'])) < 0){
-                        //simBal = simBal + parseFloat(simPoses[b][c]['qty']) * 25 * (parseFloat(asks[a]) / parseFloat(simPoses[b][c]['price']))
-                        }
-                    }
-                    if (simPoses[b][c]['qty'] > 0) {
-                        if (parseFloat(simPoses[b][c]['qty']) * 25 * (parseFloat(simPoses[b][c]['price'] ) / parseFloat(asks[a])) > 0){
-                        //simBal = simBal +  parseFloat(simPoses[b][c]['qty']) * 25 * (parseFloat(simPoses[b][c]['price'] ) / parseFloat(asks[a]))
+                price = price * parseFloat(simPoses[b]['price'])/parseFloat(asks[a]['default'])
+                simPoses[b]['price']= parseFloat(asks[a]['default'])
+            }
+        }
+    }
+   // //console.log(price)
+ simBal = simBal * price
+    ////////////console.log(simOrders)
+    for (var b in asks) {
+
+        for (var a in simOrders) {
+            if (a == b) {
+                for (var side in simOrders[a]) {
+                    if (side == 'SELL') {
+                     //   //console.log(simOrders[a][side])
+                     // //console.log(bids[b])
+                        if (simOrders[a][side]['price'] < asks[b]['default']) {
+                            if (a.includes('USD')) {
+                                if ( (parseFloat(simOrders[a][side]['qty']) * (20 / 4 * 29) / 157 * parseFloat(simOrders[a][side]['price'])) * 0.000250 > 0){
+                                   // simBal = simBal + (parseFloat(simOrders[a][side]['qty']) * 20 * parseFloat(simOrders[a][side]['price'])) * 0.000250
+
+                                }else if ( (parseFloat(simOrders[a][side]['qty']) * (20 / 4 * 29) / 157 * parseFloat(simOrders[a][side]['price'])) * 0.000250 < 0){
+                                    //simBal = simBal - (parseFloat(simOrders[a][side]['qty']) * 20 * parseFloat(simOrders[a][side]['price'])) * 0.000250
+
+                                }
+                            } else {
+                                if ( (parseFloat(simOrders[a][side]['qty']) * (20 / 4 * 29) / 157 * parseFloat(simOrders[a][side]['price'])) * 0.000250 > 0&&  (parseFloat(simOrders[a][side]['qty']) * 20 * parseFloat(simOrders[a][side]['price'])) * 0.0005 < 0.0001){
+                                    simBal = simBal + (parseFloat(simOrders[a][side]['qty']) * (20 / 4 * 29) / 157 * parseFloat(simOrders[a][side]['price'])) * 0.0005
+
+                                }
+
+                            }
+                            if (simPoses[a] == undefined) {
+                                simPoses[a] = {'price': simOrders[a][side]['price'],
+                                'qty': simOrders[a][side]['qty']}
+                            }
+                            var theQty = simOrders[a][side]['qty']
+                            simPoses[a] = {'qty': simPoses[a]['qty'] + simOrders[a][side]['qty'], 'price': simOrders[a][side]['price'] }
+                            ////console.log(simPoses)
+                           console.log('sell')
+                            simOrders[a]['SELL'] = {}
                         }
                     }
                 }
             }
         }
     }
-    ////console.log(simOrders)
-    for (var b in asks) {
+    for (var b in bids) {
         for (var a in simOrders) {
             if (a == b) {
                 for (var side in simOrders[a]) {
                     if (side == 'BUY') {
 
-                           // //console.log(simOrders[a][side]['price'])
-                           // //console.log(asks[b]['default'])
-                        if (simOrders[a][side]['price'] < asks[b]['default']) {
+                        if (simOrders[a][side]['price'] > bids[b]['default']) {
                             if (a.includes('USD')) {
-                                if ( (parseFloat(simOrders[a][side]['qty']) * 25 * parseFloat(simOrders[a][side]['price'])) * 0.000250 > 0){
-                                    //simBal = simBal + (parseFloat(simOrders[a][side]['qty']) * 25 * parseFloat(simOrders[a][side]['price'])) * 0.000250
+                                if ( (parseFloat(simOrders[a][side]['qty']) * (20 / 4 * 29) / 157 *parseFloat(simOrders[a][side]['price'])) * 0.000250 > 0){
+                                    //simBal = simBal + (parseFloat(simOrders[a][side]['qty']) * 20 * parseFloat(simOrders[a][side]['price'])) * 0.000250
 
-                                }else if ( (parseFloat(simOrders[a][side]['qty']) * 25 * parseFloat(simOrders[a][side]['price'])) * 0.000250 < 0){
-//                                    simBal = simBal - (parseFloat(simOrders[a][side]['qty']) * 25 * parseFloat(simOrders[a][side]['price'])) * 0.000250
+                                }else if ( (parseFloat(simOrders[a][side]['qty']) * (20 / 4 * 29) / 157 * parseFloat(simOrders[a][side]['price'])) * 0.000250 < 0){
+//                                    simBal = simBal - (parseFloat(simOrders[a][side]['qty']) * 20 * parseFloat(simOrders[a][side]['price'])) * 0.000250
 
                                 }
-                            } else if (a.includes('U19')) {
-                                if ( (parseFloat(simOrders[a][side]['qty']) * 25 * parseFloat(simOrders[a][side]['price'])) * 0.000250 > 0 &&  (parseFloat(simOrders[a][side]['qty']) * 25 * parseFloat(simOrders[a][side]['price'])) * 0.0005 < 0.0001){
-                                    simBal = simBal + (parseFloat(simOrders[a][side]['qty']) * 25 * parseFloat(simOrders[a][side]['price'])) * 0.0005
+                            } else {
+                                if ( (parseFloat(simOrders[a][side]['qty']) * (20 / 4 * 29) / 157 * parseFloat(simOrders[a][side]['price'])) * 0.000250 > 0 &&  (parseFloat(simOrders[a][side]['qty']) * 20 * parseFloat(simOrders[a][side]['price'])) * 0.0005 < 0.0001){
+                                    simBal = simBal + (parseFloat(simOrders[a][side]['qty']) * (20 / 4 * 29) / 157 * parseFloat(simOrders[a][side]['price'])) * 0.0005
                                 }
                             }
                             if (simPoses[a] == undefined) {
-                                simPoses[a] = []
+                                simPoses[a] = {'price': simOrders[a][side]['price'],
+                                'qty': simOrders[a][side]['qty']}
                             }
+                          console.log('buy')
                             var theQty = simOrders[a][side]['qty']
-                            simPoses[a].push({
-                                'price': simOrders[a][side]['price'],
-                                'qty': theQty
-                            })
-                            simOrders[a] = {}
+                            simPoses[a] = {'qty': simPoses[a]['qty'] + simOrders[a][side]['qty'], 'price': simOrders[a][side]['price'] }
+                            ////console.log(simPoses)
+                            simOrders[a]['BUY'] = {}
                         }
                     }
                 }
             }
         }
     }
-        for (var b in bids) {
-
-            for (var a in simOrders) {
-                if (a == b) {
-                    for (var side in simOrders[a]) {
-                        if (side == 'SELL') {
-                          //  //console.log(simOrders[a][side]['price'])
-                          //  //console.log(bids[b]['default'])
-                            if (simOrders[a][side]['price'] > bids[b]['default']) {
-                                if (a.includes('USD')) {
-                                    if ( (parseFloat(simOrders[a][side]['qty']) * 25 * parseFloat(simOrders[a][side]['price'])) * 0.000250 > 0){
-                                       // simBal = simBal + (parseFloat(simOrders[a][side]['qty']) * 25 * parseFloat(simOrders[a][side]['price'])) * 0.000250
-
-                                    }else if ( (parseFloat(simOrders[a][side]['qty']) * 25 * parseFloat(simOrders[a][side]['price'])) * 0.000250 < 0){
-                                        //simBal = simBal - (parseFloat(simOrders[a][side]['qty']) * 25 * parseFloat(simOrders[a][side]['price'])) * 0.000250
-
-                                    }
-                                } else if (a.includes('U19')) {
-                                    if ( (parseFloat(simOrders[a][side]['qty']) * 25 * parseFloat(simOrders[a][side]['price'])) * 0.000250 > 0&&  (parseFloat(simOrders[a][side]['qty']) * 25 * parseFloat(simOrders[a][side]['price'])) * 0.0005 < 0.0001){
-                                        simBal = simBal + (parseFloat(simOrders[a][side]['qty']) * 25 * parseFloat(simOrders[a][side]['price'])) * 0.0005
-
-                                    }
-
-                                }
-                                if (simPoses[a] == undefined) {
-                                    simPoses[a] = []
-                                }
-                                var theQty = simOrders[a][side]['qty']
-                                simPoses[a].push({
-                                    'price': simOrders[a][side]['price'],
-                                    'qty': theQty
-                                })
-                                simOrders[a] = {}
-                            }
-                        }
-                    }
-                }
-            }
-        }
+        
 }
         var input = fs.createReadStream('../csv.csv');
         readLines(input, func);
@@ -882,7 +893,7 @@ function checkStuff(){
 
                 for (var symbol in gos[g]) {
                     if (!candies.includes(symbol)) {
-                        ////////////////////////////console.log('candle ' + symbol)
+                        //////////////////////////////////console.log('candle ' + symbol)
                         //modular.exchangeCandles(symbol)
                         //modular.exchangeCandlesAndBooks(symbol)
                         candies.push(candle.symbol);
@@ -964,7 +975,7 @@ function checkStuff(){
             for (var t in ts) {
 
                 if (!doSyms.includes(t)) {
-                    ////////////////////////////console.log(t)
+                    //////////////////////////////////console.log(t)
                     doSyms.push(t)
                 }
             }
@@ -1000,18 +1011,18 @@ function checkStuff(){
                     let diff2 = diff * qty / qty2
                     let diff3 = upperprice - diff2
                     if (diff != upperprice) {
-                        ////////////////////////////console.log(doSyms[symbol] + ' buyo update!')
-                        ////////////////////////////console.log(buyOs[doSyms[symbol]])
+                        //////////////////////////////////console.log(doSyms[symbol] + ' buyo update!')
+                        //////////////////////////////////console.log(buyOs[doSyms[symbol]])
                         if (usddiff < 0) {
                             //buyOs[doSyms[symbol]] = diff3  * (1-(usddiff/100/(gocount / 4)));
                         } else {
                             //buyOs[doSyms[symbol]] = diff3  * 1.002;
                         }
-                        ////////////////////////////console.log(buyOs[doSyms[symbol]])
+                        //////////////////////////////////console.log(buyOs[doSyms[symbol]])
 
                     }
                 } catch (err) {
-                    //////////////////console.log(err);
+                    ////////////////////////console.log(err);
                 } */
             }
 
@@ -1050,16 +1061,16 @@ function checkStuff(){
 
 
             total2 = btcstart
-            //////////console.log(total2)
-            //////////console.log('total2: ' + total2)
-            //////////console.log('btcstart: ' + btcstart)
+            ////////////////console.log(total2)
+            ////////////////console.log('total2: ' + total2)
+            ////////////////console.log('btcstart: ' + btcstart)
 
             btctotal = (((total2 * btcs['BTC'])));
 
 
-            //////////////////console.log('btctotal: ' + btctotal)
+            ////////////////////////console.log('btctotal: ' + btctotal)
 
-            //////////////////console.log('altotal: ' + alttotal)
+            ////////////////////////console.log('altotal: ' + alttotal)
             let btcdiff
             btcdiff = 100 * ((1 - (btcstart / (bals['BTC']))));
 
@@ -1108,8 +1119,8 @@ function checkStuff(){
                 balscombined = {}
                 rego = false;
                 // modular.exchangeUpdateBalances();
-                //////////////////////////////console.log('etheth');
-                //////////////////////////////console.log(balscombined['ETH'])
+                ////////////////////////////////////console.log('etheth');
+                ////////////////////////////////////console.log(balscombined['ETH'])
             }
         }
         setTimeout(function() {
@@ -1135,8 +1146,8 @@ function checkStuff(){
             //simOrders = {}
             for (var o in orders) {
 
-                //////////////////////console.log(orders[o])
-                //////////////////////console.log('cancel')
+                ////////////////////////////console.log(orders[o])
+                ////////////////////////////console.log('cancel')
 
                 // modular.exchangeCancelOrder(orders[o])
             }
@@ -1221,7 +1232,7 @@ function checkStuff(){
                     }
                 }
             } catch (err) {
-                //////////////////console.log(err);
+                ////////////////////////console.log(err);
             }
         }
 
@@ -1236,7 +1247,7 @@ function checkStuff(){
             //modular.exchangeInfo()
         }
         setInterval(function() {
-            ////////////////////////console.log(candles)
+            //////////////////////////////console.log(candles)
         }, 300)
         let update;
         setTimeout(function() {
@@ -1244,11 +1255,11 @@ function checkStuff(){
         }, 5000)
 
         function checkDs() {
-            //////////////////console.log('check')
+            ////////////////////////console.log('check')
             let d = new Date().getTime()
-            //////////////////console.log(d)
+            ////////////////////////console.log(d)
             let diff = d - update;
-            //////////////////console.log(diff)
+            ////////////////////////console.log(diff)
             if (diff > 1000 * 60 * 1) {
                 // doit()
             }
@@ -1259,8 +1270,8 @@ function checkStuff(){
         }
         async function doit() {
             update = new Date().getTime()
-            //////////////////console.log('update: ' + update)
-            //////////////////////console.log(Object.keys(candles).length)
+            ////////////////////////console.log('update: ' + update)
+            ////////////////////////////console.log(Object.keys(candles).length)
             msg = ""
             notabuys = []
             try {
@@ -1275,7 +1286,7 @@ function checkStuff(){
                             //modular.exchangeCandlesAndBooks(tickVols)
                         } else if (ex != 'okex') {
                             if (t.indexOf('.') == -1) {
-                                //////console.log('candle ' + t)
+                                ////////////console.log('candle ' + t)
                                 //modular.exchangeCandlesAndBooks(t)
                             }
                         }
@@ -1285,31 +1296,31 @@ function checkStuff(){
                 //bals = balscombined
                 let gos = {}
                 let avgs = {}
-                ////////console.log(vols)
+                //////////////console.log(vols)
                 for (var v in vols) {
 
 
                     avgs[v] = vols[v] / cs[v];
                 }
-                //////console.log(1)
-                //////console.log(avgs)
-                //////console.log(tickVols)
+                ////////////console.log(1)
+                ////////////console.log(avgs)
+                ////////////console.log(tickVols)
                 for (var a in avgs) {
                     if (a != 'USDS') {
                         for (var t in tickVols) {
 
                             try {
-                                ////////////////////////////console.log('\n\n')
-                                ////////////////////////////console.log(avgs[a])
+                                //////////////////////////////////console.log('\n\n')
+                                //////////////////////////////////console.log(avgs[a])
                                 if ('USD' == a) {
-                                    /* //////console.log(t)
-                                    //////console.log(avgs[a])
-                                    //////console.log(tickVols[t])
-                                    //////console.log('larger than')
-                                    //////console.log(avgs[a] / targetVolDiv)
-                                    //////console.log('lesser than')
-                                      //////console.log(avgs[a] * targetVolMult)
-                                    //////console.log(spreads[t])
+                                    /* ////////////console.log(t)
+                                    ////////////console.log(avgs[a])
+                                    ////////////console.log(tickVols[t])
+                                    ////////////console.log('larger than')
+                                    ////////////console.log(avgs[a] / targetVolDiv)
+                                    ////////////console.log('lesser than')
+                                      ////////////console.log(avgs[a] * targetVolMult)
+                                    ////////////console.log(spreads[t])
                                     */
                                 }
                                 if (ex == 'okex-futures' || ex == 'okex-swap') {
@@ -1369,12 +1380,12 @@ function checkStuff(){
                                     }
                                 }
                             } catch (err) {
-                                //////////////////console.log(err)
+                                ////////////////////////console.log(err)
                             }
                         }
                     }
                 }
-                //////console.log(gos);
+                ////////////console.log(gos);
 
                 if (theonebase.length > 1) {
                     gos = {}
@@ -1414,16 +1425,16 @@ function checkStuff(){
                         }
                     }
                 }
-                //////////////////console.log('gogs length ' + gogs.length)
+                ////////////////////////console.log('gogs length ' + gogs.length)
                 if ((ex == 'liquid' || ex == 'okex' || ex == 'kucoin') && gogs.length > 0) {
-                    //////////////////console.log(gogs)
+                    ////////////////////////console.log(gogs)
                     //modular.doob(gogs, 0)
                 }
                 for (var symbol in stopp) {
                     if (true) {
-                        //////////////////////////////////console.log('2 ' + symbol)
+                        ////////////////////////////////////////console.log('2 ' + symbol)
                         //testing
-                        //////////////////////////////////console.log(symbol)//if (symbol == "GNTBNB"){
+                        ////////////////////////////////////////console.log(symbol)//if (symbol == "GNTBNB"){
                         let book = thebooks[symbol]
                         let hb = 0;
                         let laless = 0;
@@ -1478,33 +1489,33 @@ function checkStuff(){
                             asset = symbol.substring(0, symbol.length - 3)
 
                             asset = asset.replace('/', '').replace('-', '').replace('_', '')
-                            //////////////////////////////////console.log('asset: ' + asset)
+                            ////////////////////////////////////////console.log('asset: ' + asset)
 
                             if ((dontsellrsi[symbol] == false || dontsellrsi[symbol] == undefined)) {
                                 if (lala == 0) {
-                                    ////////////////////////////////////console.log(precisions[symbol]);
-                                    ////////////////////////////////////console.log(filters[symbol])
-                                    ////////////////////////////////////console.log((bals[symbol.substring(symbol.length - 3, symbol.length)] / (hb * bpSetting)));
+                                    //////////////////////////////////////////console.log(precisions[symbol]);
+                                    //////////////////////////////////////////console.log(filters[symbol])
+                                    //////////////////////////////////////////console.log((bals[symbol.substring(symbol.length - 3, symbol.length)] / (hb * bpSetting)));
                                     bp = (hb * bpSetting)
                                     bp = bp.toFixed(filters[symbol].tickSize - 1)
                                     sp = (la * spSetting)
                                     sp = sp.toFixed(filters[symbol].tickSize - 1)
-                                    //////////////////////////////////console.log('sp: ' + sp)
+                                    ////////////////////////////////////////console.log('sp: ' + sp)
                                     buyQty = trim((bals[symbol.substring(symbol.length - 3, symbol.length)] / (hb * bpSetting) / (gocount / 8)), (filters[symbol].stepSize - 1));
                                     let dontgo = false;
 
                                     let sellQty = trim((parseFloat(bals[asset]) * 0.995), (filters[symbol].stepSize - 1))
 
                                     sellQty = sellQty * 1000
-                                    //////////////////////////////////console.log(sellQty)
-                                    //////////////////////////////////console.log(filters[symbol].minNotional)
+                                    ////////////////////////////////////////console.log(sellQty)
+                                    ////////////////////////////////////////console.log(filters[symbol].minNotional)
                                     if ((sellQty) * hb * bpSetting < filters[symbol].minNotional) {
-                                        ////////////////////////////console.log('dontgo minnotional ' + symbol)
+                                        //////////////////////////////////console.log('dontgo minnotional ' + symbol)
                                         dontgo = true;
                                     }
                                     if (sellQty < filters[symbol].minQty) {
 
-                                        ////////////////////////////console.log('dontgo minqty ' + symbol)
+                                        //////////////////////////////////console.log('dontgo minqty ' + symbol)
                                         dontgo = true;
                                     }
 
@@ -1513,11 +1524,11 @@ function checkStuff(){
                                         //simOrders = {}
                                         for (var o in orders) {
                                             if (orders[o].side.toUpperCase() == 'SELL' && orders[o].symbol == symbol) {
-                                                ////////////////////////////////console.log(orders[o])
-                                                ////////////////////////////////console.log('cancel')
+                                                //////////////////////////////////////console.log(orders[o])
+                                                //////////////////////////////////////console.log('cancel')
                                                 //simOrders = {}
                                                 //modular.exchangeCancelOrder(orders[o])
-                                                //////////////////////console.log('cancel')
+                                                ////////////////////////////console.log('cancel')
 
                                             }
                                         }
@@ -1531,32 +1542,25 @@ function checkStuff(){
                                                 trading.push(symbol)
                                             }
                                             //sellQty = sellQty * bids[symbol]['default']
-                                            if (simOrders[symbol] == undefined) {
-                                                simOrders[symbol] = {}
-                                            }
-                                            simOrders[symbol]['SELL'] = {
-                                                'qty': sellQty,
-                                                'price': 0,
-                                                'type': 'MARKET'
-                                            }
-                                            //////////////////////////////////console.log('\sellQty: ' + sellQty)
+                                            
+                                            ////////////////////////////////////////console.log('\sellQty: ' + sellQty)
                                             //modular.exchangeOrder(symbol, 'SELL', sellQty, 0, 'MARKET')
 
 
-                                            //////////////////////////console.log(o.orderId)
+                                            ////////////////////////////////console.log(o.orderId)
                                             //orderIds.push(o.orderId)
-                                            /*//////////////////////////////console.log({
+                                            /*////////////////////////////////////console.log({
                                                 symbol: symbol,
                                                 side: 'sell',
                                                 quantity: Number(sellQty),
                                                     price: Number(sp)
                                             })*/
-                                            //////////////////////////////////console.log(order)
-                                            //////////////////////////////////console.log(buys);
-                                            //////////////////////////////////console.log(sells);
+                                            ////////////////////////////////////////console.log(order)
+                                            ////////////////////////////////////////console.log(buys);
+                                            ////////////////////////////////////////console.log(sells);
                                         } catch (err) {
 
-                                            //////////////////console.log(err);
+                                            ////////////////////////console.log(err);
                                         }
                                         las[symbol] = la;
                                         hbs[symbol] = hb;
@@ -1572,7 +1576,7 @@ function checkStuff(){
                         }
                     }
                 }
-                //////////////////console.log(gos)
+                ////////////////////////console.log(gos)
                 gocount = 0;
 
                 if (theonebase.length > 1) {
@@ -1581,15 +1585,15 @@ function checkStuff(){
                     gos[theonebase] = {}
                     gos[theonebase][asset2] = 10000
                 }
-                ////////////////////////console.log(gos)
+                //////////////////////////////console.log(gos)
                 for (var g in gos) {
                     for (var symbol in gos[g]) {
                         gocount++;
                         if (ex == 'bitmex' || ex == "okex-futures" || ex == "okex-swap" || g != 'PAX' && !symbol.startsWith('USD') && !g.startsWith('USD') && !symbol.startsWith('TUSD') && !g.startsWith('TUSD') && g != 'XRP') {
-                            //////console.log('sell1 ' + symbol)
+                            ////////////console.log('sell1 ' + symbol)
                             //testing
-                            //////////console.log(symbol)
-                            //////////////////////////////console.log(g)
+                            ////////////////console.log(symbol)
+                            ////////////////////////////////////console.log(g)
                             try { //if (symbol == "GNTBNB"){//
                                 //if (thebooks[symbol] != undefined){
                                 let book = thebooks[symbol]
@@ -1646,7 +1650,7 @@ function checkStuff(){
                                     hb = bids[symbol]['default']
                                     la = asks[symbol]['default']
                                 }
-                                //////console.log('sell1: ' + symbol + ' la: ' + la + ' hb: ' + hb)
+                                ////////////console.log('sell1: ' + symbol + ' la: ' + la + ' hb: ' + hb)
                                 if (ex == 'bitmex' || ex == "okex-futures" || ex == "okex-swap" || (renew[symbol] == undefined) || (renew[symbol] == false) || (symbol != 'BNBUSDS' && (hblesss[symbol] != hbless || lalesss[symbol] != laless) || (las[symbol] != la && hbs[symbol] != hb))) {
                                     hblesss[symbol] = hbless
                                     lalesss[symbol] = laless
@@ -1661,13 +1665,13 @@ function checkStuff(){
 
                                     }
                                     asset = asset.replace('/', '').replace('-', '').replace('_', '')
-                                    //////console.log('sell1 asset: ' + asset)
+                                    ////////////console.log('sell1 asset: ' + asset)
 
                                     if (bals[asset] != 0 || ex == 'bitmex' || ex == "okex-futures" || ex == "okex-swap") {
                                         if ((dontsellrsi[symbol] == false || dontsellrsi[symbol] == undefined)) {
-                                            //////////////////////////////////console.log(precisions[symbol]);
-                                            //////////////////////////////////console.log(filters[symbol])
-                                            //////////////////////////////////console.log((bals[symbol.substring(symbol.length - 3, symbol.length)] / (hb * bpSetting)));
+                                            ////////////////////////////////////////console.log(precisions[symbol]);
+                                            ////////////////////////////////////////console.log(filters[symbol])
+                                            ////////////////////////////////////////console.log((bals[symbol.substring(symbol.length - 3, symbol.length)] / (hb * bpSetting)));
                                             bp = (hb * bpSetting)
                                             bp = bp.toFixed(filters[symbol].tickSize - 1)
                                             sp = (la * spSetting)
@@ -1675,9 +1679,9 @@ function checkStuff(){
 
                                             if (ex == 'bitmex') {
                                                 if (symbol.indexOf('USD') != -1) {
-                                                    buyQty = (25 * (bals['BTC'] / (bids[symbol]['default'] * bpSetting)));
+                                                    buyQty = ((20 / 4 * 29) / 157 * (bals['BTC'] / (bids[symbol]['default'] * bpSetting)));
                                                 } else {
-                                                    buyQty = (25 * (bals['BTC'] * 10000 * (bids[symbol]['default'] * 0.05)));
+                                                    buyQty = ((20 / 4 * 29) / 157 *  (bals['BTC'] * 10000 * (bids[symbol]['default'] * 0.05)));
 
                                                 }
                                             } else {
@@ -1687,27 +1691,27 @@ function checkStuff(){
                                             let sellQty;
                                             if (ex == 'bitmex') {
                                                 if (symbol.indexOf('USD') != -1) {
-                                                    sellQty = (25 * (bals['BTC'] / (bids[symbol]['default'] * bpSetting)));
+                                                    sellQty = ((20 / 4 * 29) / 157 *  (bals['BTC'] / (bids[symbol]['default'] * bpSetting)));
                                                 } else {
-                                                    sellQty = (25 * (bals['BTC'] * 10000 * (bids[symbol]['default'] * 0.05)));
+                                                    sellQty = ((20 / 4 * 29) / 157 *  (bals['BTC'] * 10000 * (bids[symbol]['default'] * 0.05)));
 
                                                 }
                                             }
                                             if (ex == "okex-futures" || ex == "okex-swap") {
-                                                //////console.log('btcbal ' + (bals[symbol.substring(0, 3)] * hb * 0.05 * 0.05))
-                                                //////console.log('btcssymbol ' + btcs[symbol.substring(0, 3)])
+                                                ////////////console.log('btcbal ' + (bals[symbol.substring(0, 3)] * hb * 0.05 * 0.05))
+                                                ////////////console.log('btcssymbol ' + btcs[symbol.substring(0, 3)])
                                                 sellQty = parseFloat((bals[symbol.substring(0, 3)] * hb * 0.09))
-                                                //////console.log('sellqty0: ' + sellQty)
+                                                ////////////console.log('sellqty0: ' + sellQty)
                                             } else {
-                                                //////////console.log(asset)
-                                                //////////console.log('balasset ' + parseFloat(bals[asset]))
-                                                //////////console.log('filtersymbol ' + filters[symbol].stepSize)
+                                                ////////////////console.log(asset)
+                                                ////////////////console.log('balasset ' + parseFloat(bals[asset]))
+                                                ////////////////console.log('filtersymbol ' + filters[symbol].stepSize)
                                                 sellQty = trim(parseFloat(bals[asset]), filters[symbol].stepSize - 1)
                                                 let sellQty2;
                                                 if (buyOs[symbol] != undefined) {
                                                     if (buyOs[symbol][buyOs[symbol].length - 1] != undefined) {
                                                         sellQty2 = trim(buyOs[symbol][buyOs[symbol].length - 1].qty, (filters[symbol].stepSize - 1))
-                                                        //////console.log('sellqty2: ' + symbol + ': ' + sellQty)
+                                                        ////////////console.log('sellqty2: ' + symbol + ': ' + sellQty)
                                                     }
                                                 }
                                                 if (sellQty2 != undefined) {
@@ -1716,23 +1720,23 @@ function checkStuff(){
                                                     }
                                                 }
                                             }
-                                            //////////////console.log(('sellqty1: ' + symbol + ': ' + sellQty))
-                                            //////console.log('sellqty3: ' + symbol + ': ' + sellQty)
-                                            ////////////////////////////////console.log(sellQty)
-                                            ////////////////////////////////console.log(filters[symbol].minNotional)
+                                            ////////////////////console.log(('sellqty1: ' + symbol + ': ' + sellQty))
+                                            ////////////console.log('sellqty3: ' + symbol + ': ' + sellQty)
+                                            //////////////////////////////////////console.log(sellQty)
+                                            //////////////////////////////////////console.log(filters[symbol].minNotional)
                                             if (isNaN(sellQty) || (sellQty) * hb * bpSetting < filters[symbol].minNotional) {
-                                                ////////////////////console.log('dontgo minnotional ' + symbol)
+                                                //////////////////////////console.log('dontgo minnotional ' + symbol)
                                                 dontgo = true;
                                             }
                                             if (sellQty < filters[symbol].minQty) {
 
-                                                ////////////////////////////////console.log('dontgo minqty ' + symbol)
+                                                //////////////////////////////////////console.log('dontgo minqty ' + symbol)
                                                 dontgo = true;
                                             }
                                             if (ex == 'bitmex' || ex == "okex-futures" || ex == "okex-swap") {
                                                 dontgo = false;
                                             }
-                                            //////////////////////////////////console.log(bp)
+                                            ////////////////////////////////////////console.log(bp)
                                             if (buyOs[symbol] != undefined && buyOs[symbol].length - 1 != undefined) {
                                                 if ((neversellataloss == true && (buyOs[symbol][buyOs[symbol].length - 1].price != 0 && (sp < buyOs[symbol][buyOs[symbol].length - 1].price) || (buyOs[symbol] == undefined)))) {
 
@@ -1741,31 +1745,31 @@ function checkStuff(){
                                                         dontbuy[symbol] = true;
                                                     }
                                                 }
-                                                ////////////////////////////console.log('');
-                                                ////////////////////////////console.log('')
-                                                ////////////////////////////console.log(buyOs[symbol])
-                                                ////////////////////////////console.log(sp)
-                                                ////////////////////////////console.log(sellQty)
-                                                ////////////////////////////console.log('dont sell at a loss! ' + symbol)
-                                                ////////////////////////////console.log('');
-                                                ////////////////////////////console.log('')
+                                                //////////////////////////////////console.log('');
+                                                //////////////////////////////////console.log('')
+                                                //////////////////////////////////console.log(buyOs[symbol])
+                                                //////////////////////////////////console.log(sp)
+                                                //////////////////////////////////console.log(sellQty)
+                                                //////////////////////////////////console.log('dont sell at a loss! ' + symbol)
+                                                //////////////////////////////////console.log('');
+                                                //////////////////////////////////console.log('')
 
                                             }
                                             if (ex == 'bitmex' || ex == "okex-futures" || ex == "okex-swap") {
-                                                //////////////////////console.log('orders')
+                                                ////////////////////////////console.log('orders')
                                                 //simOrders = {}
                                                 //let orders = await modular.exchangeOpenOrders(symbol);
                                                 for (var o in orders) {
-                                                    //////////////////////console.log(orders[o].side.toUpperCase())
-                                                    //////////////////////console.log(orders[o].symbol)
+                                                    ////////////////////////////console.log(orders[o].side.toUpperCase())
+                                                    ////////////////////////////console.log(orders[o].symbol)
 
 
                                                     if (!cancelled.includes(orders[o].order_id)) {
-                                                        //////console.log('cancel')
+                                                        ////////////console.log('cancel')
                                                         cancelled.push(orders[o].order_id)
                                                         //modular.exchangeCancelOrder(orders[o])
                                                     }
-                                                    //////////////////////console.log('cancel')
+                                                    ////////////////////////////console.log('cancel')
                                                 }
                                             }
 
@@ -1779,38 +1783,31 @@ function checkStuff(){
                                                 borders[symbol] = 0;
                                                 renew[symbol] = true;
                                                 buyQtys[symbol] = undefined;
-                                                //////console.log('sell sell')
+                                                ////////////console.log('sell sell')
                                                 if (dontgo == false) {
-                                                    ////////////////////console.log(dontgo)
-                                                    ////////////////////console.log(1)
+                                                    //////////////////////////console.log(dontgo)
+                                                    //////////////////////////console.log(1)
                                                     //sellQty = sellQty * bids[symbol]['default']
-                                                    if (simOrders[symbol] == undefined) {
-                                                        simOrders[symbol] = {}
-                                                    }
-                                                    simOrders[symbol]['SELL'] = {
-                                                        'qty': sellQty,
-                                                        'price': sp,
-                                                        'type': 'LIMIT'
-                                                    }
+                                                 
 
                                                     //   modular.exchangeOrder(symbol, 'SELL', sellQty, sp, 'LIMIT')
                                                 }
 
 
                                             } catch (err) {
-                                                //////////////////console.log(err)
+                                                ////////////////////////console.log(err)
                                             }
                                         } else if (buyOs[symbol] != undefined && buyOs[symbol].length - 1 != undefined) {
                                             if ((sellQty > 0.0000000001) && dontgo == false && (neversellataloss == true && (buyOs[symbol][buyOs[symbol].length - 1].price == 0) || (sp > buyOs[symbol][buyOs[symbol].length - 1].price))) {
-                                                //////console.log('sellqty: ' + sellQty + ': ' + symbol);
+                                                ////////////console.log('sellqty: ' + sellQty + ': ' + symbol);
                                                 //let orders = await modular.exchangeOpenOrders();
                                                 //simOrders = {}
                                                 for (var o in orders) {
                                                     if (orders[o].side.toUpperCase() == 'SELL' && orders[o].symbol == symbol) {
-                                                        ////////////////////////////////console.log(orders[o])
-                                                        ////////////////////////////////console.log('cancel')
+                                                        //////////////////////////////////////console.log(orders[o])
+                                                        //////////////////////////////////////console.log('cancel')
                                                         //modular.exchangeCancelOrder(orders[o])
-                                                        //////////////////////console.log('cancel')
+                                                        ////////////////////////////console.log('cancel')
 
                                                     }
                                                 }
@@ -1826,28 +1823,20 @@ function checkStuff(){
                                                     renew[symbol] = true;
                                                     buyQtys[symbol] = undefined;
                                                     if (dontgo == false) {
-                                                        ////////////////////console.log(dontgo)
-                                                        ////////////////////console.log(2)
+                                                        //////////////////////////console.log(dontgo)
+                                                        //////////////////////////console.log(2)
                                                         //sellQty = sellQty * bids[symbol]['default']
-                                                        if (simOrders[symbol] == undefined) {
-                                                            simOrders[symbol] = {}
-                                                        }
-                                                        simOrders[symbol]['SELL'] = {
-                                                            'qty': sellQty,
-                                                            'price': sp,
-                                                            'type': 'LIMIT'
-                                                        }
-
+                                                        
                                                         //modular.exchangeOrder(symbol, 'SELL', sellQty, sp, 'LIMIT')
                                                     }
 
-                                                    //////////////////////////console.log(o.orderId)
+                                                    ////////////////////////////////console.log(o.orderId)
                                                     //orderIds.push(o.orderId)
-                                                    ////////////////////////////////console.log(buys);
-                                                    ////////////////////////////////console.log(sells);
+                                                    //////////////////////////////////////console.log(buys);
+                                                    //////////////////////////////////////console.log(sells);
                                                 } catch (err) {
 
-                                                    //////////////////console.log(err);
+                                                    ////////////////////////console.log(err);
                                                 }
                                                 las[symbol] = la;
                                                 hbs[symbol] = hb;
@@ -1857,10 +1846,10 @@ function checkStuff(){
                                             //simOrders = {}
                                             for (var o in orders) {
                                                 if (orders[o].side.toUpperCase() == 'SELL' && orders[o].symbol == symbol) {
-                                                    ////////////////////////////////console.log(orders[o])
-                                                    ////////////////////////////////console.log('cancel')
+                                                    //////////////////////////////////////console.log(orders[o])
+                                                    //////////////////////////////////////console.log('cancel')
                                                     //modular.exchangeCancelOrder(orders[o])
-                                                    //////////////////////console.log('cancel')
+                                                    ////////////////////////////console.log('cancel')
 
                                                 }
                                             }
@@ -1875,30 +1864,23 @@ function checkStuff(){
                                                 borders[symbol] = 0;
                                                 renew[symbol] = true;
                                                 buyQtys[symbol] = undefined;
-                                                //////console.log('sell sell')
+                                                ////////////console.log('sell sell')
                                                 if (dontgo == false) {
 
-                                                    ////////////////////console.log(dontgo)
-                                                    ////////////////////console.log(3)                                    //sellQty = sellQty * bids[symbol]['default']
+                                                    //////////////////////////console.log(dontgo)
+                                                    //////////////////////////console.log(3)                                    //sellQty = sellQty * bids[symbol]['default']
                                                     //sellQty = sellQty * bids[symbol]['default']
-                                                    if (simOrders[symbol] == undefined) {
-                                                        simOrders[symbol] = {}
-                                                    }
-                                                    simOrders[symbol]['SELL'] = {
-                                                        'qty': sellQty,
-                                                        'price': sp,
-                                                        'type': 'LIMIT'
-                                                    }
+                                                    
                                                     //modular.exchangeOrder(symbol, 'SELL', sellQty, sp, 'LIMIT')
                                                 }
 
-                                                //////////////////////////console.log(o.orderId)
+                                                ////////////////////////////////console.log(o.orderId)
                                                 //orderIds.push(o.orderId)
-                                                ////////////////////////////////console.log(buys);
-                                                ////////////////////////////////console.log(sells);
+                                                //////////////////////////////////////console.log(buys);
+                                                //////////////////////////////////////console.log(sells);
                                             } catch (err) {
 
-                                                //////////////////console.log(err);
+                                                ////////////////////////console.log(err);
                                             }
                                             las[symbol] = la;
                                             hbs[symbol] = hb;
@@ -1909,7 +1891,7 @@ function checkStuff(){
                                                 price: bp,
                                                 qty: parseFloat(sellQty)
                                             })
-                                            ////////////////////////console.log(buyOs[symbol])
+                                            //////////////////////////////console.log(buyOs[symbol])
                                         }
                                     }
 
@@ -1919,14 +1901,14 @@ function checkStuff(){
 
                                  */
                             } catch (err) {
-                                ////////console.log(err)
+                                //////////////console.log(err)
                             }
                         }
                     }
                 }
-                ////////////////////////////////console.log('wololo')
+                //////////////////////////////////////console.log('wololo')
                 //bals = balscombined
-                ////////console.log(gos)
+                //////////////console.log(gos)
                 for (var bal in bals) {
                     let book;
                     if (bal != 'BTC' && bal != 'USDS' && bal != 'ETH' && bal != 'BNB' && bals[bal] != 0) {
@@ -1939,7 +1921,7 @@ function checkStuff(){
                             if (!candies.includes(symbol)) {
                                 candies.push(symbol);
 
-                                ////////////////////////////console.log('candle ' + symbol)
+                                //////////////////////////////////console.log('candle ' + symbol)
 
                                 //modular.exchangeCandlesAndBooks(symbol)
                             }
@@ -1949,24 +1931,24 @@ function checkStuff(){
 
                             }
 
-                            ////////////////////////////console.log(symbol)
+                            //////////////////////////////////console.log(symbol)
                             if (thebooks[symbol] != undefined) {
-                                ////////////////////////////console.log(bal)
+                                //////////////////////////////////console.log(bal)
                                 try {
                                     book = thebooks[symbol]
                                 } catch (err) {
                                     symbol = bal + 'BTC';
-                                    ////////////////////////////////console.log(symbol)
+                                    //////////////////////////////////////console.log(symbol)
                                     try {
                                         //    book = thebooks[symbol]
                                     } catch (err) {
                                         symbol = bal + 'BNB';
-                                        ////////////////////////////////console.log(symbol)
+                                        //////////////////////////////////////console.log(symbol)
                                         //  book = thebooks[symbol]
                                     }
                                 }
                             }
-                            ////////////////////////////console.log(dont);
+                            //////////////////////////////////console.log(dont);
                             if (true) {
                                 try {
                                     let hb = 0;
@@ -2025,7 +2007,7 @@ function checkStuff(){
                                     } catch (err) {
 
                                     }
-                                    //////console.log('sell2333: ' + symbol + ' la: ' + la + ' hb: ' + hb)
+                                    ////////////console.log('sell2333: ' + symbol + ' la: ' + la + ' hb: ' + hb)
                                     //            if (symbol != 'BNBUSDS' && (selling[symbol] == false) || ((hblesss[symbol] != hbless || lalesss[symbol] != laless) || (las[symbol] != la && hbs[symbol] != hb))) {
                                     if (hb != 0) {
                                         selling[symbol] = true;
@@ -2047,31 +2029,31 @@ function checkStuff(){
                                         }
                                         asset = bal;
                                         asset = asset.replace('/', '').replace('-', '').replace('_', '')
-                                        //////////console.log('asset sell233: ' + asset)
+                                        ////////////////console.log('asset sell233: ' + asset)
 
                                         if (true) {
                                             if ((dontsellrsi[symbol] == false || dontsellrsi[symbol] == undefined)) {
-                                                //////////////////////////////////console.log(precisions[symbol]);
-                                                //////////////////////////////////console.log(filters[symbol])
-                                                //////////////////////////////////console.log((bals[symbol.substring(symbol.length - 3, symbol.length)] / (hb * bpSetting)));
+                                                ////////////////////////////////////////console.log(precisions[symbol]);
+                                                ////////////////////////////////////////console.log(filters[symbol])
+                                                ////////////////////////////////////////console.log((bals[symbol.substring(symbol.length - 3, symbol.length)] / (hb * bpSetting)));
                                                 bp = (hb * bpSetting)
                                                 bp = bp.toFixed(filters[symbol].tickSize - 1)
                                                 sp = (la * spSetting)
                                                 sp = sp.toFixed(filters[symbol].tickSize - 1)
 
-                                                ////////////////////////////console.log('sp: ' + sp)
+                                                //////////////////////////////////console.log('sp: ' + sp)
                                                 buyQty = ((bals[symbol.substring(symbol.length - 3, symbol.length)] / trim((hb * bpSetting) / Object.keys(gos[g]).length), (filters[symbol].stepSize - 1)));
                                                 let dontgo = false;
-                                                //////////////console.log('balsasset: ' + parseFloat(bals[asset]))
-                                                //////////////console.log('stepsize: ' + filters[symbol].stepSize - 1)
+                                                ////////////////////console.log('balsasset: ' + parseFloat(bals[asset]))
+                                                ////////////////////console.log('stepsize: ' + filters[symbol].stepSize - 1)
                                                 let sellQty = trim(parseFloat(bals[asset]), (filters[symbol].stepSize - 1))
-                                                //////console.log('sellqty133: ' + sellQty)
+                                                ////////////console.log('sellqty133: ' + sellQty)
                                                 let sellQty2;
 
                                                 if (buyOs[symbol] != undefined) {
                                                     if (buyOs[symbol][buyOs[symbol].length - 1] != undefined) {
                                                         sellQty2 = trim(buyOs[symbol][buyOs[symbol].length - 1].qty, (filters[symbol].stepSize - 1))
-                                                        //////console.log('sellqty2: ' + symbol + ': ' + sellQty)
+                                                        ////////////console.log('sellqty2: ' + symbol + ': ' + sellQty)
 
                                                     }
                                                 }
@@ -2080,36 +2062,36 @@ function checkStuff(){
                                                         sellQty = sellQty2;
                                                     }
                                                 }
-                                                //////console.log('sellqty333: ' + symbol + ': ' + sellQty)
-                                                ////////////////////console.log(sellQty)
-                                                ////////////////////console.log(bals[asset])
-                                                ////////////////////console.log(asset)
-                                                ////////////////////////////////console.log(filters[symbol].minNotional)
+                                                ////////////console.log('sellqty333: ' + symbol + ': ' + sellQty)
+                                                //////////////////////////console.log(sellQty)
+                                                //////////////////////////console.log(bals[asset])
+                                                //////////////////////////console.log(asset)
+                                                //////////////////////////////////////console.log(filters[symbol].minNotional)
                                                 if (isNaN(sellQty) || (sellQty) * hb * bpSetting < filters[symbol].minNotional) {
-                                                    //////////////////////console.log('dontgo minnotional ' + symbol)
+                                                    ////////////////////////////console.log('dontgo minnotional ' + symbol)
                                                     dontgo = true;
                                                 }
                                                 if (sellQty < filters[symbol].minQty) {
 
-                                                    //////////////////////console.log('dontgo minqty ' + symbol)
+                                                    ////////////////////////////console.log('dontgo minqty ' + symbol)
                                                     dontgo = true;
                                                 }
-                                                //////////////////////////////////console.log(buyQty)
-                                                //////////////////////////////////console.log(bp)
+                                                ////////////////////////////////////////console.log(buyQty)
+                                                ////////////////////////////////////////console.log(bp)
                                                 if (buyOs[symbol] != undefined && buyOs[symbol].length - 1 != undefined) {
                                                     if ((neversellataloss == true && (buyOs[symbol][buyOs[symbol].length - 1].price != 0 && (sp < buyOs[symbol][buyOs[symbol].length - 1].price)))) {
 
 
                                                         msg += "neversellataloss: " + symbol + " sp: " + sp + " min sell: " + buyOs[symbol][buyOs[symbol].length - 1].price + "<br>"
-                                                        ////////////////////////////console.log('');
-                                                        ////////////////////////////console.log('')
-                                                        ////////////////////////////console.log(buyOs[symbol])
-                                                        ////////////////////////////console.log(sp)
-                                                        ////////////////////////////console.log(sellQty)
+                                                        //////////////////////////////////console.log('');
+                                                        //////////////////////////////////console.log('')
+                                                        //////////////////////////////////console.log(buyOs[symbol])
+                                                        //////////////////////////////////console.log(sp)
+                                                        //////////////////////////////////console.log(sellQty)
 
-                                                        ////////////////////////////console.log('dont sell at a loss! ' + symbol)
-                                                        ////////////////////////////console.log('');
-                                                        ////////////////////////////console.log('')
+                                                        //////////////////////////////////console.log('dont sell at a loss! ' + symbol)
+                                                        //////////////////////////////////console.log('');
+                                                        //////////////////////////////////console.log('')
                                                         if (lesstrades) {
                                                             dontbuy[symbol] = true;
                                                         }
@@ -2117,16 +2099,16 @@ function checkStuff(){
 
                                                 }
                                                 if (buyOs[symbol] != undefined && buyOs[symbol].length - 1 != undefined) {
-                                                    //////console.log('sellqty33: ' + sellQty + ': ' + symbol);
+                                                    ////////////console.log('sellqty33: ' + sellQty + ': ' + symbol);
                                                     if ((sellQty > 0.00000000000000001) && dontgo == false && (neversellataloss == true && (buyOs[symbol][buyOs[symbol].length - 1].price == 0 || sp > buyOs[symbol][buyOs[symbol].length - 1].price || buyOs[symbol] == undefined))) {
                                                         //let orders = await modular.exchangeOpenOrders();
                                                         //simOrders = {}
                                                         for (var o in orders) {
                                                             if (orders[o].side.toUpperCase() == 'SELL' && orders[o].symbol == symbol) {
-                                                                ////////////////////////////////console.log(orders[o])
-                                                                ////////////////////////////////console.log('cancel')
+                                                                //////////////////////////////////////console.log(orders[o])
+                                                                //////////////////////////////////////console.log('cancel')
                                                                 //modular.exchangeCancelOrder(orders[o])
-                                                                //////////////////////console.log('cancel')
+                                                                ////////////////////////////console.log('cancel')
 
                                                             }
                                                         }
@@ -2142,39 +2124,32 @@ function checkStuff(){
                                                             // notabuys.push(symbol)
                                                             if (dontgo == false) {
 
-                                                                ////////////////////console.log(dontgo)
-                                                                ////////////////////console.log(5)
+                                                                //////////////////////////console.log(dontgo)
+                                                                //////////////////////////console.log(5)
                                                                 //sellQty = sellQty * bids[symbol]['default']
-                                                                if (simOrders[symbol] == undefined) {
-                                                                    simOrders[symbol] = {}
-                                                                }
-                                                                simOrders[symbol]['SELL'] = {
-                                                                    'qty': sellQty,
-                                                                    'price': sp,
-                                                                    'type': 'LIMIT'
-                                                                }
+                                                               
                                                                 //.  modular.exchangeOrder(symbol, 'SELL', sellQty, sp, 'LIMIT')
                                                             }
 
-                                                            //////////////////////////console.log(o.orderId)
+                                                            ////////////////////////////////console.log(o.orderId)
                                                             //orderIds.push(o.orderId)
-                                                            ////////////////////////////////console.log(buys);
-                                                            ////////////////////////////////console.log(sells);
+                                                            //////////////////////////////////////console.log(buys);
+                                                            //////////////////////////////////////console.log(sells);
                                                         } catch (err) {
 
-                                                            //////////////////console.log(err);
+                                                            ////////////////////////console.log(err);
                                                         }
                                                     }
                                                 } else if ((sellQty > 0.00000000000000001) && dontgo == false) {
                                                     //simOrders = {}
                                                     //let orders = await modular.exchangeOpenOrders();
-                                                    //////////////////////console.log('go go')
+                                                    ////////////////////////////console.log('go go')
                                                     for (var o in orders) {
                                                         if (orders[o].side.toUpperCase() == 'SELL' && orders[o].symbol == symbol) {
-                                                            ////////////////////////////////console.log(orders[o])
-                                                            ////////////////////////////////console.log('cancel')
+                                                            //////////////////////////////////////console.log(orders[o])
+                                                            //////////////////////////////////////console.log('cancel')
                                                             //modular.exchangeCancelOrder(orders[o])
-                                                            //////////////////////console.log('cancel')
+                                                            ////////////////////////////console.log('cancel')
 
                                                         }
                                                     }
@@ -2190,27 +2165,20 @@ function checkStuff(){
                                                         // notabuys.push(symbol)
                                                         if (dontgo == false) {
 
-                                                            ////////////////////console.log(dontgo)
-                                                            ////////////////////console.log(6)
+                                                            //////////////////////////console.log(dontgo)
+                                                            //////////////////////////console.log(6)
                                                             //sellQty = sellQty * bids[symbol]['default']
-                                                            if (simOrders[symbol] == undefined) {
-                                                                simOrders[symbol] = {}
-                                                            }
-                                                            simOrders[symbol]['SELL'] = {
-                                                                'qty': sellQty,
-                                                                'price': sp,
-                                                                'type': 'LIMIT'
-                                                            }
+                                                            
                                                             // modular.exchangeOrder(symbol, 'SELL', sellQty, sp, 'LIMIT')
                                                         }
 
-                                                        //////////////////////////console.log(o.orderId)
+                                                        ////////////////////////////////console.log(o.orderId)
                                                         //orderIds.push(o.orderId)
-                                                        ////////////////////////////////console.log(buys);
-                                                        ////////////////////////////////console.log(sells);
+                                                        //////////////////////////////////////console.log(buys);
+                                                        //////////////////////////////////////console.log(sells);
                                                     } catch (err) {
 
-                                                        //////////////////console.log(err);
+                                                        ////////////////////////console.log(err);
                                                     }
                                                 }
 
@@ -2220,7 +2188,7 @@ function checkStuff(){
                                                         price: bp,
                                                         qty: parseFloat(sellQty)
                                                     })
-                                                    ////////////////////////console.log(buyOs[symbol])
+                                                    //////////////////////////////console.log(buyOs[symbol])
                                                 }
                                             }
                                         }
@@ -2228,7 +2196,7 @@ function checkStuff(){
 
                                     }
                                 } catch (err) {
-                                    //////////console.log(err)
+                                    ////////////////console.log(err)
                                 }
                             }
                         }
@@ -2238,8 +2206,8 @@ function checkStuff(){
                     }
                 }
                 //  }
-                ////////////////////////////console.log('wowolo2')
-                //////////console.log(gos)
+                //////////////////////////////////console.log('wowolo2')
+                ////////////////console.log(gos)
 
                 if (theonebase.length > 1) {
                     gos = {}
@@ -2250,15 +2218,49 @@ function checkStuff(){
                 gos = {}
                 gos['a'] = {}
                 for (var a in asks){
+                    if (!a.startsWith('.') && !a.includes('BTC') && !a.includes('USD')){
                     gos['a'][a] = {}
+                    }
                 }
-                ////console.log(gos)
                 for (var g in gos) {
                     for (var symbol in gos[g]) {
+                        buyQty = ((20 / 4 * 29) / 157 *  (bals['BTC'] / (bids[symbol]['default'] * bpSetting))) / 9;
+                       
+                            ////////////////////////console.log('hb 0')
+                            hb = bids[symbol]['default']
+                            if (symbol == 'XRPU19'){
+                               // //////console.log(orderbook[symbol])
+                            }
+                            la = asks[symbol]['default']
+
+                        ////////////////////////console.log(symbol)
+                        ////////////////////////console.log(filters[symbol].tickSize)
+                        ////////////////////////console.log('hb : ' + hb)
+                        bp = (hb * bpSetting)
+                        ////////////////////////console.log(bp)
+                        bp = bp.toFixed(filters[symbol].tickSize - 1)
+                        ////////////////////////console.log(bp)
+                        let stop = (bp * stoploss)
+                        stop = stop.toFixed(filters[symbol].tickSize - 1)
+                        sp = (la * spSetting)
+                        sp = sp.toFixed(filters[symbol].tickSize - 1)
+                        if (simOrders[symbol] == undefined) {
+                            simOrders[symbol] = {}
+                        }
+                        simOrders[symbol]['SELL'] = {
+                            'qty': buyQty * -1,
+                            'price': parseFloat(sp),
+                            'type': 'LIMIT'
+                        }
+                        simOrders[symbol]['BUY'] = {
+                            'qty': buyQty,
+                            'price': parseFloat(bp),
+                            'type': 'LIMIT'
+                        }
                         //testing
-                        //////////console.log(symbol);
+                        ////////////////console.log(symbol);
                         if (ex == 'bitmex' || ex == "okex-futures" || ex == "okex-swap" || g != 'PAX' && !symbol.startsWith('USD') && !g.startsWith('USD') && !symbol.startsWith('TUSD') && !g.startsWith('TUSD') && g != 'XRP') {
-                            //////////console.log('2 ')
+                            ////////////////console.log('2 ')
                             try { //if (symbol == "GNTBNB"){
                                 let book = thebooks[symbol]
                                 let hb = 0;
@@ -2318,8 +2320,8 @@ function checkStuff(){
                                         for (var ask in book.asks) {
                                             if (ex == 'binance' || ex == 'hitbtc') {
                                                 if (parseFloat(book.asks[ask].price) < tprice) {
-                                                    ////////////////////console.log(tobuy)
-                                                    ////////////////////console.log(book.asks[ask])
+                                                    //////////////////////////console.log(tobuy)
+                                                    //////////////////////////console.log(book.asks[ask])
                                                     tobuy += parseFloat(book.asks[ask].volume);
                                                     if (parseFloat(book.asks[ask].price) < toprice) {
                                                         toprice = parseFloat(book.asks[ask].price)
@@ -2327,8 +2329,8 @@ function checkStuff(){
                                                 }
                                             } else {
                                                 if (parseFloat(book.asks[ask][0]) < tprice) {
-                                                    ////////////////////console.log(tobuy)
-                                                    ////////////////////console.log(book.asks[ask])
+                                                    //////////////////////////console.log(tobuy)
+                                                    //////////////////////////console.log(book.asks[ask])
                                                     tobuy += parseFloat(book.asks[ask][1]);
                                                     if (parseFloat(book.asks[ask][0]) < toprice) {
                                                         toprice = parseFloat(book.asks[ask][0])
@@ -2339,10 +2341,10 @@ function checkStuff(){
                                         if (tobuy * toprice > maxBuyBtc) {
                                             tobuy = maxBuyBtc / toprice
                                         }
-                                        ////////////////////console.log('tobuy: ' + tobuy)
-                                        ////////////////////console.log('at price: ' + toprice)
+                                        //////////////////////////console.log('tobuy: ' + tobuy)
+                                        //////////////////////////console.log('at price: ' + toprice)
                                         //  let o = await modular.exchangeOrder(theoneasset + theonebase, 'BUY', tobuy, toprice, 'LIMIT')
-                                        ////////////////////console.log(o)
+                                        //////////////////////////console.log(o)
                                         gobuyforfun = false;
                                         setTimeout(function() {
                                             gobuyforfun = false;
@@ -2350,18 +2352,18 @@ function checkStuff(){
                                     }
                                 }
                                 //let orders;
-                                ////console.log('1: ' + symbol + ' la: ' + la + ' hb: ' + hb)
+                                //////////console.log('1: ' + symbol + ' la: ' + la + ' hb: ' + hb)
                                 //////////////////////////d.log(aorders[symbol])
                                 if (ex == 'bitmex' || ex == "okex-futures" || ex == "okex-swap" || hb == 0 || (renew[symbol] == undefined || (renew[symbol] == true || (symbol != 'BNBUSDS' && (orders.length == 0) || ((hblesss[symbol] != hbless || lalesss[symbol] != laless) || ((las[symbol] != la && hbs[symbol] != hb) && (aorders[symbol] != la && borders[symbol] != hb))))))) {
 
-                                   ////console.log('2 ' + buyQtys[symbol] + ' ; ' + bsover);
+                                   //////////console.log('2 ' + buyQtys[symbol] + ' ; ' + bsover);
                                     if (ex = 'bitmex' || thebooks[symbol] == undefined || hb == 0 || (renew[symbol] == undefined || renew[symbol] == true) || (buyQtys[symbol] * maxBetterVol < bsover || buyQtys[symbol] == undefined || isNaN(bsover))) {
                                         if (hb == 0) {
                                             hb = bids[symbol]['default']
                                             la = asks[symbol]['default']
                                         }
-                                        //////////console.log(buyQtys[symbol] + ' ; ' + bsover);
-                                        //////console.log('3')
+                                        ////////////////console.log(buyQtys[symbol] + ' ; ' + bsover);
+                                        ////////////console.log('3')
                                         hblesss[symbol] = hbless;
                                         lalesss[symbol] = laless;
                                         if (symbol.substring(symbol.length - 4, symbol.length) == g) {
@@ -2370,32 +2372,32 @@ function checkStuff(){
                                         } else {
                                             asset = symbol.substring(0, symbol.length - 3)
 
-                                            //////////////////////////////////console.log('asset: ' + asset)
+                                            ////////////////////////////////////////console.log('asset: ' + asset)
                                         }
                                         asset = asset.replace('/', '').replace('-', '').replace('_', '')
-                                        //////console.log('asset: ' + asset)
+                                        ////////////console.log('asset: ' + asset)
 
                                         //bals = balscombined
-                                        //////////////////////////////console.log('etheth')
-                                        //////////////////////////////console.log(bals['ETH'])
-                                        //////////////////////////////console.log(symbol.substring(symbol.length - 3, symbol.length))
-                                        //////////////////////////////console.log(bals[symbol.substring(symbol.length - 3, symbol.length)])
+                                        ////////////////////////////////////console.log('etheth')
+                                        ////////////////////////////////////console.log(bals['ETH'])
+                                        ////////////////////////////////////console.log(symbol.substring(symbol.length - 3, symbol.length))
+                                        ////////////////////////////////////console.log(bals[symbol.substring(symbol.length - 3, symbol.length)])
                                         if (timeoutbuy || targetVolDiv > 0) {
-                                            //////////////////////////////////console.log(precisions[symbol]);
-                                            //////////////////////////////////console.log(filters[symbol])
-                                            //////////////////////////////////console.log((bals[symbol.substring(symbol.length - 3, symbol.length)] / (hb * bpSetting) / Object.keys(gos[g]).length));
+                                            ////////////////////////////////////////console.log(precisions[symbol]);
+                                            ////////////////////////////////////////console.log(filters[symbol])
+                                            ////////////////////////////////////////console.log((bals[symbol.substring(symbol.length - 3, symbol.length)] / (hb * bpSetting) / Object.keys(gos[g]).length));
                                             if (hb == 0) {
-                                                //////////////////console.log('hb 0')
+                                                ////////////////////////console.log('hb 0')
                                                 hb = bids[symbol]['default']
                                                 la = asks[symbol]['default']
                                             }
-                                            //////////////////console.log(symbol)
-                                            //////////////////console.log(filters[symbol].tickSize)
-                                            //////////////////console.log('hb : ' + hb)
+                                            ////////////////////////console.log(symbol)
+                                            ////////////////////////console.log(filters[symbol].tickSize)
+                                            ////////////////////////console.log('hb : ' + hb)
                                             bp = (hb * bpSetting)
-                                            //////////////////console.log(bp)
+                                            ////////////////////////console.log(bp)
                                             bp = bp.toFixed(filters[symbol].tickSize - 1)
-                                            //////////////////console.log(bp)
+                                            ////////////////////////console.log(bp)
                                             let stop = (bp * stoploss)
                                             stop = stop.toFixed(filters[symbol].tickSize - 1)
                                             sp = (la * spSetting)
@@ -2406,28 +2408,28 @@ function checkStuff(){
                                                 //simOrders = {}
                                                 for (var o in orders) {
                                                     for (var order in orders[o]) {
-                                                        ////////console.log(orders[o])
+                                                        //////////////console.log(orders[o])
                                                         if (orders[o][order].symbol.substring(0, 3) == symbol.substring(0, 3)) {
-                                                            ////////console.log(orders[o])
-                                                            ////////console.log('cancel')
+                                                            //////////////console.log(orders[o])
+                                                            //////////////console.log('cancel')
                                                             if (!cancelled.includes(orders[o][order].order_id)) {
-                                                                //////console.log('cancel')
+                                                                ////////////console.log('cancel')
                                                                 cancelled.push(orders[o][order].order_id)
                                                                 //exchangeCancelOrder(orders[o][order])
                                                             }
-                                                            //////////////////////console.log('cancel')
+                                                            ////////////////////////////console.log('cancel')
 
                                                         }
                                                     }
                                                 }
                                             } else {
                                                 /* for (var o in orders) {
-                                                  ////////console.log(orders[o])
+                                                  //////////////console.log(orders[o])
                                                     if (orders[o].side.toUpperCase() == 'BUY' && orders[o].symbol == symbol) {
-                                                        ////////console.log(orders[o])
-                                                          ////////console.log('cancel')
+                                                        //////////////console.log(orders[o])
+                                                          //////////////console.log('cancel')
                                                         modular.exchangeCancelOrder(orders[o])
-                                                        //////////////////////console.log('cancel')
+                                                        ////////////////////////////console.log('cancel')
 
                                                     }
                                                 }*/
@@ -2439,42 +2441,42 @@ function checkStuff(){
                                                 bb = bals[(symbol.substring(symbol.length - 3, symbol.length))]
                                             }
                                             if (ex == "okex-futures" || ex == "okex-swap") {
-                                                //////////////////////console.log('bitmex btcbal ' + btcbal + ' ' + (hb * bpSetting) + ' ' + filters[symbol].stepSize)
+                                                ////////////////////////////console.log('bitmex btcbal ' + btcbal + ' ' + (hb * bpSetting) + ' ' + filters[symbol].stepSize)
                                                 //buyQty = (((btcbal * 0.05) / (hb * bpSetting) / 2.5).toFixed(filters[symbol].stepSize));
                                                 buyQty = parseFloat((bals[symbol.substring(0, 3)] * hb * 0.09))
                                             } else if (ex == 'bitmex') {
                                                 if (symbol.indexOf('USD') != -1) {
-                                                    buyQty = (25 * (bals['BTC'] / (bids[symbol]['default'] * bpSetting)));
+                                                    buyQty = ((20 / 4 * 29) / 157 *  (bals['BTC'] / (bids[symbol]['default'] * bpSetting)));
                                                 } else {
-                                                    buyQty = (25 * (bals['BTC'] * 10000 * (bids[symbol]['default'] * 0.05)));
+                                                    buyQty = ((20 / 4 * 29) / 157 *  (bals['BTC'] * 10000 * (bids[symbol]['default'] * 0.05)));
 
                                                 }
-                                                ////console.log(buyQty)
+                                                //////////console.log(buyQty)
                                             } else {
-                                                //////////console.log(symbol.substring(symbol.length - 3, symbol.length))
-                                                ////////console.log('0 ' + bb)
-                                                ////////console.log('1 ' + bals[symbol.substring(symbol.length - 3, symbol.length)])
-                                                ////////console.log('2 ' + hb)
-                                                ////////console.log('3 ' + bpSetting)
-                                                ////////console.log('4 ' + Object.keys(gos[g]).length)
-                                                ////////console.log('5 ' + filters[symbol].stepSize)
+                                                ////////////////console.log(symbol.substring(symbol.length - 3, symbol.length))
+                                                //////////////console.log('0 ' + bb)
+                                                //////////////console.log('1 ' + bals[symbol.substring(symbol.length - 3, symbol.length)])
+                                                //////////////console.log('2 ' + hb)
+                                                //////////////console.log('3 ' + bpSetting)
+                                                //////////////console.log('4 ' + Object.keys(gos[g]).length)
+                                                //////////////console.log('5 ' + filters[symbol].stepSize)
 
                                                 buyQty = (bb * 0.99 / (hb * bpSetting) / (Object.keys(gos[g]).length + 3))
 
                                             }
                                             if (buyQty > 0.0000001) {
-                                                ////console.log('buyqty1: ' + buyQty)
+                                                //////////console.log('buyqty1: ' + buyQty)
                                             }
                                             let oldqty = buyQty
                                             if (ex != 'okex-futures') {
                                                 buyQty = calcBuy(buyQty, hb, filters[symbol].minNotional, filters[symbol].minQty)
 
                                                 if (buyQty > 0.0000001) {
-                                                    ////console.log('buyqty2: ' + buyQty)
+                                                    //////////console.log('buyqty2: ' + buyQty)
                                                 }
                                                 buyQty = buyQty
                                                 if (buyQty > 0.0000001) {
-                                                    ////console.log('buyqty3: ' + buyQty)
+                                                    //////////console.log('buyqty3: ' + buyQty)
                                                 }
                                             }
                                             let dontgo = false;
@@ -2483,78 +2485,78 @@ function checkStuff(){
                                             }
                                             if (buyQty == 0 || bals[symbol.substring(symbol.length - 3, symbol.length)] < filters[symbol].minNotional) {
                                                 dontgo = true;
-                                                //////////////////////console.log('4')
+                                                ////////////////////////////console.log('4')
                                             }
                                             /*
                                             if (filters[symbol].minQty * hb * bpSetting < filters[symbol].minNotional){
                                             if ((buyQty * hb * bpSetting) < filters[symbol].minNotional) {
                                             buyQty =  (filters[symbol].minQty / filters[symbol].minNotional)  //((hb * 1.1) / filters[symbol].minNotional)
-                                            ////////////////////////////console.log('1 minnotional')
+                                            //////////////////////////////////console.log('1 minnotional')
                                             }
                                              if (buyQty < filters[symbol].minQty) {
                                             buyQty = (filters[symbol].minQty / filters[symbol].minNotional)
-                                            ////////////////////////////console.log('1 minqty')
+                                            //////////////////////////////////console.log('1 minqty')
                                             }
 
                                             }
                                             else {
                                             if (buyQty < filters[symbol].minQty) {
-                                            ////////////////////////////console.log('2 minqty')
+                                            //////////////////////////////////console.log('2 minqty')
                                             buyQty = (filters[symbol].minQty / filters[symbol].minNotional)//(filters[symbol].minQty * 1.05)
                                             }if ((buyQty * hb * bpSetting) < filters[symbol].minNotional) {
-                                            ////////////////////////////console.log('2 buyqty')
+                                            //////////////////////////////////console.log('2 buyqty')
                                             buyQty =  (filters[symbol].minQty / filters[symbol].minNotional)//((hb * 1.1) / filters[symbol].minNotional)
                                             }
 
                                             }*/
-                                            ////console.log('buyqty: ' + buyQty + ' ' + symbol)
+                                            //////////console.log('buyqty: ' + buyQty + ' ' + symbol)
                                             //                               let dontgo = false;
-                                            //////////////////////////////////console.log(buyQty)
-                                            //////////////////////////////////console.log(bp)
+                                            ////////////////////////////////////////console.log(buyQty)
+                                            ////////////////////////////////////////console.log(bp)
                                             /*if (hb == bp){
-                                                ////////////////////////////////console.log('dontgo buy = ask');
+                                                //////////////////////////////////////console.log('dontgo buy = ask');
                                                 dontgo = true;
                                             }*/
                                             if (isNaN(buyQty)) {
                                                 dontgo = true;
                                             }
                                             if (buyQty > maxOrder) {
-                                                //////////////////////console.log('dontgo maxOrder ' + symbol)
+                                                ////////////////////////////console.log('dontgo maxOrder ' + symbol)
                                                 dontgo = true;
                                             }
                                             if ((buyQty * hb * bpSetting) < filters[symbol].minNotional) {
-                                                //////////////////////console.log('dontgo minnotional ' + symbol)
+                                                ////////////////////////////console.log('dontgo minnotional ' + symbol)
                                                 dontgo = true;
                                             }
                                             if (buyQty < filters[symbol].minQty) {
 
-                                                //////////////////////console.log('dontgo minqty ' + symbol)
+                                                ////////////////////////////console.log('dontgo minqty ' + symbol)
                                                 dontgo = true;
                                             }
-                                            ////////////////////console.log(symbol)
-                                            ////////////////////console.log(dontbuy[symbol])
-                                            ////////////////////console.log(dontgo2[symbol])
-                                            ////////////////////console.log(dontbuyrsi[symbol])
-                                            ////////////////////console.log(dontbuybb[symbol])
-                                            ////////////////////console.log(dontgo)
+                                            //////////////////////////console.log(symbol)
+                                            //////////////////////////console.log(dontbuy[symbol])
+                                            //////////////////////////console.log(dontgo2[symbol])
+                                            //////////////////////////console.log(dontbuyrsi[symbol])
+                                            //////////////////////////console.log(dontbuybb[symbol])
+                                            //////////////////////////console.log(dontgo)
                                             if ((dontbuy[symbol] == false || dontbuy[symbol] == undefined) && (dontgo2[symbol] == false || dontgo2[symbol] == undefined) && (dontbuyrsi[symbol] == false || dontbuyrsi[symbol] == undefined) && (dontbuybb[symbol] == false || dontbuybb[symbol] == undefined) && dontgo == false && !isNaN(buyQty)) {
-                                                //////////////////////console.log('5')
+                                                ////////////////////////////console.log('5')
                                                 if (buyOs[symbol] == undefined || (changed[symbol] == true || changed[symbol] == undefined)) {
                                                     rememberBuys[symbol] = bp;
                                                 }
                                                 if ((buyOsChange[symbol] == true || buyOsChange[symbol] == undefined) || buyOs[symbol] == undefined || (changed[symbol] == true || changed[symbol] == undefined)) {
-                                                    //////////////////////console.log('6')
+                                                    ////////////////////////////console.log('6')
                                                     changed[symbol] = false;
 
 
                                                 }
                                                 renew[symbol] = false;
-                                                //////////////////////console.log('7')
+                                                ////////////////////////////console.log('7')
 
-                                                ////////////////////////////console.log(gocount)
-                                                ////////////////////////////console.log(usddiff2)
-                                                ////////////////////////////console.log(avgBids[symbol])
-                                                ////console.log('buyO set: ' + buyOs[symbol])
+                                                //////////////////////////////////console.log(gocount)
+                                                //////////////////////////////////console.log(usddiff2)
+                                                //////////////////////////////////console.log(avgBids[symbol])
+                                                //////////console.log('buyO set: ' + buyOs[symbol])
                                                 divisor[symbol] = 1;
                                                 if (!trading.includes(symbol)) {
                                                     trading.push(symbol)
@@ -2564,24 +2566,24 @@ function checkStuff(){
                                                 if (ex == 'bitmex' || ex == "okex-futures" || ex == "okex-swap") {
                                                     //let orders = await modular.exchangeOpenOrders();
                                                     for (var o in orders) {
-                                                        //                                          //////console.log(orders[o][order])
-                                                        //////////////////////console.log(orders[o].side.toUpperCase())
-                                                        //////////////////////console.log(orders[o].symbol)
+                                                        //                                          ////////////console.log(orders[o][order])
+                                                        ////////////////////////////console.log(orders[o].side.toUpperCase())
+                                                        ////////////////////////////console.log(orders[o].symbol)
 
 
                                                         if (!cancelled.includes(orders[o].order_id)) {
-                                                            //////console.log('cancel')
+                                                            ////////////console.log('cancel')
                                                             cancelled.push(orders[o].order_id)
                                                             // modular.exchangeCancelOrder(orders[o])
                                                         }
-                                                        //////////////////////console.log('cancel')
+                                                        ////////////////////////////console.log('cancel')
                                                     }
                                                 } else {
                                                     //simOrders = {}
                                                     // //let orders = await modular.exchangeOpenOrders(symbol);
                                                     for (var o in orders) {
                                                         if (orders[o].side.toUpperCase() == 'BUY' && orders[o].symbol == symbol) {
-                                                            ////////////console.log('cancel')
+                                                            //////////////////console.log('cancel')
                                                             //modular.exchangeCancelOrder(orders[o])
 
 
@@ -2591,7 +2593,7 @@ function checkStuff(){
                                                 }
                                                 //lala++;
                                                 try {
-                                                    ////////////////////////////console.log('8')
+                                                    //////////////////////////////////console.log('8')
                                                     if (buyQty > 0.0000001 && buyQty != 0 && dontgo == false) {
                                                         buyQtys[symbol] = buyQty;
                                                         aorders[symbol] = la;
@@ -2599,33 +2601,22 @@ function checkStuff(){
                                                         borders[symbol] = hb;
 
                                                         //buyQty = buyQty * bids[symbol]['default']
-                                                        //////////////////////////////console.log
-                                                        ////////////////////////////console.log
-                                                        //////////////////////console.log(bp)
-                                                        //////////////////////console.log('8')
-                                                        if (simOrders[symbol] == undefined) {
-                                                            simOrders[symbol] = {}
-                                                        }
-                                                        simOrders[symbol]['BUY'] = {
-                                                            'qty': buyQty,
-                                                            'price': bp,
-                                                            'type': 'LIMIT'
-                                                        }
-                                                        simOrders[symbol]['SELL'] = {
-                                                            'qty': sellQty,
-                                                            'price': sp,
-                                                            'type': 'LIMIT'
-                                                        }
+                                                        ////////////////////////////////////console.log
+                                                        //////////////////////////////////console.log
+                                                        ////////////////////////////console.log(bp)
+                                                        ////////////////////////////console.log('8')
+                                                        
+                                                        ////////console.log(simOrders)
                                                         // modular.exchangeOrder(symbol, 'BUY', buyQty, bp, 'LIMIT')
                                                         ///modular.exchangeOrder(symbol, 'SELL', buyQty, sp, 'LIMIT')
-                                                        //////////////////////////console.log(o.orderId)
+                                                        ////////////////////////////////console.log(o.orderId)
                                                         //orderIds.push(o.orderId)
                                                     }
-                                                    ////////////////////////////////console.log(buys);
-                                                    ////////////////////////////////console.log(sells);
+                                                    //////////////////////////////////////console.log(buys);
+                                                    //////////////////////////////////////console.log(sells);
                                                 } catch (err) {
 
-                                                    //////////console.log(err);
+                                                    ////////////////console.log(err);
                                                 }
 
                                             }
@@ -2640,19 +2631,19 @@ function checkStuff(){
                                     }
                                 }
                             } catch (err) {
-                                //////console.log(err)
+                                ////////////console.log(err)
                             }
                         }
                     }
                 }
 
-                //////////////////console.log(update * 1 + ' intervals')
+                ////////////////////////console.log(update * 1 + ' intervals')
 
                 count++;
 
             } catch (err) {
-                ////////////console.log(err)
-                //////////////////console.log(err);
+                //////////////////console.log(err)
+                ////////////////////////console.log(err);
             }
         }
         setTimeout(function() {

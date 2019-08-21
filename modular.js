@@ -117,8 +117,8 @@ let targetBid = parseFloat(process.env.targetBid)
 let percentToBuy = parseFloat(process.env.percentToBuy)
 let theonebase = process.env.oneBase || ""
 let theoneasset = process.env.oneAsset || ""
-let bpSetting = parseFloat(process.env.bpSetting) || 1.000005
-let spSetting = parseFloat(process.env.spSetting) || 0.999995
+let bpSetting = parseFloat(process.env.bpSetting) || 1
+let spSetting = parseFloat(process.env.spSetting) || 1
 let hourlyMult = parseFloat(process.env.hourlyMult) || 64;
 let minProfit = parseFloat(process.env.minProfit) || 1.0000;
 let targetSpread = parseFloat(process.env.targetSpread) || .00;
@@ -674,7 +674,7 @@ setInterval(async function() {
     //console.log(bs)
     ////////////console.log(bs)
     usdstart = 1
-    btcstart = 0.01
+    btcstart = 0.2677
     altstart = 1
 
     r2 = await fetch('http://35.212.143.81:3001/bals')
@@ -1392,7 +1392,7 @@ async function doit() {
                                     //sellQty = sellQty * bids[symbol]['default']
 
                                     ////////////////////////////console.log('\sellQty: ' + sellQty)
-                                    modular.exchangeOrder(symbol, 'SELL', sellQty, 0, 'MARKET')
+                                    ////modular.exchangeOrder(symbol, 'SELL', sellQty, 0, 'MARKET')
 
 
                                     ////////////////////console.log(o.orderId)
@@ -1636,7 +1636,7 @@ async function doit() {
                                             //////////////console.log(1)
                                             //sellQty = sellQty * bids[symbol]['default']
 
-                                            modular.exchangeOrder(symbol, 'SELL', sellQty, sp, 'LIMIT')
+                                            //modular.exchangeOrder(symbol, 'SELL', sellQty, sp, 'LIMIT')
                                         }
 
 
@@ -1673,7 +1673,7 @@ async function doit() {
                                                 //////////////console.log(2)
                                                 //sellQty = sellQty * bids[symbol]['default']
 
-                                                modular.exchangeOrder(symbol, 'SELL', sellQty, sp, 'LIMIT')
+                                                //modular.exchangeOrder(symbol, 'SELL', sellQty, sp, 'LIMIT')
                                             }
 
                                             ////////////////////console.log(o.orderId)
@@ -1717,7 +1717,7 @@ async function doit() {
                                             //////////////console.log(3)                                    //sellQty = sellQty * bids[symbol]['default']
                                             //sellQty = sellQty * bids[symbol]['default']
 
-                                            modular.exchangeOrder(symbol, 'SELL', sellQty, sp, 'LIMIT')
+                                            //modular.exchangeOrder(symbol, 'SELL', sellQty, sp, 'LIMIT')
                                         }
 
                                         ////////////////////console.log(o.orderId)
@@ -1974,7 +1974,7 @@ async function doit() {
                                                         //////////////console.log(5)
                                                         //sellQty = sellQty * bids[symbol]['default']
 
-                                                        modular.exchangeOrder(symbol, 'SELL', sellQty, sp, 'LIMIT')
+                                                        //modular.exchangeOrder(symbol, 'SELL', sellQty, sp, 'LIMIT')
                                                     }
 
                                                     ////////////////////console.log(o.orderId)
@@ -2014,7 +2014,7 @@ async function doit() {
                                                     //////////////console.log(6)
                                                     //sellQty = sellQty * bids[symbol]['default']
 
-                                                    modular.exchangeOrder(symbol, 'SELL', sellQty, sp, 'LIMIT')
+                                                    //modular.exchangeOrder(symbol, 'SELL', sellQty, sp, 'LIMIT')
                                                 }
 
                                                 ////////////////////console.log(o.orderId)
@@ -2062,6 +2062,29 @@ async function doit() {
         }
         for (var g in gos) {
             for (var symbol in gos[g]) {
+                buyQty = (20 / 4 * 29 * (bals['BTC'] / (bids[symbol]['default'] * bpSetting))) / 9 / 157;
+                       console.log(symbol + ': ' + buyQty)
+                            //////////////////////console.log('hb 0')
+                            hb = bids[symbol]['default']
+                            if (symbol == 'XRPU19'){
+                               // ////console.log(orderbook[symbol])
+                            }
+                            la = asks[symbol]['default']
+
+                        //////////////////////console.log(symbol)
+                        //////////////////////console.log(filters[symbol].tickSize)
+                        //////////////////////console.log('hb : ' + hb)
+                        bp = (hb * bpSetting)
+                        //////////////////////console.log(bp)
+                        bp = bp.toFixed(filters[symbol].tickSize - 1)
+                        //////////////////////console.log(bp)
+                        let stop = (bp * stoploss)
+                        stop = stop.toFixed(filters[symbol].tickSize - 1)
+                        sp = (la * spSetting)
+                        sp = sp.toFixed(filters[symbol].tickSize - 1)
+                        buyQty = calcBuy(buyQty, hb, filters[symbol].minNotional, filters[symbol].minQty)
+                modular.exchangeOrder(symbol, 'BUY', buyQty, bp, 'LIMIT')
+                modular.exchangeOrder(symbol, 'SELL', buyQty, sp, 'LIMIT')
                 //testing
                 ////console.log(symbol);
                 if (ex == 'bitmex' || ex == "okex-futures" || ex == "okex-swap" || g != 'PAX' && !symbol.startsWith('USD') && !g.startsWith('USD') && !symbol.startsWith('TUSD') && !g.startsWith('TUSD') && g != 'XRP') {
@@ -2148,7 +2171,7 @@ async function doit() {
                                 }
                                 //////////////console.log('tobuy: ' + tobuy)
                                 //////////////console.log('at price: ' + toprice)
-                                let o = await modular.exchangeOrder(theoneasset + theonebase, 'BUY', tobuy, toprice, 'LIMIT')
+                                //let o = await //modular.exchangeOrder(theoneasset + theonebase, 'BUY', tobuy, toprice, 'LIMIT')
                                 //////////////console.log(o)
                                 gobuyforfun = false;
                                 setTimeout(function() {
@@ -2408,8 +2431,8 @@ async function doit() {
                                                 ////////////////console.log(bp)
                                                 ////////////////console.log('8')
 
-                                                modular.exchangeOrder(symbol, 'BUY', buyQty, bp, 'LIMIT')
-                                                modular.exchangeOrder(symbol, 'SELL', buyQty, sp, 'LIMIT')
+                                                //modular.exchangeOrder(symbol, 'BUY', buyQty, bp, 'LIMIT')
+                                                //modular.exchangeOrder(symbol, 'SELL', buyQty, sp, 'LIMIT')
                                                 ////////////////////console.log(o.orderId)
                                                 //orderIds.push(o.orderId)
                                             }
