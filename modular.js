@@ -674,7 +674,7 @@ setInterval(async function() {
     //console.log(bs)
     ////////////console.log(bs)
     usdstart = 1
-    btcstart = 0.2497
+    btcstart = 0.2492
     altstart = 1
 
     r2 = await fetch('http://35.212.143.81:3001/bals')

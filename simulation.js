@@ -1,7 +1,7 @@
 module.exports = {
 
 };
-var simBal = 0.2497;
+var simBal = 0.2492;
 var simOrders = {}
 var simPoses = {}
 setInterval(function() {
@@ -638,10 +638,16 @@ function readLines(input, func) {
 
 var old;
 var doitcount = 0;
-
+var tsold;
+var diff = 0;
 function func(data) {
     data = data.split('","')
     ////////////console.log(data)
+    let ts = data[0].replace('"','')
+    if (doitcount > 0){
+    diff+= ts - tsold;
+    }
+    tsold = ts;
     let rrr = data[1]
     //////////////console.log(rrr)
     try{
@@ -720,8 +726,9 @@ function func(data) {
             ////console.log(bals)
             doitcount++
             checkStuff()
-            if (doitcount == 60) {    
-
+            if (diff > 60000) {    
+console.log(diff)
+diff = 0
               console.log(simPoses)
                 doitcount = 0;
    console.log(simBal)

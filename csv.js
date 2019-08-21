@@ -38,6 +38,6 @@ async function doit(){
   fs.appendFileSync('../csv.csv', data);
 setTimeout(function(){
   doit()
-}, 1000)
+}, 1000 / 100)
 }
 doit()
