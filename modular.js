@@ -674,7 +674,7 @@ setInterval(async function() {
     //console.log(bs)
     ////////////console.log(bs)
     usdstart = 1
-    btcstart = 0.2631
+    btcstart = 0.2497
     altstart = 1
 
     r2 = await fetch('http://35.212.143.81:3001/bals')
@@ -1102,7 +1102,12 @@ let update;
 setTimeout(function() {
     checkDs()
 }, 5000)
-
+function doOrders(sp, bp, buyQty, symbol){
+    setTimeout(function(){
+        modular.exchangeOrder(symbol, 'BUY', buyQty, bp, 'LIMIT')
+        modular.exchangeOrder(symbol, 'SELL', buyQty, sp, 'LIMIT')
+                }, Math.random() * 7)
+}
 function checkDs() {
     ////////////console.log('check')
     let d = new Date().getTime()
@@ -1110,7 +1115,7 @@ function checkDs() {
     let diff = d - update;
     ////////////console.log(diff)
     if (diff > 1000 * 60 * 1) {
-        doit()
+        //doit()
     }
 
     setTimeout(function() {
@@ -2060,6 +2065,8 @@ async function doit() {
             gos[theonebase] = {}
             gos[theonebase][asset2] = 10000
         }
+        modular.exchangeCancelAll()
+        setTimeout(function(){
         for (var g in gos) {
             for (var symbol in gos[g]) {
                 buyQty = (20 / 4 * 29 * (bals['BTC'] / (bids[symbol]['default'] * bpSetting))) / 9 / 157;
@@ -2083,8 +2090,12 @@ async function doit() {
                         sp = (la * spSetting)
                         sp = sp.toFixed(filters[symbol].tickSize - 1)
                         buyQty = calcBuy(buyQty, hb, filters[symbol].minNotional, filters[symbol].minQty)
-                modular.exchangeOrder(symbol, 'BUY', buyQty, bp, 'LIMIT')
-                modular.exchangeOrder(symbol, 'SELL', buyQty, sp, 'LIMIT')
+                        doOrders(sp, bp, buyQty, symbol)
+                    }
+                    }
+                }, 700);
+                for (var g in gos) {
+                    for (var symbol in gos[g]) {
                 //testing
                 ////console.log(symbol);
                 if (ex == 'bitmex' || ex == "okex-futures" || ex == "okex-swap" || g != 'PAX' && !symbol.startsWith('USD') && !g.startsWith('USD') && !symbol.startsWith('TUSD') && !g.startsWith('TUSD') && g != 'XRP') {
@@ -2477,7 +2488,7 @@ async function doit() {
 }
 setTimeout(function() {
     doit();
-}, 10000)
+}, 60000)
 
 module.exports.countDecimalPlaces = function countDecimalPlaces(number) {
     var str = "" + number;

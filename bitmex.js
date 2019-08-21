@@ -21,7 +21,7 @@ bitmex.urls['api'] = bitmex.urls['test'];
 setTimeout(async function(){
   let tickers = await bitmex.fetchTickers()
   for (var t in tickers) {
-      if (tickers[t].symbol.includes('U19') && !tickers[t].symbol.includes('XBT')){
+      if (tickers[t].symbol.includes('U19') && !tickers[t].symbol.includes('XBT') && tickers[t].symbol != 'TRXU19'){
         client.addStream(tickers[t].symbol, 'instrument', function (data, symbol, tableName) {
             if (!data.length) return;
             const quote = data[data.length - 1];  // the last data element is the newest quote
@@ -186,6 +186,44 @@ module.exports.exchangeOpenOrders = async function exchangeOpenOrders(){
 module.exports.exchangeOpenOrdersBySymbol = async function exchangeOpenOrdersBySymbol(symbol){
   return await bitmex.fetchOpenOrders(symbol, since, limit)
 
+}
+module.exports.exchangeCancelAll = async function exchangeCancelAll(){
+
+    
+    var verb = 'DELETE',
+      path = '/api/v1/order/all',
+      expires = Math.round(new Date().getTime() / 1000) + 60, // 1 min in the future
+      data = {};
+    
+    // Pre-compute the postBody so we can be sure that we're using *exactly* the same body in the request
+    // and in the signature. If you don't do this, you might get differently-sorted keys and blow the signature.
+    var postBody = JSON.stringify(data);
+    
+    var signature = crypto.createHmac('sha256', apiSecret).update(verb + path + expires + postBody).digest('hex');
+    
+    var headers = {
+      'content-type' : 'application/json',
+      'Accept': 'application/json',
+      'X-Requested-With': 'XMLHttpRequest',
+      // This example uses the 'expires' scheme. You can also use the 'nonce' scheme. See
+      // https://www.bitmex.com/app/apiKeysUsage for more details.
+      'api-expires': expires,
+      'api-key': apiKey,
+      'api-signature': signature
+    };
+    
+    const requestOptions = {
+      headers: headers,
+      url:'https://testnet.bitmex.com'+path,
+      method: verb,
+      body: postBody
+    };
+    
+    request(requestOptions, function(error, response, body) {
+      if (error) { console.log(error); }
+      console.log(body);
+    });
+    
 }
 module.exports.exchangeCancelOrder = async function exchangeCancelOrder(order){
   await bitmex.cancelOrder(order.info.orderID)

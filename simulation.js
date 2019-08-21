@@ -1,7 +1,7 @@
 module.exports = {
 
 };
-var simBal = 0.2631;
+var simBal = 0.2497;
 var simOrders = {}
 var simPoses = {}
 setInterval(function() {
@@ -789,10 +789,12 @@ function checkStuff(){
                                 simPoses[a] = {'price': simOrders[a][side]['price'],
                                 'qty': simOrders[a][side]['qty']}
                             }
+                            else {
                             var theQty = simOrders[a][side]['qty']
                             simPoses[a] = {'qty': simPoses[a]['qty'] + simOrders[a][side]['qty'], 'price': simOrders[a][side]['price'] }
                             ////console.log(simPoses)
                            console.log('sell')
+                            }
                             simOrders[a]['SELL'] = {}
                         }
                     }
@@ -823,11 +825,12 @@ function checkStuff(){
                             if (simPoses[a] == undefined) {
                                 simPoses[a] = {'price': simOrders[a][side]['price'],
                                 'qty': simOrders[a][side]['qty']}
-                            }
+                            } else {
                           console.log('buy')
                             var theQty = simOrders[a][side]['qty']
                             simPoses[a] = {'qty': simPoses[a]['qty'] + simOrders[a][side]['qty'], 'price': simOrders[a][side]['price'] }
                             ////console.log(simPoses)
+                            }
                             simOrders[a]['BUY'] = {}
                         }
                     }
