@@ -1,7 +1,7 @@
 module.exports = {
 
 };
-var simBal = 0.2677;
+var simBal = 0.2631;
 var simOrders = {}
 var simPoses = {}
 setInterval(function() {
@@ -720,8 +720,9 @@ function func(data) {
             ////console.log(bals)
             doitcount++
             checkStuff()
-            if (doitcount == 60) {
-               // //console.log(simOrders)
+            if (doitcount == 60) {    
+
+              console.log(simPoses)
                 doitcount = 0;
    console.log(simBal)
     //////////console.log(simOrders)
@@ -734,7 +735,6 @@ function func(data) {
         }
         }
 function checkStuff(){
-    console.log(simPoses)
     var post = 0
 
     for (var b in simPoses) {
@@ -761,7 +761,7 @@ function checkStuff(){
    // //console.log(price)
  simBal = simBal * price
     ////////////console.log(simOrders)
-    for (var b in asks) {
+    for (var b in bids) {
 
         for (var a in simOrders) {
             if (a == b) {
@@ -769,7 +769,7 @@ function checkStuff(){
                     if (side == 'SELL') {
                      //   //console.log(simOrders[a][side])
                      // //console.log(bids[b])
-                        if (simOrders[a][side]['price'] < asks[b]['default']) {
+                        if (simOrders[a][side]['price'] < bids[b]['default']) {
                             if (a.includes('USD')) {
                                 if ( (parseFloat(simOrders[a][side]['qty']) * (20 / 4 * 29) / 157 * parseFloat(simOrders[a][side]['price'])) * 0.000250 > 0){
                                    // simBal = simBal + (parseFloat(simOrders[a][side]['qty']) * 20 * parseFloat(simOrders[a][side]['price'])) * 0.000250
@@ -800,13 +800,13 @@ function checkStuff(){
             }
         }
     }
-    for (var b in bids) {
+    for (var b in asks) {
         for (var a in simOrders) {
             if (a == b) {
                 for (var side in simOrders[a]) {
                     if (side == 'BUY') {
 
-                        if (simOrders[a][side]['price'] > bids[b]['default']) {
+                        if (simOrders[a][side]['price'] > asks[b]['default']) {
                             if (a.includes('USD')) {
                                 if ( (parseFloat(simOrders[a][side]['qty']) * (20 / 4 * 29) / 157 *parseFloat(simOrders[a][side]['price'])) * 0.000250 > 0){
                                     //simBal = simBal + (parseFloat(simOrders[a][side]['qty']) * 20 * parseFloat(simOrders[a][side]['price'])) * 0.000250
@@ -2247,14 +2247,15 @@ function checkStuff(){
                         if (simOrders[symbol] == undefined) {
                             simOrders[symbol] = {}
                         }
+                        buyQty = Math.round(buyQty)
                         simOrders[symbol]['SELL'] = {
                             'qty': buyQty * -1,
-                            'price': parseFloat(sp),
+                            'price': parseFloat(bp),
                             'type': 'LIMIT'
                         }
                         simOrders[symbol]['BUY'] = {
                             'qty': buyQty,
-                            'price': parseFloat(bp),
+                            'price': parseFloat(sp),
                             'type': 'LIMIT'
                         }
                         //testing
