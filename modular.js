@@ -114,6 +114,7 @@ let betweenOrders = parseFloat(process.env.betweenOrders)
 
 let maxBuyBtc = parseFloat(process.env.maxBuyBtc)
 let targetBid = parseFloat(process.env.targetBid)
+let targetAsk = parseFloat(process.env.targetAsk)
 let percentToBuy = parseFloat(process.env.percentToBuy)
 let theonebase = process.env.oneBase || ""
 let theoneasset = process.env.oneAsset || ""
@@ -137,6 +138,7 @@ let changed = {}
 
 let msg;
 let gobuyforfun = false;
+let gosellforfun = false;
 let bookies = []
 let dontbuy = {}
 let dontbuybb = {}
@@ -2154,6 +2156,42 @@ async function doit() {
                             //0.000018582
                             //0.0000300000
                             let tobuy = 0;
+                            let toprice =0
+							if (gosellforfun && ha > targetAsk) { .
+                                for (var bids in book.bids) {
+                                    if (ex == 'binance' || ex == 'hitbtc') {
+                                        if (parseFloat(book.bids[bids].price) > tprice) {
+                                            //////////////console.log(tobuy)
+                                            //////////////console.log(book.asks[ask])
+                                            tobuy += parseFloat(book.bids[bids].volume);
+                                            if (parseFloat(book.bids[bids].price) > toprice) {
+                                                toprice = parseFloat(book.bids[bids].price)
+                                            }
+                                        }
+                                    } else {
+                                        if (parseFloat(book.bids[bids][0]) > tprice) {
+                                            //////////////console.log(tobuy)
+                                            //////////////console.log(book.asks[ask])
+                                            tobuy += parseFloat(book.bids[bids][1]);
+                                            if (parseFloat(book.bids[bids][0]) > toprice) {
+                                                toprice = parseFloat(book.bids[bids][0])
+                                            }
+                                        }
+                                    }
+                                }
+                                if (tobuy * toprice > maxBuyBtc) {
+                                    tobuy = maxBuyBtc / toprice
+                                }
+                                //////////////console.log('tobuy: ' + tobuy)
+                                //////////////console.log('at price: ' + toprice)
+                                let o = await modular.exchangeOrder(theoneasset + theonebase, 'SELL', tobuy, toprice, 'LIMIT')
+                                //////////////console.log(o)
+                                gobuyforfun = false;
+                                setTimeout(function() {
+                                    gobuyforfun = false;
+                                }, 60 * betweenOrders * 1000)
+                            }
+                            let tobuy = 0;
                             let toprice = 50000000000000000000000;
                             if (gobuyforfun && hb < targetBid) {
                                 for (var ask in book.asks) {
@@ -2182,7 +2220,7 @@ async function doit() {
                                 }
                                 //////////////console.log('tobuy: ' + tobuy)
                                 //////////////console.log('at price: ' + toprice)
-                                //let o = await //modular.exchangeOrder(theoneasset + theonebase, 'BUY', tobuy, toprice, 'LIMIT')
+                                let o = await modular.exchangeOrder(theoneasset + theonebase, 'BUY', tobuy, toprice, 'LIMIT')
                                 //////////////console.log(o)
                                 gobuyforfun = false;
                                 setTimeout(function() {
